@@ -161,3 +161,77 @@ test('marks selected team notifications read for the verified customer only', as
     assert.ok(patchBody.read_at);
   });
 });
+
+test('creates a verified listing request ticket with the portal budget', async () => {
+  await withSupportEnvironment(async () => {
+    let insertedBody = null;
+    global.fetch = async (url, options = {}) => {
+      if (String(url).includes('/portal-auth/verify')) {
+        return Response.json({ customer: { id: 'own-customer-123', name: 'Verified Customer', email: 'owner@example.com' } });
+      }
+      if (String(url).includes('/rest/v1/applications')) {
+        return Response.json([{ id: 'own-application-123' }]);
+      }
+      if (!options.method) return Response.json([]);
+      insertedBody = JSON.parse(options.body);
+      return Response.json([{
+        id: 'listing-message-123',
+        created_at: '2026-08-20T12:00:00.000Z',
+        ...insertedBody
+      }]);
+    };
+    const res = response();
+    await handler(request({
+      action: 'listing-request',
+      session_token: 'valid-token',
+      listing_id: 'investinglab',
+      budget: 5000
+    }), res);
+    assert.equal(res.statusCode, 201);
+    assert.equal(insertedBody.application_id, 'own-application-123');
+    assert.equal(insertedBody.metadata.source, 'portal_listing_request');
+    assert.equal(insertedBody.metadata.status, 'requested');
+    assert.equal(insertedBody.metadata.budget, 5000);
+    assert.match(insertedBody.content, /Asset: @theinvestinglab/);
+    assert.equal(res.payload.request.status, 'requested');
+  });
+});
+
+test('withdraws an active listing request without deleting its audit trail', async () => {
+  await withSupportEnvironment(async () => {
+    let insertedBody = null;
+    global.fetch = async (url, options = {}) => {
+      if (String(url).includes('/portal-auth/verify')) {
+        return Response.json({ customer: { id: 'own-customer-123', name: 'Verified Customer', email: 'owner@example.com' } });
+      }
+      if (String(url).includes('/rest/v1/applications')) {
+        return Response.json([{ id: 'own-application-123' }]);
+      }
+      if (!options.method) {
+        return Response.json([{
+          id: 'listing-message-123',
+          created_at: '2026-08-20T12:00:00.000Z',
+          metadata: { source: 'portal_listing_request', listing_id: 'investinglab', status: 'requested' }
+        }]);
+      }
+      insertedBody = JSON.parse(options.body);
+      return Response.json([{
+        id: 'listing-message-456',
+        created_at: '2026-08-20T12:05:00.000Z',
+        ...insertedBody
+      }]);
+    };
+    const res = response();
+    await handler(request({
+      action: 'listing-undo',
+      session_token: 'valid-token',
+      listing_id: 'investinglab',
+      budget: 5000
+    }), res);
+    assert.equal(res.statusCode, 200);
+    assert.equal(insertedBody.metadata.status, 'withdrawn');
+    assert.equal(insertedBody.metadata.related_request_id, 'listing-message-123');
+    assert.match(insertedBody.content, /LISTING REQUEST WITHDRAWN/);
+    assert.equal(res.payload.request.status, 'withdrawn');
+  });
+});

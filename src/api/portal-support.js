@@ -2,6 +2,14 @@ const MAX_TOKEN_LENGTH = 4096;
 const MAX_MESSAGE_LENGTH = 30000;
 const MAX_NAME_LENGTH = 160;
 const MAX_NOTIFICATION_IDS = 50;
+const MAX_LISTING_BUDGET = 100000000;
+const PORTAL_LISTINGS = {
+  investinglab: {
+    username: '@theinvestinglab',
+    platform: 'TikTok',
+    niche: 'Wealth & Finance'
+  }
+};
 
 function header(req, name) {
   const value = req.headers?.[name] ?? req.headers?.[name.toLowerCase()];
@@ -102,6 +110,33 @@ async function resolveApplicationId(supabaseUrl, serviceKey, customer) {
   return validCustomerId(applicationId) ? String(applicationId) : null;
 }
 
+function listingRequestState(message) {
+  const metadata = message?.metadata && typeof message.metadata === 'object' ? message.metadata : {};
+  const listingId = String(metadata.listing_id || '');
+  if (!PORTAL_LISTINGS[listingId] || metadata.source !== 'portal_listing_request') return null;
+  return {
+    id: String(message.id || ''),
+    listing_id: listingId,
+    status: metadata.status === 'requested' ? 'requested' : 'withdrawn',
+    created_at: message.created_at || null
+  };
+}
+
+async function loadListingRequestStates(supabaseUrl, serviceKey, messageFilter) {
+  const response = await fetch(
+    `${supabaseUrl}/rest/v1/messages?${messageFilter}&sender_type=eq.customer&select=id,metadata,created_at&order=created_at.asc&limit=200`,
+    { headers: serviceHeaders(serviceKey) }
+  );
+  if (!response.ok) return null;
+  const messages = await response.json().catch(() => []);
+  const latest = new Map();
+  for (const message of Array.isArray(messages) ? messages : []) {
+    const state = listingRequestState(message);
+    if (state) latest.set(state.listing_id, state);
+  }
+  return latest;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -122,7 +157,7 @@ export default async function handler(req, res) {
 
   const action = String(req.body?.action || '');
   const sessionToken = String(req.body?.session_token || '');
-  if (!['load', 'send', 'notifications', 'mark-read'].includes(action) || !sessionToken || sessionToken.length > MAX_TOKEN_LENGTH) {
+  if (!['load', 'send', 'notifications', 'mark-read', 'listing-requests', 'listing-request', 'listing-undo'].includes(action) || !sessionToken || sessionToken.length > MAX_TOKEN_LENGTH) {
     return res.status(400).json({ error: 'Request unavailable.' });
   }
 
@@ -177,6 +212,74 @@ export default async function handler(req, res) {
     );
     if (!markReadResponse.ok) return res.status(503).json({ error: 'Notifications unavailable.' });
     return res.status(200).json({ success: true, ids });
+  }
+
+  if (action === 'listing-requests') {
+    const states = await loadListingRequestStates(supabaseUrl, serviceKey, messageFilter);
+    if (!states) return res.status(503).json({ error: 'Listings unavailable.' });
+    return res.status(200).json({ requests: [...states.values()] });
+  }
+
+  if (action === 'listing-request' || action === 'listing-undo') {
+    const listingId = String(req.body?.listing_id || '');
+    const listing = PORTAL_LISTINGS[listingId];
+    const rawBudget = req.body?.budget;
+    const budget = rawBudget === null || rawBudget === undefined || rawBudget === ''
+      ? null
+      : Number(rawBudget);
+    if (!listing || (budget !== null && (!Number.isFinite(budget) || budget < 0 || budget > MAX_LISTING_BUDGET))) {
+      return res.status(400).json({ error: 'Request unavailable.' });
+    }
+
+    const states = await loadListingRequestStates(supabaseUrl, serviceKey, messageFilter);
+    if (!states) return res.status(503).json({ error: 'Listings unavailable.' });
+    const current = states.get(listingId) || null;
+    const nextStatus = action === 'listing-request' ? 'requested' : 'withdrawn';
+    if (current?.status === nextStatus || (nextStatus === 'withdrawn' && !current)) {
+      return res.status(200).json({ request: current || { listing_id: listingId, status: 'withdrawn' } });
+    }
+
+    const requested = nextStatus === 'requested';
+    const budgetLabel = budget === null
+      ? 'Not provided'
+      : `$${Math.round(budget).toLocaleString('en-US')}`;
+    const content = [
+      requested ? 'LISTING REQUEST' : 'LISTING REQUEST WITHDRAWN',
+      `Asset: ${listing.username}`,
+      `Platform: ${listing.platform}`,
+      `Niche: ${listing.niche}`,
+      `Budget: ${budgetLabel}`,
+      `Status: ${requested ? 'Requested' : 'Withdrawn'}`,
+      'Source: GrowthEko Portal'
+    ].join('\n');
+    const insertResponse = await fetch(`${supabaseUrl}/rest/v1/messages`, {
+      method: 'POST',
+      headers: serviceHeaders(serviceKey, {
+        'Content-Type': 'application/json',
+        Prefer: 'return=representation'
+      }),
+      body: JSON.stringify({
+        application_id: applicationId,
+        sender_type: 'customer',
+        sender_name: customer.name || 'Customer',
+        content,
+        message_type: 'text',
+        metadata: {
+          source: 'portal_listing_request',
+          listing_id: listingId,
+          listing_username: listing.username,
+          status: nextStatus,
+          budget: budget === null ? null : Math.round(budget),
+          related_request_id: requested ? null : current?.id || null
+        }
+      })
+    });
+    if (!insertResponse.ok) return res.status(503).json({ error: 'Listings unavailable.' });
+    const inserted = await insertResponse.json().catch(() => []);
+    const message = Array.isArray(inserted) ? inserted[0] : inserted;
+    const state = listingRequestState(message);
+    if (!state) return res.status(503).json({ error: 'Listings unavailable.' });
+    return res.status(requested ? 201 : 200).json({ request: state });
   }
 
   const content = String(req.body?.content || '').trim();

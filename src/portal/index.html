@@ -615,22 +615,13 @@
     }
     .portal-listings-wrap {
       display: grid;
-      gap: 14px;
+      gap: 18px;
       min-height: 420px;
       align-content: start;
-    }
-    .portal-listings-title {
-      margin: 0;
-      color: #111827;
-      font-size: 22px;
-      line-height: 1.08;
-      font-weight: 900;
-      letter-spacing: 0;
     }
     .portal-listings-info {
       display: grid;
       gap: 10px;
-      max-width: 920px;
       padding: 20px 22px;
       border: 1px solid rgba(180,200,240,0.55);
       border-radius: 22px;
@@ -659,85 +650,235 @@
       line-height: 1.3;
       font-weight: 900;
     }
-    .portal-listings-table-shell {
-      overflow-x: auto;
+    .portal-listing-filters {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px;
+    }
+    .portal-listing-filter {
+      min-width: 0;
+      min-height: 62px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
       border: 1px solid rgba(180,200,240,0.55);
-      border-radius: 20px;
-      background: rgba(255,255,255,0.72);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.82), 0 16px 42px rgba(84,137,230,0.08);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.7);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 12px 30px rgba(84,137,230,0.07);
     }
-    .portal-listings-table {
-      width: 100%;
-      min-width: 820px;
-      border-collapse: collapse;
-    }
-    .portal-listings-table th {
-      padding: 15px 16px;
+    .portal-listing-filter-label {
       color: rgba(17,24,39,0.48);
-      font-size: 11px;
-      line-height: 1;
+      font-size: 10px;
       font-weight: 900;
-      letter-spacing: 0.12em;
-      text-align: left;
+      letter-spacing: 0.13em;
       text-transform: uppercase;
-      border-bottom: 1px solid rgba(180,200,240,0.42);
-      background: rgba(248,251,255,0.78);
-      white-space: nowrap;
     }
-    .portal-listings-table th + th {
-      border-left: 1px solid rgba(180,200,240,0.26);
+    .portal-listing-budget-control,
+    .portal-listing-niche-control {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
     }
-    .portal-listings-table td {
-      padding: 11px 16px;
-      color: #111827;
+    .portal-listing-currency {
+      flex: none;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: rgba(111,158,230,0.11);
+      color: #4c77b8;
       font-size: 14px;
-      font-weight: 760;
-      vertical-align: middle;
-      border-bottom: 1px solid rgba(180,200,240,0.28);
+      font-weight: 950;
     }
-    .portal-listings-table td + td {
-      border-left: 1px solid rgba(180,200,240,0.22);
+    .portal-listing-filter input,
+    .portal-listing-filter select {
+      width: 100%;
+      min-width: 0;
+      height: 34px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: #111827;
+      font: 850 13px/1 -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
     }
-    .portal-listings-table tr:last-child td {
-      border-bottom: 0;
+    .portal-listing-filter input {
+      text-align: right;
     }
-    .listing-no {
-      font-size: 15px;
-      font-weight: 900;
+    .portal-listing-filter input::placeholder {
+      color: rgba(17,24,39,0.34);
+    }
+    .portal-listing-filter select {
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 24px;
+      cursor: pointer;
+    }
+    .portal-listing-niche-control {
+      position: relative;
+    }
+    .portal-listing-niche-control::after {
+      content: '⌄';
+      position: absolute;
+      right: 1px;
+      color: rgba(17,24,39,0.46);
+      font-size: 16px;
+      pointer-events: none;
+    }
+    .portal-listing-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      align-items: start;
+    }
+    .portal-listing-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid rgba(180,200,240,0.52);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.7);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.92), 0 12px 30px rgba(84,137,230,0.07);
+      transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+    .portal-listing-card.is-open {
+      grid-column: 1 / -1;
+      border-color: rgba(111,158,230,0.42);
+      background: rgba(255,255,255,0.88);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.96), 0 18px 44px rgba(84,137,230,0.11);
+    }
+    .portal-listing-summary {
+      width: 100%;
+      min-height: 72px;
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) 30px;
+      align-items: center;
+      gap: 11px;
+      border: 0;
+      padding: 10px 12px;
+      background: transparent;
+      color: #111827;
+      text-align: left;
+      cursor: pointer;
+    }
+    .portal-listing-summary:hover,
+    .portal-listing-summary:focus-visible {
+      background: rgba(111,158,230,0.055);
+      outline: 0;
     }
     .listing-platform {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 44px;
-      min-width: 44px;
-      padding: 8px 11px;
-      border: 1px solid rgba(17,24,39,0.08);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.86);
-      box-shadow: 0 8px 22px rgba(84,137,230,0.08);
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(17,24,39,0.07);
+      border-radius: 13px;
+      background: rgba(255,255,255,0.88);
+      box-shadow: 0 7px 18px rgba(84,137,230,0.08);
     }
     .listing-tiktok-logo {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       display: block;
     }
+    .portal-listing-summary-copy {
+      min-width: 0;
+    }
     .listing-username {
-      font-size: 15px;
+      display: block;
+      overflow: hidden;
+      color: #111827;
+      font-size: 14px;
       font-weight: 900;
       letter-spacing: -0.01em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .portal-listing-summary-meta {
+      display: block;
+      margin-top: 4px;
+      overflow: hidden;
+      color: rgba(17,24,39,0.48);
+      font-size: 10px;
+      font-weight: 750;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .portal-listing-chevron {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(17,24,39,0.04);
+      color: rgba(17,24,39,0.5);
+      font-size: 18px;
+      transition: transform 180ms ease;
+    }
+    .portal-listing-card.is-open .portal-listing-chevron {
+      transform: rotate(180deg);
+    }
+    .portal-listing-details {
+      display: none;
+      padding: 0 14px 14px;
+      border-top: 1px solid rgba(180,200,240,0.3);
+    }
+    .portal-listing-card.is-open .portal-listing-details {
+      display: block;
+    }
+    .portal-listing-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      padding: 14px 0;
+    }
+    .portal-listing-stat {
+      min-width: 0;
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(247,249,253,0.9);
+    }
+    .portal-listing-stat small {
+      display: block;
+      color: rgba(17,24,39,0.42);
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .portal-listing-stat strong {
+      display: block;
+      margin-top: 4px;
+      overflow: hidden;
+      color: #111827;
+      font-size: 12px;
+      font-weight: 900;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .portal-listing-detail-label {
+      display: block;
+      margin-bottom: 8px;
+      color: rgba(17,24,39,0.42);
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
     .listing-analytics-grid {
       display: grid;
-      grid-template-columns: repeat(3, 26px);
-      gap: 6px;
+      grid-template-columns: repeat(3, minmax(0, 74px));
+      gap: 8px;
     }
     .listing-analytics-button {
-      width: 26px;
-      height: 40px;
+      width: 100%;
+      aspect-ratio: 9 / 13;
       border: 1px solid rgba(180,200,240,0.48);
-      border-radius: 7px;
+      border-radius: 10px;
       padding: 0;
       overflow: hidden;
       background: rgba(255,255,255,0.86);
@@ -745,8 +886,8 @@
       cursor: zoom-in;
     }
     .listing-analytics-button img {
-      width: 26px;
-      height: 40px;
+      width: 100%;
+      height: 100%;
       display: block;
       object-fit: contain;
       object-position: top center;
@@ -804,8 +945,25 @@
       cursor: pointer;
       box-shadow: 0 10px 24px rgba(17,24,39,0.12);
     }
+    .portal-listing-action-row {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(180,200,240,0.28);
+    }
+    .portal-listing-action-note {
+      color: rgba(17,24,39,0.48);
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
     .listing-request-button {
       min-height: 40px;
+      min-width: 112px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -820,10 +978,52 @@
       cursor: pointer;
       white-space: nowrap;
     }
-    .listing-request-button svg {
-      width: 16px;
-      height: 16px;
-      stroke-width: 2.4;
+    .listing-request-button.is-countdown {
+      background: #111827;
+      border-color: #111827;
+      box-shadow: 0 12px 28px rgba(17,24,39,0.18);
+    }
+    .listing-request-button.is-undo {
+      background: rgba(17,24,39,0.055);
+      border-color: rgba(17,24,39,0.11);
+      color: #111827;
+      box-shadow: none;
+    }
+    .listing-request-button:disabled {
+      cursor: wait;
+      opacity: 0.72;
+    }
+    .listing-request-spinner {
+      width: 15px;
+      height: 15px;
+      flex: none;
+      border: 2px solid rgba(255,255,255,0.28);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: listing-spin 0.8s linear infinite;
+    }
+    .listing-request-button.is-undo .listing-request-spinner {
+      border-color: rgba(17,24,39,0.18);
+      border-top-color: #111827;
+    }
+    @keyframes listing-spin {
+      to { transform: rotate(360deg); }
+    }
+    .portal-listing-empty {
+      grid-column: 1 / -1;
+      min-height: 120px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(180,200,240,0.45);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.56);
+      color: rgba(17,24,39,0.48);
+      font-size: 12px;
+      font-weight: 750;
+      text-align: center;
+    }
+    .portal-listing-empty[hidden] {
+      display: none;
     }
     .portal-community-layout {
       min-height: 560px;
@@ -4053,6 +4253,67 @@
       }
       .embedded-page-panel { padding: 0 16px 56px; }
       .embedded-page-content { padding: 22px; }
+      .portal-listing-filter {
+        min-height: 58px;
+        grid-template-columns: minmax(0, 1fr);
+        align-content: center;
+        gap: 3px;
+        padding: 9px 10px;
+      }
+      .portal-listing-filter-label {
+        font-size: 8px;
+        letter-spacing: 0.09em;
+      }
+      .portal-listing-currency {
+        width: 25px;
+        height: 25px;
+      }
+      .portal-listing-filter input,
+      .portal-listing-filter select {
+        font-size: 11px;
+      }
+      .portal-listing-budget-control,
+      .portal-listing-niche-control {
+        justify-content: flex-start;
+      }
+      .portal-listing-filter input {
+        text-align: left;
+      }
+      .portal-listing-summary {
+        grid-template-columns: 34px minmax(0, 1fr) 24px;
+        gap: 6px;
+        padding: 8px;
+      }
+      .listing-platform {
+        width: 34px;
+        height: 34px;
+        border-radius: 11px;
+      }
+      .listing-tiktok-logo {
+        width: 18px;
+        height: 18px;
+      }
+      .listing-username {
+        font-size: 11px;
+      }
+      .portal-listing-summary-meta {
+        font-size: 8px;
+      }
+      .portal-listing-chevron {
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+      }
+      .portal-listing-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .portal-listing-action-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .listing-request-button {
+        width: 100%;
+      }
       #portalPanelCommunity .embedded-page-content { padding: 0; }
       .portal-community-layout {
         grid-template-columns: 1fr;
@@ -4325,59 +4586,89 @@
               <p>We are directly in contact with the page owner or seller, check the deal before you move, and help protect you from getting scammed. If you buy a page through GrowthEko, you have a 14-day money-back guarantee.</p>
               <div class="portal-listings-drop">New listings drop every Sunday.</div>
             </div>
-            <div class="portal-listings-table-shell">
-              <table class="portal-listings-table">
-                <thead>
-                  <tr>
-                    <th scope="col">No.</th>
-                    <th scope="col">Platform</th>
-                    <th scope="col">Username</th>
-                    <th scope="col">Followers</th>
-                    <th scope="col">Top Country</th>
-                    <th scope="col">Analytics</th>
-                    <th scope="col">Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><span class="listing-no">#1</span></td>
-                    <td>
-                      <div class="listing-platform" aria-label="TikTok">
-                        <svg class="listing-tiktok-logo" viewBox="0 0 24 24" aria-hidden="true">
-                          <path d="M14.75 2.5v12.24a4.76 4.76 0 1 1-4.76-4.76c.42 0 .82.05 1.2.16v3.38a1.72 1.72 0 1 0 1.72 1.72V2.5h1.84Z" fill="#25F4EE" opacity=".95"/>
-                          <path d="M16.02 2.5c.48 2.38 1.94 4.2 4.36 4.58v3.42a8.05 8.05 0 0 1-4.36-1.34v5.84a5.96 5.96 0 1 1-6.98-5.86v3.5a2.55 2.55 0 1 0 3.33 2.43V2.5h3.65Z" fill="#FE2C55" opacity=".9"/>
-                          <path d="M15.39 2.5c.51 2.13 1.94 3.78 4.2 4.12v3.16a7.4 7.4 0 0 1-4.2-1.31v6.38a5.36 5.36 0 1 1-5.36-5.36c.32 0 .63.03.93.09v3.1a2.25 2.25 0 1 0 1.69 2.18V2.5h2.74Z" fill="#111827"/>
-                        </svg>
-                      </div>
-                    </td>
-                    <td><span class="listing-username">@theinvestinglab</span></td>
-                    <td><span class="listing-username">1M</span></td>
-                    <td style="text-align:center;"><span class="listing-username">US</span></td>
-                    <td>
-                      <div class="listing-analytics-grid" aria-label="TikTok analytics screenshots">
-                        <button class="listing-analytics-button" type="button" data-analytics-src="/assets/portal/listings/investinglab-analytics-overview.jpg" aria-label="Open TikTok analytics overview">
-                          <img src="/assets/portal/listings/investinglab-analytics-overview.jpg" alt="TikTok analytics overview for @theinvestinglab">
-                        </button>
-                        <button class="listing-analytics-button" type="button" data-analytics-src="/assets/portal/listings/investinglab-analytics-viewers.jpg" aria-label="Open TikTok viewer gender analytics">
-                          <img src="/assets/portal/listings/investinglab-analytics-viewers.jpg" alt="TikTok viewer gender analytics for @theinvestinglab">
-                        </button>
-                        <button class="listing-analytics-button" type="button" data-analytics-src="/assets/portal/listings/investinglab-analytics-locations.jpg" aria-label="Open TikTok viewer location analytics">
-                          <img src="/assets/portal/listings/investinglab-analytics-locations.jpg" alt="TikTok viewer location analytics for @theinvestinglab">
-                        </button>
-                      </div>
-                    </td>
-                    <td>
-                      <button class="listing-request-button" type="button">
-                        <span>Request</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                          <path d="M5 12h14"></path>
-                          <path d="m12 5 7 7-7 7"></path>
-                        </svg>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="portal-listing-filters" aria-label="Filter listings">
+              <label class="portal-listing-filter" for="portalListingBudget">
+                <span class="portal-listing-filter-label">Budget</span>
+                <span class="portal-listing-budget-control">
+                  <span class="portal-listing-currency" aria-hidden="true">$</span>
+                  <input id="portalListingBudget" type="number" min="0" max="100000000" step="100" inputmode="numeric" placeholder="Any amount" aria-label="Maximum budget in US dollars">
+                </span>
+              </label>
+              <label class="portal-listing-filter" for="portalListingNiche">
+                <span class="portal-listing-filter-label">Niche</span>
+                <span class="portal-listing-niche-control">
+                  <select id="portalListingNiche" aria-label="Choose niche">
+                    <option value="">All niches</option>
+                    <option>AI &amp; Future</option>
+                    <option>Wealth &amp; Finance</option>
+                    <option>Viral Memes &amp; Fun</option>
+                    <option>Beauty &amp; Skincare</option>
+                    <option>Fitness &amp; Health</option>
+                    <option>Luxury &amp; Lifestyle</option>
+                    <option>Fashion &amp; Style</option>
+                    <option>Motivation &amp; Quotes</option>
+                    <option>Love &amp; Relationships</option>
+                    <option>Animals &amp; Pets</option>
+                    <option>Tech &amp; Gadgets</option>
+                    <option>Cars &amp; Motorcycles</option>
+                    <option>Food &amp; Cooking</option>
+                    <option>Travel &amp; Nature</option>
+                    <option>Education &amp; Learning</option>
+                    <option>Gaming &amp; Esports</option>
+                    <option>Music &amp; Culture</option>
+                    <option>Parenting &amp; Kids</option>
+                    <option>DIY &amp; Creativity</option>
+                    <option>Sports &amp; Highlights</option>
+                    <option>Entertainment &amp; Comedy</option>
+                    <option>Model &amp; Fashion Girls</option>
+                  </select>
+                </span>
+              </label>
+            </div>
+            <div class="portal-listing-grid" id="portalListingGrid">
+              <article class="portal-listing-card" data-listing-id="investinglab" data-listing-niche="Wealth &amp; Finance" data-listing-price="">
+                <button class="portal-listing-summary" type="button" aria-expanded="false" aria-controls="portalListingInvestinglabDetails">
+                  <span class="listing-platform" aria-label="TikTok">
+                    <svg class="listing-tiktok-logo" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M14.75 2.5v12.24a4.76 4.76 0 1 1-4.76-4.76c.42 0 .82.05 1.2.16v3.38a1.72 1.72 0 1 0 1.72 1.72V2.5h1.84Z" fill="#25F4EE" opacity=".95"/>
+                      <path d="M16.02 2.5c.48 2.38 1.94 4.2 4.36 4.58v3.42a8.05 8.05 0 0 1-4.36-1.34v5.84a5.96 5.96 0 1 1-6.98-5.86v3.5a2.55 2.55 0 1 0 3.33 2.43V2.5h3.65Z" fill="#FE2C55" opacity=".9"/>
+                      <path d="M15.39 2.5c.51 2.13 1.94 3.78 4.2 4.12v3.16a7.4 7.4 0 0 1-4.2-1.31v6.38a5.36 5.36 0 1 1-5.36-5.36c.32 0 .63.03.93.09v3.1a2.25 2.25 0 1 0 1.69 2.18V2.5h2.74Z" fill="#111827"/>
+                    </svg>
+                  </span>
+                  <span class="portal-listing-summary-copy">
+                    <span class="listing-username">@theinvestinglab</span>
+                    <span class="portal-listing-summary-meta">1M · US · Wealth &amp; Finance</span>
+                  </span>
+                  <span class="portal-listing-chevron" aria-hidden="true">⌄</span>
+                </button>
+                <div class="portal-listing-details" id="portalListingInvestinglabDetails">
+                  <div class="portal-listing-stats">
+                    <div class="portal-listing-stat"><small>Platform</small><strong>TikTok</strong></div>
+                    <div class="portal-listing-stat"><small>Followers</small><strong>1M</strong></div>
+                    <div class="portal-listing-stat"><small>Top country</small><strong>US</strong></div>
+                    <div class="portal-listing-stat"><small>Price</small><strong>On request</strong></div>
+                  </div>
+                  <span class="portal-listing-detail-label">Verified analytics</span>
+                  <div class="listing-analytics-grid" aria-label="TikTok analytics screenshots">
+                    <button class="listing-analytics-button" type="button" data-analytics-src="/assets/portal/listings/investinglab-analytics-overview.jpg" aria-label="Open TikTok analytics overview">
+                      <img src="/assets/portal/listings/investinglab-analytics-overview.jpg" alt="TikTok analytics overview for @theinvestinglab">
+                    </button>
+                    <button class="listing-analytics-button" type="button" data-analytics-src="/assets/portal/listings/investinglab-analytics-viewers.jpg" aria-label="Open TikTok viewer gender analytics">
+                      <img src="/assets/portal/listings/investinglab-analytics-viewers.jpg" alt="TikTok viewer gender analytics for @theinvestinglab">
+                    </button>
+                    <button class="listing-analytics-button" type="button" data-analytics-src="/assets/portal/listings/investinglab-analytics-locations.jpg" aria-label="Open TikTok viewer location analytics">
+                      <img src="/assets/portal/listings/investinglab-analytics-locations.jpg" alt="TikTok viewer location analytics for @theinvestinglab">
+                    </button>
+                  </div>
+                  <div class="portal-listing-action-row">
+                    <span class="portal-listing-action-note" data-listing-request-status aria-live="polite">10-second safety window.</span>
+                    <button class="listing-request-button" type="button" data-listing-request>
+                      <span data-listing-request-label>Request</span>
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <div class="portal-listing-empty" id="portalListingEmpty" hidden>No listings match these filters.</div>
             </div>
           </div>
         </div>
@@ -7867,6 +8158,241 @@
       updateSendState();
     }
 
+    // ===== LISTINGS =====
+    const portalListingRequests = new Map();
+    const portalListingCountdowns = new Map();
+
+    function getPortalListingCard(listingId) {
+      return document.querySelector(`[data-listing-id="${listingId}"]`);
+    }
+
+    function getPortalListingBudget() {
+      const value = document.getElementById('portalListingBudget')?.value;
+      if (value === '' || value === undefined) return null;
+      const budget = Number(value);
+      return Number.isFinite(budget) && budget >= 0 ? Math.round(budget) : null;
+    }
+
+    function setPortalListingRequestUI(listingId, mode, detail = '') {
+      const card = getPortalListingCard(listingId);
+      const button = card?.querySelector('[data-listing-request]');
+      const label = card?.querySelector('[data-listing-request-label]');
+      const status = card?.querySelector('[data-listing-request-status]');
+      if (!button || !label || !status) return;
+
+      button.classList.remove('is-countdown', 'is-undo');
+      button.disabled = false;
+      if (mode === 'countdown') {
+        button.classList.add('is-countdown');
+        label.innerHTML = `<span class="listing-request-spinner" aria-hidden="true"></span> Cancel · ${escapeHTML(detail)}s`;
+        status.textContent = 'Nothing is sent until the countdown ends.';
+        return;
+      }
+      if (mode === 'sending') {
+        button.classList.add('is-countdown');
+        button.disabled = true;
+        label.innerHTML = '<span class="listing-request-spinner" aria-hidden="true"></span> Sending';
+        status.textContent = 'Creating your private request…';
+        return;
+      }
+      if (mode === 'undoing') {
+        button.classList.add('is-undo');
+        button.disabled = true;
+        label.innerHTML = '<span class="listing-request-spinner" aria-hidden="true"></span> Withdrawing';
+        status.textContent = 'Updating your private request…';
+        return;
+      }
+      if (mode === 'requested') {
+        button.classList.add('is-undo');
+        label.textContent = 'Undo';
+        status.textContent = detail || 'Request sent to GrowthEko.';
+        return;
+      }
+      label.textContent = 'Request';
+      status.textContent = detail || '10-second safety window.';
+    }
+
+    function cancelPortalListingCountdown(listingId, message = 'Request cancelled. Nothing was sent.') {
+      const countdown = portalListingCountdowns.get(listingId);
+      if (!countdown) return false;
+      window.clearInterval(countdown.timer);
+      portalListingCountdowns.delete(listingId);
+      setPortalListingRequestUI(listingId, 'idle', message);
+      return true;
+    }
+
+    function togglePortalListing(card) {
+      const grid = document.getElementById('portalListingGrid');
+      if (!card || !grid) return;
+      const willOpen = !card.classList.contains('is-open');
+      grid.querySelectorAll('.portal-listing-card').forEach(otherCard => {
+        if (otherCard !== card && otherCard.classList.contains('is-open')) {
+          cancelPortalListingCountdown(otherCard.dataset.listingId);
+        }
+        otherCard.classList.remove('is-open');
+        otherCard.querySelector('.portal-listing-summary')?.setAttribute('aria-expanded', 'false');
+      });
+      if (!willOpen) cancelPortalListingCountdown(card.dataset.listingId);
+      card.classList.toggle('is-open', willOpen);
+      card.querySelector('.portal-listing-summary')?.setAttribute('aria-expanded', String(willOpen));
+    }
+
+    function filterPortalListings() {
+      const grid = document.getElementById('portalListingGrid');
+      const empty = document.getElementById('portalListingEmpty');
+      const niche = document.getElementById('portalListingNiche')?.value || '';
+      const budget = getPortalListingBudget();
+      if (!grid || !empty) return;
+
+      let visible = 0;
+      grid.querySelectorAll('.portal-listing-card').forEach(card => {
+        const price = card.dataset.listingPrice === '' ? null : Number(card.dataset.listingPrice);
+        const nicheMatches = !niche || card.dataset.listingNiche === niche;
+        const budgetMatches = budget === null || price === null || (Number.isFinite(price) && price <= budget);
+        const show = nicheMatches && budgetMatches;
+        card.hidden = !show;
+        if (show) visible += 1;
+        else if (card.classList.contains('is-open')) {
+          cancelPortalListingCountdown(card.dataset.listingId);
+          card.classList.remove('is-open');
+          card.querySelector('.portal-listing-summary')?.setAttribute('aria-expanded', 'false');
+        }
+      });
+      empty.hidden = visible !== 0;
+    }
+
+    async function loadPortalListingRequests() {
+      if (isLocalPortalPreview()) return;
+      try {
+        const response = await fetch('/api/portal-support', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'listing-requests', session_token: getToken() })
+        });
+        const data = await response.json();
+        if (!response.ok || data.error) throw new Error('Listing requests unavailable');
+        portalListingRequests.clear();
+        (data.requests || []).forEach(request => portalListingRequests.set(request.listing_id, request));
+        document.querySelectorAll('[data-listing-id]').forEach(card => {
+          const request = portalListingRequests.get(card.dataset.listingId);
+          setPortalListingRequestUI(card.dataset.listingId, request?.status === 'requested' ? 'requested' : 'idle');
+        });
+      } catch (error) {
+        console.error('[Portal Listings] Request state failed:', error);
+      }
+    }
+
+    async function submitPortalListingRequest(listingId) {
+      setPortalListingRequestUI(listingId, 'sending');
+      if (isLocalPortalPreview()) {
+        setPortalListingRequestUI(listingId, 'idle', 'Local preview only. Nothing was sent.');
+        return;
+      }
+      try {
+        const response = await fetch('/api/portal-support', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'listing-request',
+            session_token: getToken(),
+            listing_id: listingId,
+            budget: getPortalListingBudget()
+          })
+        });
+        const data = await response.json();
+        if (!response.ok || data.error || !data.request) throw new Error('Listing request failed');
+        portalListingRequests.set(listingId, data.request);
+        setPortalListingRequestUI(listingId, 'requested');
+        loadPortalChatMessages(true);
+      } catch (error) {
+        console.error('[Portal Listings] Request failed:', error);
+        setPortalListingRequestUI(listingId, 'idle', 'Nothing was sent. Try again.');
+      }
+    }
+
+    function startPortalListingCountdown(listingId) {
+      if (portalListingCountdowns.has(listingId)) {
+        cancelPortalListingCountdown(listingId);
+        return;
+      }
+      const deadline = Date.now() + 10000;
+      const update = () => {
+        const seconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+        if (seconds > 0) {
+          setPortalListingRequestUI(listingId, 'countdown', seconds);
+          return;
+        }
+        const countdown = portalListingCountdowns.get(listingId);
+        if (countdown) window.clearInterval(countdown.timer);
+        portalListingCountdowns.delete(listingId);
+        submitPortalListingRequest(listingId);
+      };
+      const timer = window.setInterval(update, 200);
+      portalListingCountdowns.set(listingId, { timer, deadline });
+      update();
+    }
+
+    async function undoPortalListingRequest(listingId) {
+      setPortalListingRequestUI(listingId, 'undoing');
+      if (isLocalPortalPreview()) {
+        portalListingRequests.delete(listingId);
+        setPortalListingRequestUI(listingId, 'idle', 'Local preview reset.');
+        return;
+      }
+      try {
+        const response = await fetch('/api/portal-support', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'listing-undo',
+            session_token: getToken(),
+            listing_id: listingId,
+            budget: getPortalListingBudget()
+          })
+        });
+        const data = await response.json();
+        if (!response.ok || data.error || !data.request) throw new Error('Listing withdrawal failed');
+        portalListingRequests.set(listingId, data.request);
+        setPortalListingRequestUI(listingId, 'idle', 'Request withdrawn.');
+        loadPortalChatMessages(true);
+      } catch (error) {
+        console.error('[Portal Listings] Withdrawal failed:', error);
+        setPortalListingRequestUI(listingId, 'requested', 'Request is still active. Try again.');
+      }
+    }
+
+    function initPortalListings() {
+      const grid = document.getElementById('portalListingGrid');
+      const budget = document.getElementById('portalListingBudget');
+      const niche = document.getElementById('portalListingNiche');
+      if (!grid || !budget || !niche || grid.dataset.initialized === 'true') return;
+      grid.dataset.initialized = 'true';
+
+      grid.addEventListener('click', event => {
+        const requestButton = event.target.closest('[data-listing-request]');
+        if (requestButton) {
+          const card = requestButton.closest('[data-listing-id]');
+          const listingId = card?.dataset.listingId;
+          if (!listingId) return;
+          if (portalListingCountdowns.has(listingId)) {
+            cancelPortalListingCountdown(listingId);
+            return;
+          }
+          const state = portalListingRequests.get(listingId);
+          if (state?.status === 'requested') undoPortalListingRequest(listingId);
+          else startPortalListingCountdown(listingId);
+          return;
+        }
+
+        const summary = event.target.closest('.portal-listing-summary');
+        if (summary) togglePortalListing(summary.closest('.portal-listing-card'));
+      });
+      budget.addEventListener('input', filterPortalListings);
+      niche.addEventListener('change', filterPortalListings);
+      filterPortalListings();
+      loadPortalListingRequests();
+    }
+
     function initListingAnalyticsPreview() {
       const preview = document.getElementById('listingAnalyticsPreview');
       const image = document.getElementById('listingAnalyticsPreviewImage');
@@ -8333,6 +8859,7 @@
 
     // ===== GO =====
     init();
+    initPortalListings();
     initListingAnalyticsPreview();
     initVoiceSettingsModal();
     initProfileMenu();
