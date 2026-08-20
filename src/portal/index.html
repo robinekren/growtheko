@@ -3827,6 +3827,7 @@
     .phase-detail {
       grid-column: 1 / -1;
       width: 100%;
+      min-width: 0;
       max-width: none;
       margin: 0;
       padding: 0;
@@ -3837,6 +3838,9 @@
     @keyframes detailFadeIn { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
 
     .detail-card {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
       padding: 22px 20px 24px;
       background: rgba(255,255,255,0.34);
       border: 0;
@@ -3867,7 +3871,7 @@
     }
 
     /* ===== TASKS ===== */
-    .tasks-list { display: flex; flex-direction: column; gap: 3px; }
+    .tasks-list { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
     .phase-card .detail-card { padding: 8px 8px 10px; }
     .phase-card .task-item {
       min-height: 42px;
@@ -3910,7 +3914,7 @@
       border-color: rgba(0,0,0,0.1); cursor: not-allowed; background: rgba(0,0,0,0.04);
     }
 
-    .task-content { flex: 1; }
+    .task-content { min-width: 0; flex: 1; }
     .task-name {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       font-weight: 600; font-size: 15px; color: #111; margin-bottom: 4px;
@@ -3949,6 +3953,7 @@
       stroke-linejoin: round;
     }
     .task-entry {
+      min-width: 0;
       display: grid;
       gap: 3px;
     }
@@ -3974,6 +3979,7 @@
     .task-detail-view.open { display: block; }
     .task-detail-view.inline {
       width: 100%;
+      min-width: 0;
       max-width: none;
       margin: 0;
       padding: 0 0 4px;
@@ -3983,6 +3989,9 @@
       font-size: 11px;
     }
     .task-detail-view.inline .task-detail-card {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
       padding: 18px;
       border-radius: 8px;
       box-shadow: none;
@@ -4047,6 +4056,9 @@
     .task-detail-content {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       font-size: 15px; line-height: 1.9; color: rgba(0,0,0,0.65); margin-bottom: 36px;
+      min-width: 0;
+      max-width: 100%;
+      overflow-wrap: anywhere;
     }
     .task-detail-content strong { color: #111; }
     .task-detail-content a { color: #6F9EE6; text-decoration: none; }
@@ -4096,6 +4108,9 @@
     .doc-content {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       font-size: 15px; line-height: 1.9; color: rgba(0,0,0,0.65); margin-bottom: 36px;
+      min-width: 0;
+      max-width: 100%;
+      overflow-wrap: anywhere;
     }
     .doc-content h2 {
       font-family: 'Times New Roman', Times, serif;
@@ -4128,15 +4143,17 @@
       border-left: 3px solid #8AB4F3; padding: 16px 20px; border-radius: 0 12px 12px 0; margin: 16px 0;
     }
     .doc-content table {
-      width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;
+      width: 100%; max-width: 100%; table-layout: fixed; border-collapse: collapse; margin: 20px 0; font-size: 14px;
     }
     .doc-content table th {
       text-align: left; padding: 12px 16px; font-weight: 700; color: #111; font-size: 12px;
       letter-spacing: 1px; text-transform: uppercase;
       background: rgba(138,180,243,0.1); border-bottom: 2px solid rgba(180,200,240,0.4);
+      overflow-wrap: anywhere;
     }
     .doc-content table td {
       padding: 12px 16px; border-bottom: 1px solid rgba(180,200,240,0.25); color: rgba(0,0,0,0.6);
+      overflow-wrap: anywhere;
     }
     .doc-content table tr:last-child td { border-bottom: none; }
 
@@ -4471,6 +4488,13 @@
       }
       .detail-card { padding: 32px 24px; }
       .task-detail-card { padding: 32px 24px; }
+      .task-detail-view.inline .task-detail-card { padding: 16px 12px; }
+      .task-detail-view.inline .doc-content table th,
+      .task-detail-view.inline .doc-content table td {
+        padding: 9px 7px;
+        font-size: 10px;
+        line-height: 1.45;
+      }
       .task-item { padding: 20px; flex-direction: column; align-items: flex-start; }
       .phase-card .task-item { flex-direction: row; align-items: center; }
       .task-action { align-self: flex-start; }
