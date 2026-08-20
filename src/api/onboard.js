@@ -82,16 +82,15 @@ export default async function handler(req, res) {
       if (SUPABASE_URL && SUPABASE_KEY) {
         let verifiedOffer;
         if (tokenClaims) {
-          const vRes = await fetch(
-            `${SUPABASE_URL}/rest/v1/stripe_billing_entitlements?stripe_customer_id=eq.${encodeURIComponent(tokenClaims.stripeCustomerId)}&entitlement_key=eq.${encodeURIComponent(tokenClaims.tier)}&select=stripe_customer_id,entitlement_key,email,status`,
-            { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
-          );
-          if (!vRes.ok) throw new Error(`Entitlement verification failed (${vRes.status})`);
-          const rows = await vRes.json();
-          if (!rows || rows.length !== 1 || rows[0].status !== 'paid' || rows[0].email !== email) {
+          verifiedOffer = await verifyPaidOnboardingEntitlement({
+            supabaseUrl: SUPABASE_URL,
+            supabaseKey: SUPABASE_KEY,
+            tokenClaims,
+            email
+          });
+          if (!verifiedOffer) {
             return res.status(403).json({ error: 'No active paid entitlement matches this onboarding link.' });
           }
-          verifiedOffer = rows[0].entitlement_key;
         } else {
           // Local development compatibility only. Production billing requires
           // BILLING_ONBOARDING_TOKEN_SECRET and never uses email-only access.
@@ -185,16 +184,16 @@ export default async function handler(req, res) {
 
     if (SUPABASE_URL && SUPABASE_KEY) {
       if (tokenClaims) {
-        const verifyRes = await fetch(
-          `${SUPABASE_URL}/rest/v1/stripe_billing_entitlements?stripe_customer_id=eq.${encodeURIComponent(tokenClaims.stripeCustomerId)}&entitlement_key=eq.${encodeURIComponent(tokenClaims.tier)}&select=stripe_customer_id,entitlement_key,email,status`,
-          { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
-        );
-        if (!verifyRes.ok) throw new Error(`Entitlement verification failed (${verifyRes.status})`);
-        const entitlements = await verifyRes.json();
-        if (!entitlements || entitlements.length !== 1 || entitlements[0].status !== 'paid' || entitlements[0].email !== data.email) {
+        const paidTier = await verifyPaidOnboardingEntitlement({
+          supabaseUrl: SUPABASE_URL,
+          supabaseKey: SUPABASE_KEY,
+          tokenClaims,
+          email: data.email
+        });
+        if (!paidTier) {
           return res.status(403).json({ error: 'Payment entitlement is not active.' });
         }
-        verifiedTier = entitlements[0].entitlement_key;
+        verifiedTier = paidTier;
       } else {
         const verifyRes = await fetch(
           `${SUPABASE_URL}/rest/v1/customers?email=eq.${encodeURIComponent(data.email)}&select=id,status,tier`,
@@ -476,6 +475,66 @@ function verifySecureOnboardingRequest(body, email) {
     { email, expectedTier: body?.offerKey },
     secret
   );
+}
+
+export async function verifyPaidOnboardingEntitlement({
+  supabaseUrl,
+  supabaseKey,
+  tokenClaims,
+  email,
+  fetchImpl = fetch
+}) {
+  const headers = { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` };
+  const entitlementResponse = await fetchImpl(
+    `${supabaseUrl}/rest/v1/stripe_billing_entitlements?stripe_customer_id=eq.${encodeURIComponent(tokenClaims.stripeCustomerId)}&entitlement_key=eq.${encodeURIComponent(tokenClaims.tier)}&select=stripe_customer_id,entitlement_key,email,status`,
+    { headers }
+  );
+
+  if (entitlementResponse.ok) {
+    const rows = await entitlementResponse.json();
+    return rows?.length === 1 &&
+      rows[0].status === 'paid' &&
+      rows[0].email === email
+      ? rows[0].entitlement_key
+      : null;
+  }
+
+  // The live project still has the original customer ledger. Keep signed-link
+  // security while supporting that schema until the durable billing migration
+  // is installed. Never fall back on email alone: Stripe/customer id, offer,
+  // email and paid status must all match the signed claims.
+  const entitlementError = await entitlementResponse.json().catch(() => ({}));
+  if (entitlementResponse.status !== 404 || entitlementError?.code !== 'PGRST205') {
+    throw new Error(`Entitlement verification failed (${entitlementResponse.status})`);
+  }
+
+  const customerResponse = await fetchImpl(
+    `${supabaseUrl}/rest/v1/customers?stripe_customer_id=eq.${encodeURIComponent(tokenClaims.stripeCustomerId)}&email=eq.${encodeURIComponent(email)}&select=stripe_customer_id,email,status,tier&limit=2`,
+    { headers }
+  );
+  if (!customerResponse.ok) {
+    throw new Error(`Customer entitlement verification failed (${customerResponse.status})`);
+  }
+
+  const customers = await customerResponse.json();
+  const customer = customers?.length === 1 ? customers[0] : null;
+  if (
+    !customer ||
+    !['paid', 'active'].includes(customer.status) ||
+    customer.email !== email ||
+    customer.stripe_customer_id !== tokenClaims.stripeCustomerId ||
+    billingTierKey(customer.tier) !== tokenClaims.tier
+  ) {
+    return null;
+  }
+  return tokenClaims.tier;
+}
+
+function billingTierKey(value) {
+  const tier = String(value || '').trim().toLowerCase();
+  if (tier === 'audit' || tier === 'growth' || tier === 'onetime_1997') return 'onetime_1997';
+  if (tier === 'membership' || tier === 'monthly_97') return 'monthly_97';
+  return null;
 }
 
 // ========================================
