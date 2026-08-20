@@ -13,6 +13,10 @@
   <title>Onboarding — GrowthEko</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html {
+      width: 100%; max-width: 100%; overflow-x: hidden;
+      overscroll-behavior-x: none;
+    }
     body {
       background-color: #F7F8FC;
       background-image:
@@ -24,11 +28,11 @@
         radial-gradient(ellipse 100% 80% at 80% 75%, #E7F0FF 0%, transparent 55%),
         radial-gradient(ellipse 140% 100% at 50% 50%, #E9EDF5 0%, transparent 80%),
         linear-gradient(160deg, #F7F8FC 0%, #EEF3FF 30%, #E7F0FF 50%, #EDEBFA 70%, #F7F8FC 100%);
-      min-height: 100vh;
+      width: 100%; max-width: 100%; min-height: 100vh;
       display: flex; align-items: center; justify-content: center;
       padding: 40px 20px;
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      position: relative;
+      position: relative; overflow-x: hidden; overscroll-behavior-x: none; touch-action: pan-y;
     }
     body::before {
       content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -36,8 +40,16 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
       background-size: 200px 200px;
     }
-    body > * { position: relative; z-index: 2; }
-    .wizard { width: 100%; max-width: 600px; }
+    body > * { position: relative; z-index: 2; min-width: 0; max-width: 100%; }
+    .wizard { width: 100%; max-width: 600px; min-width: 0; }
+    .wizard-header, .progress-bar, .progress-info, #stepContainer, .step-card {
+      width: 100%; max-width: 100%; min-width: 0;
+    }
+    img, svg, video, canvas { max-width: 100%; }
+    button, input, select, textarea { min-width: 0; max-width: 100%; }
+    @supports (overflow: clip) {
+      html, body { overflow-x: clip; }
+    }
 
     /* Header */
     .wizard-header { text-align: center; margin-bottom: 32px; }
@@ -51,7 +63,8 @@
     .tier-badge {
       display: inline-block; padding: 4px 14px; border-radius: 20px;
       font-size: 12px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1px; margin-bottom: 12px;
+      letter-spacing: 1px; line-height: 1.35; margin-bottom: 12px;
+      max-width: 100%; white-space: normal; overflow-wrap: anywhere;
     }
     .tier-secret { background: #EDF4FF; color: #5A8AE6; }
     .tier-audit { background: #EDF4FF; color: #5A8AE6; }
@@ -222,7 +235,12 @@
       margin: 0 auto 20px; box-shadow: 0 6px 20px rgba(90,138,230,0.3);
     }
     .verify-screen .verify-icon svg { width: 32px; height: 32px; fill: #fff; }
-    .verify-error { color: #E53E3E; font-size: 14px; margin-top: 12px; display: none; }
+    .verify-message {
+      display: none; margin-top: 14px; padding: 12px 14px; border-radius: 12px;
+      color: #315F9F; background: rgba(90,138,230,0.09);
+      border: 1px solid rgba(90,138,230,0.2); font-size: 13px; line-height: 1.45;
+    }
+    .verify-message.visible { display: block; }
 
     /* Success */
     .success-screen { text-align: center; }
@@ -265,9 +283,11 @@
     .slack-cta strong { color: #1a1a2e; }
 
     @media (max-width: 600px) {
-      body { padding: 20px 12px; }
+      body { align-items: flex-start; justify-content: flex-start; padding: 20px 12px; }
       .step-card { padding: 24px 20px; border-radius: 16px; }
       .wizard-header h1 { font-size: 26px; }
+      .wizard-brand-mark { width: 54px; height: 54px; }
+      .tier-badge { font-size: 11px; letter-spacing: 0.8px; }
       .review-row { flex-direction: column; gap: 2px; }
       .review-value { text-align: left; max-width: 100%; }
       .market-pill-group { flex-direction: column; }
@@ -517,7 +537,7 @@ function renderVerifyStep(c, step) {
     '<h2 class="step-title">' + step.title + '</h2>' +
     '<p class="step-subtitle" style="margin-bottom:24px">' + step.subtitle + '</p>' +
     '<div class="field"><input type="email" id="verifyEmail" placeholder="your@email.com" autofocus></div>' +
-    '<div class="verify-error" id="verifyError">No payment found for this email.</div>' +
+    '<div class="verify-message" id="verifyError" role="status" aria-live="polite"></div>' +
     '<button class="btn btn-next" style="width:100%;margin-top:20px" id="verifyBtn" onclick="verifyEmail()">Verify & Continue</button>' +
     '<p style="font-size:12px;color:#999;margin-top:16px">This is the email you used when purchasing ' + (tierNames[tier] || 'your package') + '.</p></div>';
   document.getElementById('verifyEmail').addEventListener('keydown', function(e) { if (e.key === 'Enter') verifyEmail(); });
@@ -527,8 +547,8 @@ async function verifyEmail() {
   const email = document.getElementById('verifyEmail').value.trim().toLowerCase();
   const err = document.getElementById('verifyError');
   const btn = document.getElementById('verifyBtn');
-  if (!email || !email.includes('@')) { err.textContent = 'Please enter a valid email address.'; err.style.display = 'block'; return; }
-  btn.disabled = true; btn.textContent = 'Verifying...'; err.style.display = 'none';
+  if (!email || !email.includes('@')) { err.textContent = 'Please enter a valid email address.'; err.classList.add('visible'); return; }
+  btn.disabled = true; btn.textContent = 'Verifying...'; err.classList.remove('visible');
   try {
     const res = await fetch('/api/onboard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'verify', email: email, tier: tier, offerKey: billingOfferKey, onboardingToken: onboardingToken }) });
     if (res.ok) {
@@ -583,9 +603,13 @@ async function verifyEmail() {
       currentStep++; renderStep();
     } else {
       const data = await res.json().catch(() => ({}));
-      err.textContent = data.error || 'No payment found for this email.'; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Verify & Continue';
+      if (data.code === 'secure_link_required') sessionStorage.removeItem('ge_onboarding_token');
+      err.textContent = data.code === 'secure_link_required'
+        ? 'Secure access could not be confirmed. Open onboarding from your GrowthEko purchase email or contact Support.'
+        : 'We could not confirm access for this email. Check the address or contact Support.';
+      err.classList.add('visible'); btn.disabled = false; btn.textContent = 'Verify & Continue';
     }
-  } catch (e) { err.textContent = 'Connection error. Please try again.'; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Verify & Continue'; }
+  } catch (e) { err.textContent = 'Connection error. Please try again.'; err.classList.add('visible'); btn.disabled = false; btn.textContent = 'Verify & Continue'; }
 }
 
 function renderFormStep(c, step) {

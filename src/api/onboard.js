@@ -73,7 +73,10 @@ export default async function handler(req, res) {
       try {
         tokenClaims = verifySecureOnboardingRequest(req.body, email);
       } catch {
-        return res.status(403).json({ error: 'This onboarding link is invalid or expired. Please use the latest link from your GrowthEko email.' });
+        return res.status(403).json({
+          code: 'secure_link_required',
+          error: 'Secure onboarding access is required.'
+        });
       }
 
       if (SUPABASE_URL && SUPABASE_KEY) {
@@ -145,7 +148,10 @@ export default async function handler(req, res) {
     try {
       tokenClaims = verifySecureOnboardingRequest(req.body, data.email);
     } catch {
-      return res.status(403).json({ error: 'This onboarding link is invalid or expired.' });
+      return res.status(403).json({
+        code: 'secure_link_required',
+        error: 'Secure onboarding access is required.'
+      });
     }
 
     // A completed onboarding is not valid unless all required emails can be
