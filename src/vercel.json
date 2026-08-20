@@ -33,6 +33,8 @@
   "rewrites": [
     { "source": "/ops", "destination": "/api/ops-page" },
     { "source": "/ops/:path*", "destination": "/api/ops-page" },
+    { "source": "/onboarding", "destination": "/onboard" },
+    { "source": "/onboarding/:path*", "destination": "/onboard/:path*" },
     { "source": "/onboard/:path*", "destination": "/onboard" }
   ],
   "functions": {

@@ -274,6 +274,35 @@
       margin: 34px auto 0;
       padding: 0 24px;
     }
+    .portal-tabs-shell {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) 42px;
+      align-items: center;
+      gap: 10px;
+    }
+    .portal-tab-arrow {
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(180,200,240,0.52);
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.78);
+      color: #111827;
+      font: 700 24px/1 -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(20,32,56,0.07);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+    .portal-tab-arrow:hover,
+    .portal-tab-arrow:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(111,158,230,0.58);
+      background: rgba(255,255,255,0.96);
+      outline: none;
+    }
     .portal-tabs {
       display: flex;
       align-items: center;
@@ -285,6 +314,7 @@
       border-radius: 999px;
       overflow-x: auto;
       overflow-y: hidden;
+      scroll-behavior: smooth;
       overscroll-behavior-inline: contain;
       scroll-snap-type: x proximity;
       scrollbar-width: none;
@@ -3254,6 +3284,16 @@
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
       .portal-tabs-section { margin-top: 24px; }
+      .portal-tabs-shell {
+        grid-template-columns: 36px minmax(0, 1fr) 36px;
+        gap: 7px;
+      }
+      .portal-tab-arrow {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        font-size: 21px;
+      }
       .portal-tabs {
         display: flex;
         width: 100%;
@@ -3428,17 +3468,20 @@
   <!-- PORTAL VIEW (main) -->
   <div id="portalView">
     <div class="portal-tabs-section" aria-label="Portal sections">
-      <div class="portal-tabs" role="tablist" aria-label="Portal tabs">
-        <button class="portal-tab active" type="button" role="tab" aria-selected="true" data-portal-tab="community" onclick="setPortalTab('community')">Community</button>
-        <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="home" onclick="setPortalTab('home')">Tasks</button>
-        <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="chat" onclick="setPortalTab('chat')">Chat</button>
-        <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="calendar" onclick="setPortalTab('calendar')">Calendar</button>
-        <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="learning" onclick="setPortalTab('learning')">Learning</button>
-        <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="listings" onclick="setPortalTab('listings')">Listings</button>
+      <div class="portal-tabs-shell">
+        <button class="portal-tab-arrow" type="button" aria-label="Previous portal section" onclick="cyclePortalTab(-1)">&#8249;</button>
+        <div class="portal-tabs" role="tablist" aria-label="Portal tabs">
+          <button class="portal-tab active" type="button" role="tab" aria-selected="true" data-portal-tab="home" onclick="setPortalTab('home')">Tasks</button>
+          <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="calendar" onclick="setPortalTab('calendar')">Calendar</button>
+          <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="community" onclick="setPortalTab('community')">Community</button>
+          <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="chat" onclick="setPortalTab('chat')">Support</button>
+          <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="listings" onclick="setPortalTab('listings')">Listings</button>
+        </div>
+        <button class="portal-tab-arrow" type="button" aria-label="Next portal section" onclick="cyclePortalTab(1)">&#8250;</button>
       </div>
     </div>
 
-    <section class="portal-panel embedded-page-panel" id="portalPanelCommunity" data-portal-panel="community">
+    <section class="portal-panel embedded-page-panel" id="portalPanelCommunity" data-portal-panel="community" hidden>
       <button class="portal-community-next-event" id="portalCommunityNextEvent" type="button" onclick="openPortalCommunityNextEvent()" aria-live="polite">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M3 10h18"></path></svg>
         <span id="portalCommunityNextEventText">Loading next class...</span>
@@ -3567,7 +3610,7 @@
       </div>
     </section>
 
-    <section class="portal-panel" id="portalPanelHome" data-portal-panel="home" hidden>
+    <section class="portal-panel" id="portalPanelHome" data-portal-panel="home">
       <div class="welcome-title" id="welcomeTitle">Welcome, Marcus.</div>
 
       <div class="progress-section">
@@ -3831,7 +3874,7 @@
       </div>
     </section>
 
-    <section class="portal-panel embedded-page-panel" id="portalPanelLearning" data-portal-panel="learning" hidden>
+    <section class="portal-panel embedded-page-panel" id="portalPanelLearning" data-portal-panel="learning" hidden aria-hidden="true" style="display:none!important">
       <div class="embedded-page-shell">
         <div class="embedded-page-bar">
           <span class="embedded-page-label">Learning</span>
@@ -4772,7 +4815,7 @@
     }
 
     // ===== PORTAL TABS =====
-    const PORTAL_TABS = new Set(['community', 'home', 'listings', 'chat', 'calendar', 'learning']);
+    const PORTAL_TABS = new Set(['home', 'calendar', 'community', 'chat', 'listings']);
     const PORTAL_CALENDAR_EVENT_RULES = [
       {
         id: 'accountability-group',
@@ -5533,7 +5576,7 @@
 
     function getPortalTabFromURL() {
       const tab = new URLSearchParams(window.location.search).get('tab');
-      return PORTAL_TABS.has(tab) ? tab : 'community';
+      return PORTAL_TABS.has(tab) ? tab : 'home';
     }
 
     function getPortalLessonFromURL() {
@@ -5744,7 +5787,7 @@
     }
 
     function setPortalTab(tab, updateUrl = true) {
-      const nextTab = PORTAL_TABS.has(tab) ? tab : 'community';
+      const nextTab = PORTAL_TABS.has(tab) ? tab : 'home';
 
       document.querySelectorAll('[data-portal-tab]').forEach(button => {
         const isActive = button.dataset.portalTab === nextTab;
@@ -5758,7 +5801,7 @@
 
       if (updateUrl) {
         const url = new URL(window.location.href);
-        if (nextTab === 'community') {
+        if (nextTab === 'home') {
           url.searchParams.delete('tab');
           url.searchParams.delete('lesson');
         } else {
@@ -5766,14 +5809,6 @@
           url.searchParams.delete('lesson');
         }
         window.history.replaceState({}, '', url.toString());
-      }
-
-      if (nextTab === 'learning') {
-        if (hasPortalLessonInURL()) {
-          openPortalLearningModule(getPortalLessonFromURL(), false);
-        } else {
-          showPortalLearningOverview(false);
-        }
       }
 
       if (nextTab === 'community') {
@@ -5787,13 +5822,26 @@
       if (nextTab === 'calendar') {
         renderPortalCalendar();
       }
+
+      document.querySelector(`[data-portal-tab="${nextTab}"]`)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+
+    function cyclePortalTab(direction) {
+      const tabs = [...document.querySelectorAll('[data-portal-tab]')];
+      if (!tabs.length) return;
+      const activeIndex = Math.max(0, tabs.findIndex((tab) => tab.classList.contains('active')));
+      const nextIndex = (activeIndex + direction + tabs.length) % tabs.length;
+      setPortalTab(tabs[nextIndex].dataset.portalTab);
     }
 
     document.addEventListener('click', (event) => {
       const lessonLink = event.target.closest('[data-open-portal-lesson]');
       if (!lessonLink) return;
-      setPortalTab('learning', true);
-      setPortalLesson(lessonLink.dataset.openPortalLesson, true);
+      setPortalTab('home', true);
     });
 
     // ===== LOGOUT =====
