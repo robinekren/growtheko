@@ -2697,6 +2697,22 @@
       border-color: rgba(111,158,230,0.70);
       box-shadow: 0 0 0 3px rgba(111,158,230,0.12);
     }
+    .support-other-field {
+      margin-top: 16px;
+      border-top: 1px solid rgba(17,17,17,0.08);
+      padding-top: 16px;
+      animation: supportStepIn 180ms ease both;
+    }
+    .support-other-field[hidden] {
+      display: none !important;
+    }
+    .support-other-field label {
+      display: block;
+      margin-bottom: 8px;
+      color: rgba(0,0,0,0.62);
+      font-size: 12px;
+      font-weight: 850;
+    }
     .support-textarea {
       resize: vertical;
       line-height: 1.55;
@@ -4252,7 +4268,12 @@
                     <label class="support-option"><input type="radio" name="support_category" value="AI, Automation, SOPs & Team"><span>AI, Automation, SOPs &amp; Team</span></label>
                     <label class="support-option"><input type="radio" name="support_category" value="Digital Asset, Account & Security"><span>Asset, Account &amp; Security</span></label>
                     <label class="support-option"><input type="radio" name="support_category" value="Billing, Access & Technical"><span>Billing, Access &amp; Technical</span></label>
-                    <label class="support-option"><input type="radio" name="support_category" value="Other"><span>Other</span></label>
+                    <label class="support-option"><input type="radio" name="support_category" value="Other" data-support-other="support_category_other"><span>Other</span></label>
+                  </div>
+                  <div class="support-other-field" data-support-other-field="support_category_other" hidden>
+                    <label for="supportCategoryOther">Tell us what you need help with</label>
+                    <input class="support-field" id="supportCategoryOther" name="support_category_other" type="text" maxlength="240" placeholder="Describe the topic in your own words">
+                    <button class="support-continue" type="button" onclick="continuePortalSupportStep(0)">Continue</button>
                   </div>
                 </div>
               </section>
@@ -4820,9 +4841,24 @@
       return String(field.value || '').trim();
     }
 
+    function getPortalSupportCategory() {
+      const category = getPortalSupportValue('support_category');
+      if (category !== 'Other') return category;
+      const customCategory = getPortalSupportValue('support_category_other');
+      return customCategory ? `Other — ${customCategory}` : 'Other';
+    }
+
+    function updatePortalSupportOtherFields() {
+      document.querySelectorAll('[data-support-other-field]').forEach(container => {
+        const fieldName = container.dataset.supportOtherField;
+        const trigger = document.querySelector(`[data-support-other="${fieldName}"]:checked`);
+        container.hidden = !trigger;
+      });
+    }
+
     function getPortalSupportStepSummary(step) {
       const summaries = {
-        0: getPortalSupportValue('support_category'),
+        0: getPortalSupportCategory(),
         1: getPortalSupportValue('support_stage'),
         2: getPortalSupportValue('support_request_type'),
         3: getPortalSupportValue('support_priority'),
@@ -4896,6 +4932,11 @@
         card.querySelector('input, select, textarea')?.focus();
         return;
       }
+      if (step === 0 && getPortalSupportValue('support_category') === 'Other' && !getPortalSupportValue('support_category_other')) {
+        card.classList.add('is-invalid');
+        card.querySelector('[name="support_category_other"]')?.focus();
+        return;
+      }
 
       card?.classList.remove('is-invalid');
       portalSupportCompletedSteps.add(step);
@@ -4905,6 +4946,7 @@
     }
 
     function updatePortalSupportForm() {
+      updatePortalSupportOtherFields();
       document.querySelectorAll('[data-support-required]').forEach(card => {
         const name = card.dataset.supportRequired;
         if (getPortalSupportValue(name)) card.classList.remove('is-invalid');
@@ -4912,7 +4954,7 @@
 
       const preview = document.getElementById('portalSupportPreview');
       if (!preview) return;
-      const category = getPortalSupportValue('support_category') || 'Not selected';
+      const category = getPortalSupportCategory() || 'Not selected';
       const stage = getPortalSupportValue('support_stage') || 'Not selected';
       const requestType = getPortalSupportValue('support_request_type') || 'Not selected';
       const priority = getPortalSupportValue('support_priority') || 'Not selected';
@@ -4933,7 +4975,7 @@
       return [
         'GROWTHEKO SUPPORT REQUEST',
         '',
-        `Category: ${getPortalSupportValue('support_category')}`,
+        `Category: ${getPortalSupportCategory()}`,
         `Operator stage: ${getPortalSupportValue('support_stage')}`,
         `Response needed: ${getPortalSupportValue('support_request_type')}`,
         `Priority: ${getPortalSupportValue('support_priority')}`,
@@ -4959,9 +5001,13 @@
 
     function validatePortalSupportForm() {
       const missing = PORTAL_SUPPORT_REQUIRED_FIELDS.filter(name => !getPortalSupportValue(name));
+      if (getPortalSupportValue('support_category') === 'Other' && !getPortalSupportValue('support_category_other')) {
+        missing.splice(1, 0, 'support_category_other');
+      }
       const error = document.getElementById('portalSupportError');
       document.querySelectorAll('[data-support-required]').forEach(card => {
-        card.classList.toggle('is-invalid', missing.includes(card.dataset.supportRequired));
+        const isOtherCategoryMissing = card.dataset.supportStep === '0' && missing.includes('support_category_other');
+        card.classList.toggle('is-invalid', missing.includes(card.dataset.supportRequired) || isOtherCategoryMissing);
       });
       if (!missing.length) {
         if (error) error.hidden = true;
@@ -4972,11 +5018,16 @@
         error.textContent = `Complete the ${missing.length} highlighted required ${missing.length === 1 ? 'answer' : 'answers'} before submitting.`;
         error.hidden = false;
       }
-      const firstCard = document.querySelector(`[data-support-required="${missing[0]}"]`);
+      const firstCard = missing[0] === 'support_category_other'
+        ? document.querySelector('[data-support-step="0"]')
+        : document.querySelector(`[data-support-required="${missing[0]}"]`);
       const firstStep = Number(firstCard?.dataset.supportStep);
       if (Number.isFinite(firstStep)) openPortalSupportStep(firstStep);
       firstCard?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      firstCard?.querySelector('input, select, textarea')?.focus({ preventScroll: true });
+      const firstField = missing[0] === 'support_category_other'
+        ? firstCard?.querySelector('[name="support_category_other"]')
+        : firstCard?.querySelector('input, select, textarea');
+      firstField?.focus({ preventScroll: true });
       return false;
     }
 
@@ -5014,7 +5065,13 @@
         const step = event.target.closest('.support-step');
         const index = Number(step?.dataset.supportStep);
         const isInstantChoice = index >= 0 && index <= 3 && (event.target.matches('input[type="radio"]') || event.target.matches('select'));
-        if (isInstantChoice) window.setTimeout(() => continuePortalSupportStep(index), 120);
+        const needsOtherText = Boolean(event.target.dataset.supportOther);
+        if (isInstantChoice && !needsOtherText) window.setTimeout(() => continuePortalSupportStep(index), 120);
+      });
+      form.addEventListener('keydown', event => {
+        if (event.key !== 'Enter' || !event.target.matches('[name="support_category_other"]')) return;
+        event.preventDefault();
+        continuePortalSupportStep(0);
       });
       updatePortalSupportForm();
       renderPortalSupportSteps();
