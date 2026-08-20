@@ -3149,8 +3149,22 @@
       stroke-linecap: round;
       stroke-linejoin: round;
     }
+    .task-entry {
+      display: grid;
+      gap: 3px;
+    }
+    .task-entry.is-open .task-item {
+      border-color: rgba(100,150,230,0.48);
+      background: rgba(255,255,255,0.66);
+    }
+    .task-entry.is-open .task-disclosure {
+      transform: rotate(90deg);
+    }
+    .task-disclosure {
+      transition: transform 180ms ease, color 180ms ease;
+    }
 
-    /* ===== TASK DETAIL PAGE ===== */
+    /* ===== INLINE TASK DETAIL ===== */
     .task-detail-view {
       display: none;
       max-width: 1100px;
@@ -3159,12 +3173,52 @@
       animation: detailFadeIn 0.4s ease;
     }
     .task-detail-view.open { display: block; }
+    .task-detail-view.inline {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0 0 4px;
+    }
+    .task-detail-view.inline .task-back {
+      margin: 4px 8px 8px;
+      font-size: 11px;
+    }
+    .task-detail-view.inline .task-detail-card {
+      padding: 18px;
+      border-radius: 8px;
+      box-shadow: none;
+    }
+    .task-detail-view.inline .task-detail-label {
+      font-size: 9px;
+      letter-spacing: 1px;
+    }
+    .task-detail-view.inline .task-detail-title {
+      margin-bottom: 14px;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 18px;
+    }
+    .task-detail-view.inline .task-detail-content,
+    .task-detail-view.inline .doc-content {
+      margin-bottom: 18px;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+    .task-detail-view.inline .task-detail-actions {
+      margin-top: 14px;
+    }
+    .inline-document {
+      margin-top: 14px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(17,24,39,0.08);
+      animation: detailFadeIn 220ms ease;
+    }
 
     .task-back {
       display: inline-flex; align-items: center; gap: 8px;
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       font-size: 14px; color: #6F9EE6; text-decoration: none; cursor: pointer;
       margin-bottom: 28px; letter-spacing: 0.5px; font-weight: 500;
+      padding: 0; border: 0; background: transparent;
     }
     .task-back:hover { color: #111; }
 
@@ -3237,6 +3291,7 @@
       flex-shrink: 0; color: #6F9EE6; transition: transform 0.2s ease;
     }
     .file-cta:hover .file-cta-arrow { transform: translateX(4px); }
+    .file-cta.is-open .file-cta-arrow { transform: rotate(90deg); }
 
     /* Document content */
     .doc-content {
@@ -3509,6 +3564,7 @@
       .detail-card { padding: 32px 24px; }
       .task-detail-card { padding: 32px 24px; }
       .task-item { padding: 20px; flex-direction: column; align-items: flex-start; }
+      .phase-card .task-item { flex-direction: row; align-items: center; }
       .task-action { align-self: flex-start; }
       .phase-card { grid-template-columns: 58px minmax(0, 1fr) 34px; }
       .phase-block-main { padding: 6px 8px; }
@@ -3916,59 +3972,6 @@
         </div>
       </div>
     </section>
-  </div>
-
-  <!-- TASK DETAIL VIEW (separate page) -->
-  <div class="task-detail-view" id="taskDetailView">
-    <div class="task-back" onclick="backToPortal()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-      Back to Portal
-    </div>
-    <div class="task-detail-card">
-      <div class="task-detail-label" id="taskDetailLabel">Phase 0 — Task 1</div>
-      <div class="task-detail-title" id="taskDetailTitle">Task Name</div>
-      <div class="task-detail-content" id="taskDetailContent"></div>
-
-      <div class="task-detail-actions">
-        <button class="btn btn-primary" id="btnMarkComplete" onclick="markCompleteFromDetail()">
-          Mark as Complete
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- DOCUMENT VIEW (deliverable content) -->
-  <div class="task-detail-view" id="documentView">
-    <div class="task-back" onclick="backToTaskDetail()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-      Back to Steps
-    </div>
-    <div class="task-detail-card">
-      <div class="task-detail-label" id="docLabel">Phase 0 — Document</div>
-      <div class="task-detail-title" id="docTitle">Document Title</div>
-      <div class="doc-content" id="docContent"></div>
-
-      <div class="edit-section" id="editSection">
-        <div class="edit-label">Your Changes</div>
-        <textarea class="edit-textarea" id="editTextarea" placeholder="Describe what you'd like changed..."></textarea>
-        <div class="edit-saved-msg" id="editSavedMsg">Changes saved.</div>
-      </div>
-
-      <div class="task-detail-actions">
-        <button class="btn btn-secondary" id="btnMakeChanges" onclick="toggleEdit()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-          Make Changes
-        </button>
-        <button class="btn btn-save" id="btnSave" onclick="saveChanges()">
-          Save
-        </button>
-        <button class="btn btn-primary" id="btnDocComplete" onclick="markCompleteFromDoc()">
-          Mark as Complete
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </button>
-      </div>
-    </div>
   </div>
 
   <!-- FOOTER -->
@@ -4775,6 +4778,7 @@
     let customerChanges = {};         // taskId -> string (saved edits)
     let currentPhaseIndex = 0;
     let currentDetailTaskId = null;
+    let currentTaskDetailMode = 'task';
 
     // ===== URL PARAMS =====
     function getCustomerFromURL() {
@@ -5564,6 +5568,24 @@
       return new URLSearchParams(window.location.search).has('lesson');
     }
 
+    function commitPortalURL(url, replace = false) {
+      if (url.toString() === window.location.href) return;
+      window.history[replace ? 'replaceState' : 'pushState']({}, '', url.toString());
+    }
+
+    function updateTaskRoute(phaseId = null, taskId = null, view = null, replace = false) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('tab');
+      url.searchParams.delete('lesson');
+      if (phaseId) url.searchParams.set('phase', phaseId);
+      else url.searchParams.delete('phase');
+      if (taskId) url.searchParams.set('task', taskId);
+      else url.searchParams.delete('task');
+      if (view === 'document') url.searchParams.set('view', 'document');
+      else url.searchParams.delete('view');
+      commitPortalURL(url, replace);
+    }
+
     function getPortalLearningProgress() {
       try {
         return JSON.parse(localStorage.getItem(PORTAL_LEARNING_PROGRESS_KEY) || '{}') || {};
@@ -5649,7 +5671,10 @@
         const url = new URL(window.location.href);
         url.searchParams.set('tab', 'learning');
         url.searchParams.delete('lesson');
-        window.history.replaceState({}, '', url.toString());
+        url.searchParams.delete('phase');
+        url.searchParams.delete('task');
+        url.searchParams.delete('view');
+        commitPortalURL(url);
       }
     }
 
@@ -5729,7 +5754,10 @@
         const url = new URL(window.location.href);
         url.searchParams.set('tab', 'learning');
         url.searchParams.set('lesson', nextLesson);
-        window.history.replaceState({}, '', url.toString());
+        url.searchParams.delete('phase');
+        url.searchParams.delete('task');
+        url.searchParams.delete('view');
+        commitPortalURL(url);
       }
     }
 
@@ -5764,6 +5792,7 @@
 
     function setPortalTab(tab, updateUrl = true) {
       const nextTab = PORTAL_TABS.has(tab) ? tab : 'home';
+      const previousTab = getPortalTabFromURL();
       const currentTitle = document.getElementById('portalTabCurrentTitle');
       const currentControl = document.getElementById('portalTabCurrent');
       if (currentTitle) currentTitle.textContent = PORTAL_TAB_LABELS[nextTab];
@@ -5773,6 +5802,12 @@
         panel.hidden = panel.dataset.portalPanel !== nextTab;
       });
 
+      if (previousTab !== nextTab) {
+        currentDetailTaskId = null;
+        currentTaskDetailMode = 'task';
+        renderPhases();
+      }
+
       if (updateUrl) {
         const url = new URL(window.location.href);
         if (nextTab === 'home') {
@@ -5781,8 +5816,11 @@
         } else {
           url.searchParams.set('tab', nextTab);
           url.searchParams.delete('lesson');
+          url.searchParams.delete('phase');
+          url.searchParams.delete('task');
+          url.searchParams.delete('view');
         }
-        window.history.replaceState({}, '', url.toString());
+        commitPortalURL(url);
       }
 
       if (nextTab === 'chat') {
@@ -5915,8 +5953,49 @@
       updateProgress();
       renderPortalCalendar();
       startPortalCalendarClock();
-      setPortalTab(getPortalTabFromURL(), false);
+      const initialTab = getPortalTabFromURL();
+      setPortalTab(initialTab, false);
+      if (initialTab === 'home') restorePortalTaskRoute();
     }
+
+    function restorePortalTaskRoute() {
+      currentDetailTaskId = null;
+      currentTaskDetailMode = 'task';
+      renderPhases();
+
+      const params = new URLSearchParams(window.location.search);
+      const requestedTaskId = params.get('task');
+      const requestedPhaseId = params.get('phase');
+      const requestedTask = requestedTaskId ? findTask(requestedTaskId) : null;
+      const requestedPhase = requestedTask
+        ? findPhaseForTask(requestedTaskId)
+        : PHASES.find(phase => phase.id === requestedPhaseId);
+      if (!requestedPhase || !getVisiblePhases().includes(requestedPhase)) return;
+
+      const phaseIndex = PHASES.indexOf(requestedPhase);
+      const currentVisibleIndex = getVisiblePhaseIndex(getCurrentPhaseIndex());
+      if (getVisiblePhaseIndex(phaseIndex) > currentVisibleIndex + 1) return;
+      selectPhase(phaseIndex, false);
+
+      if (requestedTask && !isTaskLocked(requestedTaskId)) {
+        openTaskDetail(requestedTaskId, false);
+        if (params.get('view') === 'document' && requestedTask.docContent) {
+          openDocument(requestedTaskId, false);
+        }
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      const nextTab = getPortalTabFromURL();
+      setPortalTab(nextTab, false);
+      if (nextTab === 'home') {
+        restorePortalTaskRoute();
+      } else {
+        currentDetailTaskId = null;
+        currentTaskDetailMode = 'task';
+        renderPhases();
+      }
+    });
 
     // ===== RENDER PHASES =====
     function renderPhases() {
@@ -5967,7 +6046,7 @@
       });
     }
 
-    function togglePhaseBlock(index) {
+    function togglePhaseBlock(index, updateUrl = true) {
       const detail = document.getElementById('phaseDetail');
       const card = document.querySelector(`.phase-card[data-orig-index="${index}"]`);
       const isOpen = card?.classList.contains('active') && detail?.parentElement === card && detail.classList.contains('open');
@@ -5976,14 +6055,22 @@
         card.classList.remove('active');
         card.setAttribute('aria-expanded', 'false');
         document.getElementById('phaseDetailDock')?.appendChild(detail);
+        currentDetailTaskId = null;
+        currentTaskDetailMode = 'task';
+        if (updateUrl) updateTaskRoute();
         return;
       }
-      selectPhase(index);
+      selectPhase(index, updateUrl);
     }
 
-    function selectPhase(index) {
+    function selectPhase(index, updateUrl = true) {
       currentPhaseIndex = index;
       const phase = PHASES[index];
+      if (!phase) return;
+      if (currentDetailTaskId && findPhaseForTask(currentDetailTaskId) !== phase) {
+        currentDetailTaskId = null;
+        currentTaskDetailMode = 'task';
+      }
       document.getElementById('detailPhaseLabel').textContent = phase.number;
       document.getElementById('detailTitle').textContent = phase.title;
       document.getElementById('detailDesc').textContent = phase.description;
@@ -5997,6 +6084,7 @@
         c.classList.toggle('active', isActive);
         c.setAttribute('aria-expanded', String(isActive));
       });
+      if (updateUrl) updateTaskRoute(phase.id, currentDetailTaskId, currentTaskDetailMode);
     }
 
     // ===== RENDER TASKS =====
@@ -6007,18 +6095,105 @@
         const isComplete = completedTasks.has(task.id);
         const prevComplete = i === 0 || completedTasks.has(phase.tasks[i-1].id);
         const isLocked = !isComplete && !prevComplete;
+        const isOpen = currentDetailTaskId === task.id;
+        const entry = document.createElement('div');
+        entry.className = `task-entry${isOpen ? ' is-open' : ''}`;
+        entry.dataset.taskId = task.id;
         const item = document.createElement('div');
         item.className = `task-item${isComplete ? ' complete' : ''}${isLocked ? ' locked' : ''}`;
+        item.setAttribute('role', 'button');
+        item.setAttribute('tabindex', isLocked ? '-1' : '0');
+        item.setAttribute('aria-expanded', String(isOpen));
+        item.onclick = () => { if (!isLocked) openTaskDetail(task.id); };
+        item.onkeydown = (event) => {
+          if (!isLocked && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            openTaskDetail(task.id);
+          }
+        };
         item.innerHTML = `
           <div class="task-checkbox" onclick="${isLocked ? '' : `event.stopPropagation();toggleTask('${task.id}')`}"></div>
-          <div class="task-content" style="cursor:${isLocked ? 'default' : 'pointer'}" onclick="${isLocked ? '' : `openTaskDetail('${task.id}')`}">
+          <div class="task-content" style="cursor:${isLocked ? 'default' : 'pointer'}">
             <div class="task-name">${task.name}</div>
             <div class="task-description">${task.desc}</div>
           </div>
           ${!isLocked ? `<span class="task-disclosure" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>` : ''}
           ${isLocked ? '<div class="task-action" style="color:rgba(0,0,0,0.2);cursor:not-allowed;border-color:rgba(0,0,0,0.06);background:rgba(0,0,0,0.02);">Locked \uD83D\uDD12</div>' : ''}`;
-        list.appendChild(item);
+        entry.appendChild(item);
+        if (isOpen) entry.insertAdjacentHTML('beforeend', buildInlineTaskDetail(task, phase, isComplete));
+        list.appendChild(entry);
       });
+    }
+
+    function buildTaskSopHTML(task) {
+      let html = task.sop;
+      if (task.docContent && task.fileName) {
+        const documentOpen = currentTaskDetailMode === 'document';
+        html += `
+          <div class="file-cta${documentOpen ? ' is-open' : ''}" onclick="event.stopPropagation();openDocument('${task.id}')" style="cursor:pointer" role="button" tabindex="0" aria-expanded="${documentOpen}">
+            <div class="file-cta-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+            </div>
+            <div class="file-cta-text">
+              <div class="file-cta-title">Start with Step 1 Here</div>
+              <div class="file-cta-sub">Open ${task.fileName}</div>
+            </div>
+            <div class="file-cta-arrow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </div>
+          </div>`;
+      }
+      return html;
+    }
+
+    function buildInlineDocument(task, phase, isComplete) {
+      if (currentTaskDetailMode !== 'document' || !task.docContent) return '';
+      return `
+        <div class="inline-document" id="documentView">
+          <div class="task-detail-label" id="docLabel">${phase.number} — Document</div>
+          <div class="task-detail-title" id="docTitle">${task.fileName}</div>
+          <div class="doc-content" id="docContent">${task.docContent}</div>
+          <div class="edit-section" id="editSection">
+            <div class="edit-label">Your Changes</div>
+            <textarea class="edit-textarea" id="editTextarea" placeholder="Describe what you'd like changed...">${escapeHTML(customerChanges[task.id] || '')}</textarea>
+            <div class="edit-saved-msg" id="editSavedMsg">Changes saved.</div>
+          </div>
+          <div class="task-detail-actions">
+            <button class="btn btn-secondary" id="btnMakeChanges" onclick="toggleEdit()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+              Make Changes
+            </button>
+            <button class="btn btn-save" id="btnSave" onclick="saveChanges()">Save</button>
+            <button class="btn btn-primary" id="btnDocComplete" onclick="markCompleteFromDoc()">
+              ${isComplete ? 'Undo Complete' : 'Mark as Complete'}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+          </div>
+        </div>`;
+    }
+
+    function buildInlineTaskDetail(task, phase, isComplete) {
+      const documentHTML = buildInlineDocument(task, phase, isComplete);
+      return `
+        <div class="task-detail-view inline open" id="taskDetailView">
+          <button class="task-back" type="button" onclick="backToPortal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            Close
+          </button>
+          <div class="task-detail-card">
+            <div class="task-detail-label" id="taskDetailLabel">${phase.number}</div>
+            <div class="task-detail-title" id="taskDetailTitle">${task.name}</div>
+            <div class="task-detail-content" id="taskDetailContent">${buildTaskSopHTML(task)}</div>
+            ${documentHTML}
+            ${currentTaskDetailMode === 'document' ? '' : `
+              <div class="task-detail-actions">
+                <button class="btn btn-primary" id="btnMarkComplete" onclick="markCompleteFromDetail()">
+                  ${isComplete ? 'Undo Complete' : 'Mark as Complete'}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </button>
+              </div>`}
+          </div>
+        </div>`;
     }
 
     // ===== TOGGLE CHECKBOX (on/off) =====
@@ -6068,85 +6243,59 @@
       }
     }
 
-    // ===== TASK DETAIL PAGE =====
-    function openTaskDetail(taskId) {
-      currentDetailTaskId = taskId;
+    // ===== INLINE TASK + DOCUMENT ACCORDION =====
+    function openTaskDetail(taskId, updateUrl = true) {
       const task = findTask(taskId);
-      if (!task) return;
+      if (!task || isTaskLocked(taskId)) return;
       const phaseInfo = findPhaseForTask(taskId);
-      const isComplete = completedTasks.has(taskId);
+      const phaseIndex = PHASES.indexOf(phaseInfo);
 
-      document.getElementById('taskDetailLabel').textContent = phaseInfo.number;
-      document.getElementById('taskDetailTitle').textContent = task.name;
-
-      // Build SOP + File CTA as last step
-      let sopHTML = task.sop;
-      if (task.docContent && task.fileName) {
-        sopHTML += `
-          <div class="file-cta" onclick="openDocument('${task.id}')" style="cursor:pointer">
-            <div class="file-cta-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
-            </div>
-            <div class="file-cta-text">
-              <div class="file-cta-title">Start with Step 1 Here</div>
-              <div class="file-cta-sub">Open ${task.fileName}</div>
-            </div>
-            <div class="file-cta-arrow">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </div>
-          </div>`;
+      if (currentDetailTaskId === taskId) {
+        backToPortal(updateUrl);
+        return;
       }
-      document.getElementById('taskDetailContent').innerHTML = sopHTML;
 
-      // Button state
-      document.getElementById('btnMarkComplete').textContent = isComplete ? 'Undo Complete' : 'Mark as Complete';
-
-      // Show task detail, hide portal
-      document.getElementById('portalView').style.display = 'none';
-      document.getElementById('taskDetailView').classList.add('open');
-      window.scrollTo(0, 0);
-    }
-
-    function backToPortal() {
-      document.getElementById('taskDetailView').classList.remove('open');
-      document.getElementById('documentView').classList.remove('open');
-      document.getElementById('portalView').style.display = '';
-      currentDetailTaskId = null;
-      window.scrollTo(0, 0);
-    }
-
-    // ===== DOCUMENT VIEW =====
-    function openDocument(taskId) {
       currentDetailTaskId = taskId;
-      const task = findTask(taskId);
-      if (!task || !task.docContent) return;
-      const phaseInfo = findPhaseForTask(taskId);
-      const isComplete = completedTasks.has(taskId);
-
-      document.getElementById('docLabel').textContent = phaseInfo.number;
-      document.getElementById('docTitle').textContent = task.fileName;
-      document.getElementById('docContent').innerHTML = task.docContent;
-
-      // Reset edit state
-      document.getElementById('editSection').classList.remove('open');
-      document.getElementById('btnSave').classList.remove('show');
-      document.getElementById('editSavedMsg').classList.remove('show');
-      document.getElementById('editTextarea').value = customerChanges[taskId] || '';
-
-      // Button state
-      document.getElementById('btnDocComplete').textContent = isComplete ? 'Undo Complete' : 'Mark as Complete';
-
-      // Show document view, hide task detail
-      document.getElementById('taskDetailView').classList.remove('open');
-      document.getElementById('portalView').style.display = 'none';
-      document.getElementById('documentView').classList.add('open');
-      window.scrollTo(0, 0);
+      currentTaskDetailMode = 'task';
+      if (currentPhaseIndex !== phaseIndex || !document.querySelector(`.phase-card[data-orig-index="${phaseIndex}"].active`)) {
+        selectPhase(phaseIndex, false);
+      } else {
+        renderTasks(phaseInfo);
+      }
+      if (updateUrl) updateTaskRoute(phaseInfo.id, taskId);
     }
 
-    function backToTaskDetail() {
-      document.getElementById('documentView').classList.remove('open');
-      document.getElementById('taskDetailView').classList.add('open');
-      window.scrollTo(0, 0);
+    function backToPortal(updateUrl = true) {
+      const phaseInfo = currentDetailTaskId ? findPhaseForTask(currentDetailTaskId) : PHASES[currentPhaseIndex];
+      currentDetailTaskId = null;
+      currentTaskDetailMode = 'task';
+      if (phaseInfo && document.querySelector(`.phase-card[data-orig-index="${PHASES.indexOf(phaseInfo)}"].active`)) {
+        renderTasks(phaseInfo);
+      }
+      if (updateUrl) updateTaskRoute(phaseInfo?.id || null);
+    }
+
+    function openDocument(taskId, updateUrl = true) {
+      const task = findTask(taskId);
+      if (!task || !task.docContent || isTaskLocked(taskId)) return;
+      const phaseInfo = findPhaseForTask(taskId);
+      const phaseIndex = PHASES.indexOf(phaseInfo);
+      currentDetailTaskId = taskId;
+      currentTaskDetailMode = currentTaskDetailMode === 'document' ? 'task' : 'document';
+      if (currentPhaseIndex !== phaseIndex || !document.querySelector(`.phase-card[data-orig-index="${phaseIndex}"].active`)) {
+        selectPhase(phaseIndex, false);
+      } else {
+        renderTasks(phaseInfo);
+      }
+      if (updateUrl) updateTaskRoute(phaseInfo.id, taskId, currentTaskDetailMode);
+    }
+
+    function backToTaskDetail(updateUrl = true) {
+      if (!currentDetailTaskId) return;
+      const phaseInfo = findPhaseForTask(currentDetailTaskId);
+      currentTaskDetailMode = 'task';
+      renderTasks(phaseInfo);
+      if (updateUrl) updateTaskRoute(phaseInfo.id, currentDetailTaskId);
     }
 
     function toggleEdit() {
@@ -6250,6 +6399,17 @@
         if (phase.tasks.some(t => t.id === taskId)) return phase;
       }
       return PHASES[0];
+    }
+
+    function isTaskLocked(taskId) {
+      const phase = findPhaseForTask(taskId);
+      const phaseIndex = PHASES.indexOf(phase);
+      const visiblePhaseIndex = getVisiblePhaseIndex(phaseIndex);
+      const currentVisibleIndex = getVisiblePhaseIndex(getCurrentPhaseIndex());
+      if (visiblePhaseIndex < 0 || visiblePhaseIndex > currentVisibleIndex + 1) return true;
+      const taskIndex = phase.tasks.findIndex(task => task.id === taskId);
+      if (taskIndex < 0 || completedTasks.has(taskId)) return taskIndex < 0;
+      return taskIndex > 0 && !completedTasks.has(phase.tasks[taskIndex - 1].id);
     }
 
     function getCurrentPhaseIndex() {
