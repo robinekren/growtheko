@@ -38,6 +38,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 24px 32px;
+      z-index: 70;
     }
     .logo {
       font-size: 22px;
@@ -108,6 +109,162 @@
     }
     .header-notification-badge[hidden] {
       display: none;
+    }
+    .notification-center-wrap {
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+    .notification-popover {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      z-index: 60;
+      width: min(390px, calc(100vw - 32px));
+      overflow: hidden;
+      border: 1px solid rgba(180,200,240,0.48);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.96);
+      box-shadow: 0 24px 70px rgba(20,32,56,0.2);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+    }
+    .notification-popover[hidden] {
+      display: none;
+    }
+    .notification-popover-header {
+      min-height: 62px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid rgba(17,24,39,0.07);
+    }
+    .notification-popover-title {
+      color: #111827;
+      font-size: 15px;
+      font-weight: 850;
+      line-height: 1.2;
+    }
+    .notification-popover-count {
+      display: block;
+      margin-top: 3px;
+      color: rgba(17,24,39,0.46);
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .notification-mark-all {
+      flex: 0 0 auto;
+      border: 0;
+      background: transparent;
+      color: #4c77b8;
+      font: inherit;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .notification-mark-all:disabled {
+      color: rgba(17,24,39,0.28);
+      cursor: default;
+    }
+    .notification-list {
+      max-height: min(440px, calc(100vh - 160px));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .notification-item {
+      width: 100%;
+      min-height: 86px;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) 8px;
+      gap: 11px;
+      align-items: start;
+      border: 0;
+      border-bottom: 1px solid rgba(17,24,39,0.06);
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      transition: background 150ms ease;
+    }
+    .notification-item:last-child {
+      border-bottom: 0;
+    }
+    .notification-item:hover,
+    .notification-item:focus-visible {
+      background: rgba(111,158,230,0.07);
+      outline: none;
+    }
+    .notification-item.unread {
+      background: rgba(111,158,230,0.045);
+    }
+    .notification-item-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: #f1f4f9;
+      color: #4c77b8;
+      font-size: 15px;
+      font-weight: 900;
+    }
+    .notification-item-copy {
+      min-width: 0;
+    }
+    .notification-item-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .notification-item-title {
+      min-width: 0;
+      overflow: hidden;
+      color: #111827;
+      font-size: 12px;
+      font-weight: 850;
+      line-height: 1.25;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .notification-item-time {
+      flex: 0 0 auto;
+      color: rgba(17,24,39,0.4);
+      font-size: 9px;
+      font-weight: 700;
+    }
+    .notification-item-body {
+      display: -webkit-box;
+      margin-top: 5px;
+      overflow: hidden;
+      color: rgba(17,24,39,0.58);
+      font-size: 11px;
+      font-weight: 650;
+      line-height: 1.42;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+    .notification-unread-dot {
+      width: 7px;
+      height: 7px;
+      margin-top: 5px;
+      border-radius: 50%;
+      background: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+    }
+    .notification-item:not(.unread) .notification-unread-dot {
+      visibility: hidden;
+    }
+    .notification-empty {
+      padding: 42px 24px;
+      color: rgba(17,24,39,0.48);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.5;
+      text-align: center;
     }
     .tier-badge {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
@@ -4065,10 +4222,24 @@
       <button class="header-icon-button" type="button" aria-label="Open messages" onclick="setPortalTab('chat')">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path></svg>
       </button>
-      <button class="header-icon-button" type="button" aria-label="Open notifications">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.27 21a2 2 0 0 0 3.46 0"></path><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path></svg>
-        <span class="header-notification-badge" id="portalNotificationBadge" hidden></span>
-      </button>
+      <div class="notification-center-wrap" id="portalNotificationCenter">
+        <button class="header-icon-button" id="portalNotificationButton" type="button" aria-label="Open notifications" aria-expanded="false" aria-controls="portalNotificationPopover">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.27 21a2 2 0 0 0 3.46 0"></path><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path></svg>
+          <span class="header-notification-badge" id="portalNotificationBadge" hidden></span>
+        </button>
+        <section class="notification-popover" id="portalNotificationPopover" role="dialog" aria-label="Notifications" hidden>
+          <div class="notification-popover-header">
+            <div>
+              <div class="notification-popover-title">Notifications</div>
+              <small class="notification-popover-count" id="portalNotificationCount">You're all caught up</small>
+            </div>
+            <button class="notification-mark-all" id="portalNotificationMarkAll" type="button" disabled>Mark all as read</button>
+          </div>
+          <div class="notification-list" id="portalNotificationList" aria-live="polite">
+            <div class="notification-empty">New GrowthEko updates will appear here.</div>
+          </div>
+        </section>
+      </div>
       <div class="profile-menu-wrap">
         <button class="profile-button" id="profileButton" type="button" aria-label="Open profile menu" aria-expanded="false">RE</button>
         <div class="profile-menu" id="profileMenu" hidden>
@@ -4651,6 +4822,216 @@
     let portalChatMessages = [];
     let portalChatLoadedFor = null;
     let portalChatSending = false;
+
+    // ===== NOTIFICATIONS =====
+    const PORTAL_NOTIFICATION_TYPES = {
+      support_reply: { title: 'New support reply', icon: '↗', target: 'chat' },
+      support_received: { title: 'Support request received', icon: '✓', target: 'chat' },
+      approval_needed: { title: 'Your approval is needed', icon: '!', target: 'home' },
+      file_ready: { title: 'A new file is ready', icon: '↓', target: 'home' },
+      task_update: { title: 'Your plan was updated', icon: '✓', target: 'home' },
+      live_reminder: { title: 'Live session reminder', icon: '◉', target: 'calendar' },
+      account_update: { title: 'Account update', icon: 'i', target: 'home' },
+      general: { title: 'GrowthEko update', icon: 'i', target: 'home' }
+    };
+    let portalNotifications = [];
+    let portalNotificationsLoaded = false;
+    let portalNotificationRefreshTimer = null;
+
+    function parsePortalNotificationMetadata(value) {
+      if (value && typeof value === 'object') return value;
+      if (typeof value !== 'string' || !value.trim()) return {};
+      try {
+        const parsed = JSON.parse(value);
+        return parsed && typeof parsed === 'object' ? parsed : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function normalizePortalNotification(message) {
+      const metadata = parsePortalNotificationMetadata(message.metadata);
+      const requestedType = String(metadata.notification_type || 'support_reply');
+      const type = PORTAL_NOTIFICATION_TYPES[requestedType] ? requestedType : 'general';
+      const defaults = PORTAL_NOTIFICATION_TYPES[type];
+      const requestedTarget = String(metadata.notification_target || defaults.target);
+      const target = ['home', 'calendar', 'chat'].includes(requestedTarget) ? requestedTarget : defaults.target;
+      return {
+        id: String(message.id || ''),
+        type,
+        title: String(metadata.notification_title || defaults.title),
+        body: String(metadata.notification_body || message.content || 'Open your portal for the latest update.'),
+        icon: defaults.icon,
+        target,
+        read_at: message.read_at || null,
+        created_at: message.created_at || new Date().toISOString()
+      };
+    }
+
+    function formatPortalNotificationDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '';
+      const today = new Date();
+      if (date.toDateString() === today.toDateString()) {
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+
+    function renderPortalNotifications() {
+      const list = document.getElementById('portalNotificationList');
+      const badge = document.getElementById('portalNotificationBadge');
+      const count = document.getElementById('portalNotificationCount');
+      const markAll = document.getElementById('portalNotificationMarkAll');
+      if (!list || !badge || !count || !markAll) return;
+
+      const unread = portalNotifications.filter(notification => !notification.read_at);
+      badge.hidden = unread.length === 0;
+      badge.textContent = unread.length > 99 ? '99+' : String(unread.length);
+      count.textContent = unread.length
+        ? `${unread.length} unread`
+        : "You're all caught up";
+      markAll.disabled = unread.length === 0;
+
+      if (!portalNotifications.length) {
+        list.innerHTML = '<div class="notification-empty">New GrowthEko updates will appear here.</div>';
+        return;
+      }
+
+      list.innerHTML = portalNotifications.map(notification => `
+        <button class="notification-item${notification.read_at ? '' : ' unread'}" type="button" data-notification-id="${escapeHTML(notification.id)}">
+          <span class="notification-item-icon" aria-hidden="true">${escapeHTML(notification.icon)}</span>
+          <span class="notification-item-copy">
+            <span class="notification-item-heading">
+              <span class="notification-item-title">${escapeHTML(notification.title)}</span>
+              <span class="notification-item-time">${escapeHTML(formatPortalNotificationDate(notification.created_at))}</span>
+            </span>
+            <span class="notification-item-body">${escapeHTML(notification.body)}</span>
+          </span>
+          <span class="notification-unread-dot" aria-label="Unread"></span>
+        </button>
+      `).join('');
+    }
+
+    async function loadPortalNotifications() {
+      if (isLocalPortalPreview()) {
+        portalNotifications = [normalizePortalNotification({
+          id: 'local-notification-preview',
+          content: 'New GrowthEko updates will now appear here.',
+          read_at: null,
+          created_at: new Date().toISOString(),
+          metadata: {
+            notification_type: 'account_update',
+            notification_title: 'Your notification center is ready',
+            notification_target: 'home'
+          }
+        })];
+        portalNotificationsLoaded = true;
+        renderPortalNotifications();
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/portal-support', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'notifications', session_token: getToken() })
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) throw new Error('Notifications unavailable');
+        portalNotifications = (data.notifications || []).map(normalizePortalNotification);
+        portalNotificationsLoaded = true;
+        renderPortalNotifications();
+      } catch (error) {
+        console.error('[Portal Notifications] Load failed:', error);
+        if (!portalNotificationsLoaded) portalNotifications = [];
+        renderPortalNotifications();
+      }
+    }
+
+    async function markPortalNotificationsRead(ids) {
+      const validIds = [...new Set(ids.map(String).filter(Boolean))];
+      if (!validIds.length) return;
+      const readAt = new Date().toISOString();
+      portalNotifications.forEach(notification => {
+        if (validIds.includes(notification.id)) notification.read_at = readAt;
+      });
+      renderPortalNotifications();
+
+      if (isLocalPortalPreview()) return;
+      try {
+        const res = await fetch('/api/portal-support', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'mark-read', session_token: getToken(), ids: validIds })
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) throw new Error('Could not mark notifications read');
+      } catch (error) {
+        console.error('[Portal Notifications] Mark read failed:', error);
+        await loadPortalNotifications();
+      }
+    }
+
+    function closePortalNotifications() {
+      const button = document.getElementById('portalNotificationButton');
+      const popover = document.getElementById('portalNotificationPopover');
+      if (!button || !popover) return;
+      popover.hidden = true;
+      button.setAttribute('aria-expanded', 'false');
+    }
+
+    function openPortalNotification(notificationId) {
+      const notification = portalNotifications.find(item => item.id === notificationId);
+      if (!notification) return;
+      if (!notification.read_at) markPortalNotificationsRead([notification.id]);
+      closePortalNotifications();
+      setPortalTab(notification.target);
+      if (notification.target === 'chat') {
+        loadPortalChatMessages(true).then(() => {
+          const history = document.getElementById('portalSupportHistory');
+          if (history && !history.hidden) history.open = true;
+        });
+      }
+    }
+
+    function initPortalNotificationCenter() {
+      const center = document.getElementById('portalNotificationCenter');
+      const button = document.getElementById('portalNotificationButton');
+      const popover = document.getElementById('portalNotificationPopover');
+      const list = document.getElementById('portalNotificationList');
+      const markAll = document.getElementById('portalNotificationMarkAll');
+      if (!center || !button || !popover || !list || !markAll) return;
+
+      button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const willOpen = popover.hidden;
+        popover.hidden = !willOpen;
+        button.setAttribute('aria-expanded', String(willOpen));
+        if (willOpen) loadPortalNotifications();
+      });
+
+      list.addEventListener('click', (event) => {
+        const item = event.target.closest('[data-notification-id]');
+        if (!item) return;
+        openPortalNotification(item.dataset.notificationId);
+      });
+
+      markAll.addEventListener('click', () => {
+        const unreadIds = portalNotifications.filter(item => !item.read_at).map(item => item.id);
+        markPortalNotificationsRead(unreadIds);
+      });
+
+      document.addEventListener('click', event => {
+        if (!event.target.closest('.notification-center-wrap')) closePortalNotifications();
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closePortalNotifications();
+      });
+
+      loadPortalNotifications();
+      portalNotificationRefreshTimer = window.setInterval(loadPortalNotifications, 60000);
+    }
 
     function getPortalCustomerId() {
       return sessionStorage.getItem('portal_customer')
@@ -7955,6 +8336,7 @@
     initListingAnalyticsPreview();
     initVoiceSettingsModal();
     initProfileMenu();
+    initPortalNotificationCenter();
   </script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 const MAX_TOKEN_LENGTH = 4096;
 const MAX_MESSAGE_LENGTH = 30000;
 const MAX_NAME_LENGTH = 160;
+const MAX_NOTIFICATION_IDS = 50;
 
 function header(req, name) {
   const value = req.headers?.[name] ?? req.headers?.[name.toLowerCase()];
@@ -74,6 +75,33 @@ function validCustomerId(value) {
   return /^[a-zA-Z0-9-]{8,128}$/.test(String(value || ''));
 }
 
+function validMessageId(value) {
+  return /^[a-zA-Z0-9-]{8,128}$/.test(String(value || ''));
+}
+
+async function resolveApplicationId(supabaseUrl, serviceKey, customer) {
+  let email = String(customer.email || '').trim().toLowerCase();
+  if (!email) {
+    const customerResponse = await fetch(
+      `${supabaseUrl}/rest/v1/customers?id=eq.${encodeURIComponent(customer.id)}&select=email&limit=1`,
+      { headers: serviceHeaders(serviceKey) }
+    );
+    if (!customerResponse.ok) return null;
+    const customers = await customerResponse.json().catch(() => []);
+    email = String(customers?.[0]?.email || '').trim().toLowerCase();
+  }
+  if (!email) return null;
+
+  const applicationResponse = await fetch(
+    `${supabaseUrl}/rest/v1/applications?email=eq.${encodeURIComponent(email)}&select=id&order=submitted_at.desc&limit=1`,
+    { headers: serviceHeaders(serviceKey) }
+  );
+  if (!applicationResponse.ok) return null;
+  const applications = await applicationResponse.json().catch(() => []);
+  const applicationId = applications?.[0]?.id;
+  return validCustomerId(applicationId) ? String(applicationId) : null;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -94,7 +122,7 @@ export default async function handler(req, res) {
 
   const action = String(req.body?.action || '');
   const sessionToken = String(req.body?.session_token || '');
-  if (!['load', 'send'].includes(action) || !sessionToken || sessionToken.length > MAX_TOKEN_LENGTH) {
+  if (!['load', 'send', 'notifications', 'mark-read'].includes(action) || !sessionToken || sessionToken.length > MAX_TOKEN_LENGTH) {
     return res.status(400).json({ error: 'Request unavailable.' });
   }
 
@@ -103,16 +131,52 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'Session expired.' });
   }
 
-  const messageFilter = `application_id=eq.${encodeURIComponent(customer.id)}`;
+  const applicationId = await resolveApplicationId(supabaseUrl, serviceKey, customer).catch(() => null);
+  if (!applicationId) return res.status(503).json({ error: 'Support unavailable.' });
+  const messageFilter = `application_id=eq.${encodeURIComponent(applicationId)}`;
 
   if (action === 'load') {
     const messagesResponse = await fetch(
-      `${supabaseUrl}/rest/v1/messages?${messageFilter}&select=id,sender_type,sender_name,content,created_at&order=created_at.asc&limit=100`,
+      `${supabaseUrl}/rest/v1/messages?${messageFilter}&select=id,sender_type,sender_name,content,message_type,metadata,read_at,created_at&order=created_at.asc&limit=100`,
       { headers: serviceHeaders(serviceKey) }
     );
     if (!messagesResponse.ok) return res.status(503).json({ error: 'Support unavailable.' });
     const messages = await messagesResponse.json();
     return res.status(200).json({ messages: Array.isArray(messages) ? messages : [] });
+  }
+
+  if (action === 'notifications') {
+    const notificationsResponse = await fetch(
+      `${supabaseUrl}/rest/v1/messages?${messageFilter}&sender_type=eq.team&select=id,sender_name,content,message_type,metadata,read_at,created_at&order=created_at.desc&limit=50`,
+      { headers: serviceHeaders(serviceKey) }
+    );
+    if (!notificationsResponse.ok) return res.status(503).json({ error: 'Notifications unavailable.' });
+    const notifications = await notificationsResponse.json();
+    return res.status(200).json({ notifications: Array.isArray(notifications) ? notifications : [] });
+  }
+
+  if (action === 'mark-read') {
+    const ids = Array.isArray(req.body?.ids)
+      ? [...new Set(req.body.ids.map(value => String(value)).filter(validMessageId))]
+      : [];
+    if (!ids.length || ids.length > MAX_NOTIFICATION_IDS) {
+      return res.status(400).json({ error: 'Request unavailable.' });
+    }
+
+    const idFilter = `id=in.(${ids.map(encodeURIComponent).join(',')})`;
+    const markReadResponse = await fetch(
+      `${supabaseUrl}/rest/v1/messages?${messageFilter}&sender_type=eq.team&${idFilter}`,
+      {
+        method: 'PATCH',
+        headers: serviceHeaders(serviceKey, {
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal'
+        }),
+        body: JSON.stringify({ read_at: new Date().toISOString() })
+      }
+    );
+    if (!markReadResponse.ok) return res.status(503).json({ error: 'Notifications unavailable.' });
+    return res.status(200).json({ success: true, ids });
   }
 
   const content = String(req.body?.content || '').trim();
@@ -128,7 +192,7 @@ export default async function handler(req, res) {
       Prefer: 'return=representation'
     }),
     body: JSON.stringify({
-      application_id: customer.id,
+      application_id: applicationId,
       sender_type: 'customer',
       sender_name: senderName || customer.name || 'Customer',
       content,
