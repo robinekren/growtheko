@@ -2405,6 +2405,343 @@
       font-size: 12px;
       font-weight: 700;
     }
+    .support-intake-shell {
+      display: grid;
+      gap: 22px;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .support-intake-head,
+    .support-progress,
+    .support-question-card,
+    .support-submit-panel,
+    .support-history {
+      border: 1px solid rgba(180,200,240,0.48);
+      background: rgba(255,255,255,0.74);
+      box-shadow: 0 24px 70px rgba(84,137,230,0.09);
+      backdrop-filter: blur(18px);
+    }
+    .support-intake-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+      border-radius: 26px;
+      padding: 30px;
+    }
+    .support-intake-head > div:first-child {
+      max-width: 660px;
+    }
+    .support-intake-head h2 {
+      margin: 0 0 10px;
+      color: #111;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 0.98;
+      letter-spacing: -0.035em;
+    }
+    .support-intake-head p {
+      margin: 0;
+      color: rgba(0,0,0,0.56);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+    .support-owner-card {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 282px;
+      border: 1px solid rgba(180,200,240,0.42);
+      border-radius: 18px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.72);
+    }
+    .support-owner-card strong,
+    .support-owner-card span {
+      display: block;
+    }
+    .support-owner-card strong {
+      color: #111;
+      font-size: 13px;
+    }
+    .support-owner-card span {
+      margin-top: 4px;
+      color: rgba(0,0,0,0.44);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .support-intake-form {
+      display: grid;
+      gap: 14px;
+    }
+    .support-progress {
+      position: sticky;
+      top: 10px;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(180px, 310px);
+      align-items: center;
+      gap: 22px;
+      border-radius: 18px;
+      padding: 15px 18px;
+    }
+    .support-progress strong,
+    .support-progress span {
+      display: block;
+    }
+    .support-progress strong {
+      color: #111;
+      font-size: 13px;
+    }
+    .support-progress > div > span {
+      margin-top: 3px;
+      color: rgba(0,0,0,0.42);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .support-progress-track {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(17,17,17,0.08);
+    }
+    .support-progress-track span {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #6F9EE6, #8AB4F3);
+      transition: width 180ms ease;
+    }
+    .support-question-card {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr);
+      gap: 18px;
+      border-radius: 22px;
+      padding: 24px;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+    .support-question-card.is-invalid,
+    .support-submit-panel.is-invalid {
+      border-color: rgba(198,57,57,0.5);
+      box-shadow: 0 18px 48px rgba(198,57,57,0.08);
+    }
+    .support-question-number {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+      background: rgba(111,158,230,0.12);
+      color: #4c77b8;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+    .support-question-body h3,
+    .support-submit-copy h3 {
+      margin: 2px 0 6px;
+      color: #111;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+    .support-question-body h3 span {
+      color: #6F9EE6;
+    }
+    .support-question-body > p {
+      margin: 0 0 18px;
+      color: rgba(0,0,0,0.48);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .support-option-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+    }
+    .support-option-grid-wide {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .support-option-grid-four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .support-option {
+      position: relative;
+      min-width: 0;
+      cursor: pointer;
+    }
+    .support-option input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .support-option span {
+      display: flex;
+      align-items: center;
+      min-height: 48px;
+      border: 1px solid rgba(17,17,17,0.10);
+      border-radius: 14px;
+      padding: 11px 13px;
+      background: rgba(255,255,255,0.72);
+      color: rgba(0,0,0,0.62);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.3;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+    .support-option:hover span {
+      transform: translateY(-1px);
+      border-color: rgba(111,158,230,0.44);
+    }
+    .support-option input:checked + span {
+      border-color: rgba(111,158,230,0.64);
+      background: rgba(111,158,230,0.12);
+      color: #315f9f;
+    }
+    .support-option input:focus-visible + span {
+      outline: 3px solid rgba(111,158,230,0.22);
+      outline-offset: 2px;
+    }
+    .support-field {
+      width: 100%;
+      border: 1px solid rgba(17,17,17,0.12);
+      border-radius: 14px;
+      padding: 14px 15px;
+      background: rgba(255,255,255,0.82);
+      color: #111;
+      font: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+    .support-field:focus {
+      border-color: rgba(111,158,230,0.70);
+      box-shadow: 0 0 0 3px rgba(111,158,230,0.12);
+    }
+    .support-textarea {
+      resize: vertical;
+      line-height: 1.55;
+    }
+    .support-field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+    .support-field-grid label > span {
+      display: block;
+      margin: 0 0 7px;
+      color: rgba(0,0,0,0.62);
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .support-security-note {
+      margin-top: 16px;
+      border: 1px solid rgba(210,148,43,0.24);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(255,249,232,0.74);
+      color: rgba(111,74,17,0.72);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .support-submit-panel {
+      border-radius: 24px;
+      padding: 26px;
+    }
+    .support-submit-copy {
+      display: grid;
+      grid-template-columns: minmax(210px, 0.7fr) minmax(0, 1.3fr);
+      column-gap: 24px;
+      align-items: start;
+    }
+    .support-submit-copy .portal-chat-eyebrow,
+    .support-submit-copy h3 {
+      grid-column: 1;
+    }
+    .support-preview {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      min-height: 78px;
+      border: 1px solid rgba(180,200,240,0.44);
+      border-radius: 16px;
+      padding: 15px 16px;
+      background: rgba(255,255,255,0.68);
+      color: rgba(0,0,0,0.56);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .support-preview strong {
+      color: #111;
+    }
+    .support-confirm {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 20px 0 14px;
+      color: rgba(0,0,0,0.58);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+    .support-confirm input {
+      flex: 0 0 auto;
+      width: 17px;
+      height: 17px;
+      margin-top: 1px;
+      accent-color: #6F9EE6;
+    }
+    .support-form-error {
+      margin-bottom: 12px;
+      border-radius: 12px;
+      padding: 11px 13px;
+      background: rgba(198,57,57,0.08);
+      color: #9d2f2f;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .support-submit {
+      width: 100%;
+      height: 56px;
+    }
+    .support-history {
+      overflow: hidden;
+      border-radius: 22px;
+    }
+    .support-history summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px 22px;
+      color: #111;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 900;
+      list-style: none;
+    }
+    .support-history summary::-webkit-details-marker { display: none; }
+    .support-history summary::after {
+      content: "+";
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: rgba(17,17,17,0.06);
+      font-size: 18px;
+    }
+    .support-history[open] summary::after { content: "−"; }
+    .support-history summary small {
+      margin-left: auto;
+      color: rgba(0,0,0,0.42);
+      font-size: 11px;
+    }
+    .support-history .portal-chat-messages {
+      max-height: 520px;
+      min-height: 180px;
+      border-top: 1px solid rgba(180,200,240,0.36);
+    }
     .portal-learning-shell {
       display: grid;
       grid-template-columns: 292px minmax(0, 1fr);
@@ -3529,6 +3866,42 @@
       .portal-chat-top {
         flex-direction: column;
       }
+      .support-intake-head {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 22px;
+      }
+      .support-owner-card {
+        min-width: 0;
+      }
+      .support-progress {
+        position: static;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .support-question-card {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
+      .support-option-grid,
+      .support-option-grid-wide,
+      .support-option-grid-four,
+      .support-field-grid,
+      .support-submit-copy {
+        grid-template-columns: 1fr;
+      }
+      .support-submit-copy .portal-chat-eyebrow,
+      .support-submit-copy h3,
+      .support-preview {
+        grid-column: 1;
+        grid-row: auto;
+      }
+      .support-preview {
+        margin-top: 12px;
+      }
+      .support-history summary small {
+        display: none;
+      }
       .portal-msg {
         max-width: 94%;
       }
@@ -3745,80 +4118,182 @@
     <section class="portal-panel embedded-page-panel" id="portalPanelChat" data-portal-panel="chat" hidden>
       <div class="embedded-page-shell">
         <div class="embedded-page-bar">
-          <span class="embedded-page-label">Chat</span>
+          <span class="embedded-page-label">Support</span>
         </div>
         <div class="embedded-page-content">
-          <div class="portal-chat-shell" aria-label="Customer support chat inside portal">
-            <aside class="portal-chat-side">
-              <div class="portal-chat-eyebrow">Direct Support</div>
-              <h2>Your operator channel.</h2>
-              <p>One clean place for implementation questions, files, decisions, and weekly execution updates.</p>
-
-              <div class="portal-chat-person">
-                <div class="portal-person-row">
-                  <div class="portal-avatar">R</div>
-                  <div>
-                    <strong>Rayan</strong>
-                    <span>Customer Success</span>
-                  </div>
-                </div>
-                <p>Rayan keeps the sprint moving, answers operational questions, and routes important blockers to Robin.</p>
-                <div class="portal-chat-status">Available today</div>
+          <div class="support-intake-shell" aria-label="GrowthEko support request">
+            <header class="support-intake-head">
+              <div>
+                <div class="portal-chat-eyebrow">Direct Support</div>
+                <h2>Send one complete request.</h2>
+                <p>Work from top to bottom. Your answers create one structured request so the team can diagnose the issue without unnecessary back-and-forth.</p>
               </div>
-            </aside>
-
-            <section class="portal-chat-main">
-              <div class="portal-chat-top">
-                <div class="portal-thread-title">
-                  <div class="portal-avatar">R</div>
-                  <div>
-                    <strong>Rayan - GrowthEko Support</strong>
-                    <span>Private customer channel</span>
-                  </div>
+              <div class="support-owner-card">
+                <div class="portal-avatar">R</div>
+                <div>
+                  <strong>Rayan · Customer Success</strong>
+                  <span>Private channel · Replies same business day</span>
                 </div>
-                <div class="portal-chat-sla">Replies same business day</div>
+              </div>
+            </header>
+
+            <form class="support-intake-form" id="portalSupportForm" novalidate onsubmit="event.preventDefault(); submitPortalSupportRequest();">
+              <div class="support-progress" aria-live="polite">
+                <div>
+                  <strong id="portalSupportProgressText">0 of 7 required answers complete</strong>
+                  <span>Required questions are marked with *</span>
+                </div>
+                <div class="support-progress-track" aria-hidden="true"><span id="portalSupportProgressBar"></span></div>
               </div>
 
+              <section class="support-question-card" data-support-required="support_category">
+                <div class="support-question-number">01</div>
+                <div class="support-question-body">
+                  <h3>What do you need help with? <span>*</span></h3>
+                  <p>Choose the category closest to your current bottleneck.</p>
+                  <div class="support-option-grid support-option-grid-wide">
+                    <label class="support-option"><input type="radio" name="support_category" value="Growth & Content"><span>Growth &amp; Content</span></label>
+                    <label class="support-option"><input type="radio" name="support_category" value="Offer & Positioning"><span>Offer &amp; Positioning</span></label>
+                    <label class="support-option"><input type="radio" name="support_category" value="Funnel & Conversion"><span>Funnel &amp; Conversion</span></label>
+                    <label class="support-option"><input type="radio" name="support_category" value="Monetization & Pricing"><span>Monetization &amp; Pricing</span></label>
+                    <label class="support-option"><input type="radio" name="support_category" value="Paid Attention & Ads"><span>Paid Attention &amp; Ads</span></label>
+                    <label class="support-option"><input type="radio" name="support_category" value="AI, Automation, SOPs & Team"><span>AI, Automation, SOPs &amp; Team</span></label>
+                    <label class="support-option"><input type="radio" name="support_category" value="Digital Asset, Account & Security"><span>Asset, Account &amp; Security</span></label>
+                    <label class="support-option"><input type="radio" name="support_category" value="Billing, Access & Technical"><span>Billing, Access &amp; Technical</span></label>
+                    <label class="support-option"><input type="radio" name="support_category" value="Other"><span>Other</span></label>
+                  </div>
+                </div>
+              </section>
+
+              <section class="support-question-card" data-support-required="support_stage">
+                <div class="support-question-number">02</div>
+                <div class="support-question-body">
+                  <h3>Where are you in the Operator System? <span>*</span></h3>
+                  <p>Select the stage you are currently implementing.</p>
+                  <select class="support-field" name="support_stage" aria-label="Operator System stage">
+                    <option value="">Choose your current stage</option>
+                    <option>Start Here / Onboarding</option>
+                    <option>01 — Business Clarity</option>
+                    <option>02 — Build Your Digital Estate</option>
+                    <option>03 — Attention Engine</option>
+                    <option>04 — Choose Your Path</option>
+                    <option>05 — Monetize</option>
+                    <option>06 — Systemize & Scale</option>
+                    <option>07 — AI Operator Library</option>
+                    <option>08 — Safe Digital Asset Operations</option>
+                    <option>Weekly Operator Review</option>
+                    <option>Not sure yet</option>
+                  </select>
+                </div>
+              </section>
+
+              <section class="support-question-card" data-support-required="support_request_type">
+                <div class="support-question-number">03</div>
+                <div class="support-question-body">
+                  <h3>What response do you need? <span>*</span></h3>
+                  <p>This determines how the request is routed and answered.</p>
+                  <div class="support-option-grid">
+                    <label class="support-option"><input type="radio" name="support_request_type" value="Answer a question"><span>Answer a question</span></label>
+                    <label class="support-option"><input type="radio" name="support_request_type" value="Review my work"><span>Review my work</span></label>
+                    <label class="support-option"><input type="radio" name="support_request_type" value="Troubleshoot a problem"><span>Troubleshoot a problem</span></label>
+                    <label class="support-option"><input type="radio" name="support_request_type" value="Help me make a decision"><span>Help me decide</span></label>
+                    <label class="support-option"><input type="radio" name="support_request_type" value="Approval required"><span>Approval required</span></label>
+                    <label class="support-option"><input type="radio" name="support_request_type" value="Report a bug or access issue"><span>Bug or access issue</span></label>
+                  </div>
+                </div>
+              </section>
+
+              <section class="support-question-card" data-support-required="support_priority">
+                <div class="support-question-number">04</div>
+                <div class="support-question-body">
+                  <h3>How urgent is it? <span>*</span></h3>
+                  <p>Choose based on real impact, not preference.</p>
+                  <div class="support-option-grid support-option-grid-four">
+                    <label class="support-option"><input type="radio" name="support_priority" value="Blocked now"><span>Blocked now</span></label>
+                    <label class="support-option"><input type="radio" name="support_priority" value="Needed this week"><span>Needed this week</span></label>
+                    <label class="support-option"><input type="radio" name="support_priority" value="Improvement"><span>Improvement</span></label>
+                    <label class="support-option"><input type="radio" name="support_priority" value="FYI / No action"><span>FYI / No action</span></label>
+                  </div>
+                </div>
+              </section>
+
+              <section class="support-question-card" data-support-required="support_situation">
+                <div class="support-question-number">05</div>
+                <div class="support-question-body">
+                  <h3>What is the current situation? <span>*</span></h3>
+                  <p>Explain the exact context, what is happening now, and the point where you became blocked.</p>
+                  <textarea class="support-field support-textarea" name="support_situation" rows="5" placeholder="Example: I published 12 Reels this week. Views increased, but profile visits and follows stayed flat..."></textarea>
+                </div>
+              </section>
+
+              <section class="support-question-card" data-support-required="support_outcome">
+                <div class="support-question-number">06</div>
+                <div class="support-question-body">
+                  <h3>What outcome do you need? <span>*</span></h3>
+                  <p>Describe what a useful answer or successful resolution should make possible.</p>
+                  <textarea class="support-field support-textarea" name="support_outcome" rows="4" placeholder="Example: Identify the main conversion bottleneck and tell me the one change to test next."></textarea>
+                </div>
+              </section>
+
+              <section class="support-question-card">
+                <div class="support-question-number">07</div>
+                <div class="support-question-body">
+                  <h3>Add the evidence</h3>
+                  <p>Optional, but useful when the answer depends on what happened before.</p>
+                  <div class="support-field-grid">
+                    <label>
+                      <span>What have you already tried?</span>
+                      <textarea class="support-field support-textarea" name="support_tried" rows="3" placeholder="Actions, tests, settings, or previous advice already used"></textarea>
+                    </label>
+                    <label>
+                      <span>Relevant links or evidence</span>
+                      <textarea class="support-field support-textarea" name="support_links" rows="3" placeholder="Page, Reel, Loom, screenshot folder, document, or funnel links"></textarea>
+                    </label>
+                    <label>
+                      <span>Numbers or error details</span>
+                      <textarea class="support-field support-textarea" name="support_metrics" rows="3" placeholder="Views, visits, clicks, leads, spend, revenue, error message, device, browser"></textarea>
+                    </label>
+                    <label>
+                      <span>Is a decision or approval required?</span>
+                      <select class="support-field" name="support_decision">
+                        <option value="No">No</option>
+                        <option value="Yes — strategic decision">Yes — strategic decision</option>
+                        <option value="Yes — payment or purchase approval">Yes — payment or purchase approval</option>
+                        <option value="Yes — access or account approval">Yes — access or account approval</option>
+                        <option value="Not sure">Not sure</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="support-security-note"><strong>Never submit</strong> passwords, login codes, card or bank details, identity documents, or private customer data. Share only secure, permission-safe evidence links.</div>
+                </div>
+              </section>
+
+              <section class="support-submit-panel" data-support-required="support_confirmed">
+                <div class="support-submit-copy">
+                  <div class="portal-chat-eyebrow">Request preview</div>
+                  <h3>Check once. Submit once.</h3>
+                  <div class="support-preview" id="portalSupportPreview">Complete the required questions to build your request.</div>
+                </div>
+                <label class="support-confirm">
+                  <input type="checkbox" name="support_confirmed" value="Confirmed">
+                  <span>I confirm that the information is accurate and contains no passwords, codes, payment details, IDs, or private customer data. *</span>
+                </label>
+                <div class="support-form-error" id="portalSupportError" role="alert" hidden></div>
+                <button class="portal-send support-submit" id="portalSupportSubmit" type="submit">Submit support request</button>
+                <div class="portal-composer-note" id="portalChatStatus">Your request is private and syncs directly with the GrowthEko CRM.</div>
+              </section>
+            </form>
+
+            <details class="support-history" id="portalSupportHistory">
+              <summary>
+                <span>Previous requests &amp; replies</span>
+                <small>Open private support history</small>
+              </summary>
               <div class="portal-chat-messages" id="portalChatMessages">
-                <div class="portal-date-divider">Today</div>
-                <div class="portal-msg">
-                  <div class="portal-mini-avatar">R</div>
-                  <div class="portal-bubble">
-                    Welcome back, Marcus. I am here for anything blocking the sprint today.
-                    <small>Rayan - 09:12</small>
-                  </div>
-                </div>
-                <div class="portal-msg">
-                  <div class="portal-mini-avatar">R</div>
-                  <div class="portal-bubble">
-                    If you want the fastest answer, send the exact task, screenshot, and what result you expected.
-                    <small>Rayan - 09:13</small>
-                  </div>
-                </div>
-                <div class="portal-msg client">
-                  <div class="portal-mini-avatar">M</div>
-                  <div class="portal-bubble">
-                    Can you review the funnel copy before I publish?
-                    <small>You - 09:18</small>
-                  </div>
-                </div>
-                <div class="portal-msg">
-                  <div class="portal-mini-avatar">R</div>
-                  <div class="portal-bubble">
-                    Yes. Send the page link and I will check clarity, offer strength, CTA, and whether the next action is obvious.
-                    <small>Rayan - 09:21</small>
-                  </div>
-                </div>
+                <div class="portal-date-divider">History</div>
+                <div class="portal-chat-empty">Loading your private support history...</div>
               </div>
-
-              <div class="portal-chat-composer">
-                <div class="portal-composer-inner">
-                  <textarea id="portalChatInput" placeholder="Write a message to Rayan..."></textarea>
-                  <button class="portal-send" id="portalChatSend" type="button" onclick="sendPortalChatMessage()">Send</button>
-                </div>
-                <div class="portal-composer-note" id="portalChatStatus">This is the logged-in customer view. No login step appears inside the chat.</div>
-              </div>
-            </section>
+            </details>
           </div>
         </div>
       </div>
@@ -4147,8 +4622,8 @@
 
       if (!portalChatMessages.length) {
         container.innerHTML = `
-          <div class="portal-date-divider">Today</div>
-          <div class="portal-chat-empty">No messages yet. Send your exact question, screenshot context, and expected result to Rayan.</div>
+          <div class="portal-date-divider">History</div>
+          <div class="portal-chat-empty">No previous support requests yet. Your first structured request will appear here after submission.</div>
         `;
         return;
       }
@@ -4179,7 +4654,7 @@
         portalChatMessages = [];
         portalChatLoadedFor = LOCAL_PORTAL_PREVIEW_CUSTOMER;
         renderPortalChatMessages();
-        setPortalChatStatus('Local owner preview is read-only. No CRM data was loaded.');
+        setPortalChatStatus('Local owner preview is read-only. The form is fully testable, but no request will be sent.');
         return;
       }
 
@@ -4200,7 +4675,7 @@
         portalChatMessages = (data.messages || []).map(normalizePortalMessage);
         portalChatLoadedFor = applicationId;
         renderPortalChatMessages();
-        setPortalChatStatus('Messages sync with the CRM. Rayan sees customer replies there.');
+        setPortalChatStatus('Support requests and replies sync privately with the GrowthEko CRM.');
       } catch (error) {
         console.error('[Portal Chat] Load failed:', error);
         if (container) {
@@ -4213,28 +4688,155 @@
       }
     }
 
-    async function sendPortalChatMessage() {
-      if (isLocalPortalPreview()) {
-        setPortalChatStatus('Local owner preview is read-only. No message was sent.', true);
-        return;
+    const PORTAL_SUPPORT_REQUIRED_FIELDS = [
+      'support_category',
+      'support_stage',
+      'support_request_type',
+      'support_priority',
+      'support_situation',
+      'support_outcome',
+      'support_confirmed'
+    ];
+
+    function getPortalSupportValue(name) {
+      const field = document.querySelector(`[name="${name}"]`);
+      if (!field) return '';
+      if (field.type === 'radio' || field.type === 'checkbox') {
+        return document.querySelector(`[name="${name}"]:checked`)?.value || '';
+      }
+      return String(field.value || '').trim();
+    }
+
+    function updatePortalSupportForm() {
+      const completed = PORTAL_SUPPORT_REQUIRED_FIELDS.filter(name => Boolean(getPortalSupportValue(name))).length;
+      const total = PORTAL_SUPPORT_REQUIRED_FIELDS.length;
+      const percent = Math.round((completed / total) * 100);
+      const progressText = document.getElementById('portalSupportProgressText');
+      const progressBar = document.getElementById('portalSupportProgressBar');
+      if (progressText) progressText.textContent = `${completed} of ${total} required answers complete`;
+      if (progressBar) progressBar.style.width = `${percent}%`;
+
+      document.querySelectorAll('[data-support-required]').forEach(card => {
+        const name = card.dataset.supportRequired;
+        if (getPortalSupportValue(name)) card.classList.remove('is-invalid');
+      });
+
+      const preview = document.getElementById('portalSupportPreview');
+      if (!preview) return;
+      const category = getPortalSupportValue('support_category') || 'Not selected';
+      const stage = getPortalSupportValue('support_stage') || 'Not selected';
+      const requestType = getPortalSupportValue('support_request_type') || 'Not selected';
+      const priority = getPortalSupportValue('support_priority') || 'Not selected';
+      const outcome = getPortalSupportValue('support_outcome') || 'Add the outcome you need.';
+      preview.innerHTML = `
+        <strong>${escapeHTML(category)}</strong> · ${escapeHTML(requestType)} · ${escapeHTML(priority)}<br>
+        ${escapeHTML(stage)}<br>
+        <span>${escapeHTML(outcome)}</span>
+      `;
+    }
+
+    function buildPortalSupportMessage() {
+      const optional = value => value || 'Not provided';
+      return [
+        'GROWTHEKO SUPPORT REQUEST',
+        '',
+        `Category: ${getPortalSupportValue('support_category')}`,
+        `Operator stage: ${getPortalSupportValue('support_stage')}`,
+        `Response needed: ${getPortalSupportValue('support_request_type')}`,
+        `Priority: ${getPortalSupportValue('support_priority')}`,
+        '',
+        'CURRENT SITUATION',
+        getPortalSupportValue('support_situation'),
+        '',
+        'DESIRED OUTCOME',
+        getPortalSupportValue('support_outcome'),
+        '',
+        'ALREADY TRIED',
+        optional(getPortalSupportValue('support_tried')),
+        '',
+        'LINKS / EVIDENCE',
+        optional(getPortalSupportValue('support_links')),
+        '',
+        'NUMBERS / ERROR DETAILS',
+        optional(getPortalSupportValue('support_metrics')),
+        '',
+        `Decision or approval required: ${optional(getPortalSupportValue('support_decision'))}`
+      ].join('\n');
+    }
+
+    function validatePortalSupportForm() {
+      const missing = PORTAL_SUPPORT_REQUIRED_FIELDS.filter(name => !getPortalSupportValue(name));
+      const error = document.getElementById('portalSupportError');
+      document.querySelectorAll('[data-support-required]').forEach(card => {
+        card.classList.toggle('is-invalid', missing.includes(card.dataset.supportRequired));
+      });
+      if (!missing.length) {
+        if (error) error.hidden = true;
+        return true;
       }
 
-      if (portalChatSending) return;
+      if (error) {
+        error.textContent = `Complete the ${missing.length} highlighted required ${missing.length === 1 ? 'answer' : 'answers'} before submitting.`;
+        error.hidden = false;
+      }
+      const firstCard = document.querySelector(`[data-support-required="${missing[0]}"]`);
+      firstCard?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      firstCard?.querySelector('input, select, textarea')?.focus({ preventScroll: true });
+      return false;
+    }
+
+    function resetPortalSupportForm() {
+      const form = document.getElementById('portalSupportForm');
+      if (!form) return;
+      form.reset();
+      document.querySelectorAll('[data-support-required]').forEach(card => card.classList.remove('is-invalid'));
+      const error = document.getElementById('portalSupportError');
+      if (error) error.hidden = true;
+      updatePortalSupportForm();
+    }
+
+    async function submitPortalSupportRequest() {
+      if (!validatePortalSupportForm()) return;
+      const sent = await sendPortalChatMessage(buildPortalSupportMessage(), 'portalSupportSubmit');
+      if (!sent) return;
+      resetPortalSupportForm();
+      const history = document.getElementById('portalSupportHistory');
+      if (history) history.open = true;
+      history?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function initPortalSupportForm() {
+      const form = document.getElementById('portalSupportForm');
+      if (!form || form.dataset.initialized === 'true') return;
+      form.dataset.initialized = 'true';
+      form.addEventListener('input', updatePortalSupportForm);
+      form.addEventListener('change', updatePortalSupportForm);
+      updatePortalSupportForm();
+    }
+
+    async function sendPortalChatMessage(messageOverride = null, buttonId = 'portalChatSend') {
+      if (isLocalPortalPreview()) {
+        setPortalChatStatus('Local owner preview is read-only. No message was sent.', true);
+        return false;
+      }
+
+      if (portalChatSending) return false;
       const input = document.getElementById('portalChatInput');
-      const button = document.getElementById('portalChatSend');
-      const text = (input?.value || '').trim();
-      if (!text) return;
+      const button = document.getElementById(buttonId);
+      const isStructuredRequest = typeof messageOverride === 'string';
+      const text = (isStructuredRequest ? messageOverride : (input?.value || '')).trim();
+      if (!text) return false;
 
       const applicationId = getPortalCustomerId();
       if (!applicationId) {
         setPortalChatStatus('Missing customer ID. Log in again before sending.', true);
-        return;
+        return false;
       }
 
       portalChatSending = true;
       if (button) {
         button.disabled = true;
-        button.textContent = 'Sending';
+        button.textContent = isStructuredRequest ? 'Submitting request' : 'Sending';
       }
 
       const localMessage = normalizePortalMessage({
@@ -4246,7 +4848,7 @@
         pending: true
       });
       portalChatMessages.push(localMessage);
-      if (input) input.value = '';
+      if (input && !isStructuredRequest) input.value = '';
       renderPortalChatMessages();
       setPortalChatStatus('Sending to Rayan in the CRM...');
 
@@ -4266,29 +4868,23 @@
         const idx = portalChatMessages.findIndex(message => message.id === localMessage.id);
         if (idx >= 0) portalChatMessages[idx] = normalizePortalMessage(data.message);
         renderPortalChatMessages();
-        setPortalChatStatus('Sent. Rayan can now see this message in the CRM.');
+        setPortalChatStatus('Request submitted. Rayan can now review it in the GrowthEko CRM.');
+        return true;
       } catch (error) {
         console.error('[Portal Chat] Send failed:', error);
         portalChatMessages = portalChatMessages.filter(message => message.id !== localMessage.id);
         renderPortalChatMessages();
-        if (input) input.value = text;
-        setPortalChatStatus('Message was not delivered. Nothing was stored in CRM. Try again.', true);
+        if (input && !isStructuredRequest) input.value = text;
+        setPortalChatStatus('Request was not delivered. Nothing was stored in CRM. Try again.', true);
+        return false;
       } finally {
         portalChatSending = false;
         if (button) {
           button.disabled = false;
-          button.textContent = 'Send';
+          button.textContent = isStructuredRequest ? 'Submit support request' : 'Send';
         }
       }
     }
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key !== 'Enter' || event.shiftKey) return;
-      const input = event.target.closest('#portalChatInput');
-      if (!input) return;
-      event.preventDefault();
-      sendPortalChatMessage();
-    });
 
     async function syncToggleTask(taskId, phaseId, complete) {
       apiCall('toggle-task', { task_id: taskId, phase_id: phaseId, complete });
@@ -5952,6 +6548,7 @@
       renderPhases();
       updateProgress();
       renderPortalCalendar();
+      initPortalSupportForm();
       startPortalCalendarClock();
       const initialTab = getPortalTabFromURL();
       setPortalTab(initialTab, false);
