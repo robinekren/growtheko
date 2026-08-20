@@ -731,7 +731,7 @@
     }
     .portal-listing-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
       gap: 10px;
       align-items: start;
     }
@@ -960,6 +960,9 @@
       font-size: 10px;
       font-weight: 700;
       line-height: 1.4;
+    }
+    .portal-listing-action-note:empty {
+      display: none;
     }
     .listing-request-button {
       min-height: 40px;
@@ -4243,6 +4246,15 @@
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
       .portal-tabs-section { margin-top: 24px; }
+      .notification-popover {
+        position: fixed;
+        top: calc(74px + env(safe-area-inset-top, 0px));
+        right: max(12px, env(safe-area-inset-right, 0px));
+        left: max(12px, env(safe-area-inset-left, 0px));
+        width: auto;
+        max-width: none;
+        max-height: calc(100dvh - 94px - env(safe-area-inset-top, 0px));
+      }
       .portal-tabs-shell {
         grid-template-columns: 48px minmax(0, 1fr) 48px;
       }
@@ -4661,7 +4673,7 @@
                     </button>
                   </div>
                   <div class="portal-listing-action-row">
-                    <span class="portal-listing-action-note" data-listing-request-status aria-live="polite">10-second safety window.</span>
+                    <span class="portal-listing-action-note" data-listing-request-status aria-live="polite"></span>
                     <button class="listing-request-button" type="button" data-listing-request>
                       <span data-listing-request-label>Request</span>
                     </button>
@@ -8209,7 +8221,7 @@
         return;
       }
       label.textContent = 'Request';
-      status.textContent = detail || '10-second safety window.';
+      status.textContent = detail || '';
     }
 
     function cancelPortalListingCountdown(listingId, message = 'Request cancelled. Nothing was sent.') {
