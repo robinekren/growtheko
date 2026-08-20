@@ -2994,21 +2994,6 @@
       font-weight: 700;
       white-space: nowrap;
     }
-    .phase-block-chevron {
-      width: 10px;
-      height: 10px;
-      border-right: 1.5px solid #6F9EE6;
-      border-bottom: 1.5px solid #6F9EE6;
-      transform: rotate(45deg) translate(-2px, -2px);
-      transition: transform 180ms ease;
-    }
-    .phase-card.active .phase-block-chevron {
-      transform: rotate(225deg) translate(-2px, -2px);
-    }
-    .phase-card:not(.active) .phase-block-chevron,
-    .phase-card.active .phase-block-count {
-      display: none;
-    }
     .phase-number {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       display: none;
@@ -3146,6 +3131,24 @@
       background: rgba(100,150,230,0.06); text-decoration: none;
     }
     .task-action:hover { background: rgba(100,150,230,0.12); border-color: rgba(100,150,230,0.4); }
+    .task-disclosure {
+      flex: 0 0 18px;
+      width: 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      color: rgba(17,24,39,0.34);
+      pointer-events: none;
+    }
+    .task-disclosure svg {
+      width: 12px;
+      height: 12px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
     /* ===== TASK DETAIL PAGE ===== */
     .task-detail-view {
@@ -5959,7 +5962,6 @@
           </div>
           <div class="phase-block-state">
             <span class="phase-block-count">${done}/${total}</span>
-            <span class="phase-block-chevron" aria-hidden="true"></span>
           </div>`;
         scroll.appendChild(card);
       });
@@ -6008,12 +6010,12 @@
         const item = document.createElement('div');
         item.className = `task-item${isComplete ? ' complete' : ''}${isLocked ? ' locked' : ''}`;
         item.innerHTML = `
-          <div class="task-checkbox" onclick="${isLocked ? '' : `toggleTask('${task.id}')`}"></div>
+          <div class="task-checkbox" onclick="${isLocked ? '' : `event.stopPropagation();toggleTask('${task.id}')`}"></div>
           <div class="task-content" style="cursor:${isLocked ? 'default' : 'pointer'}" onclick="${isLocked ? '' : `openTaskDetail('${task.id}')`}">
             <div class="task-name">${task.name}</div>
             <div class="task-description">${task.desc}</div>
           </div>
-          ${!isLocked ? `<div class="task-action" onclick="openTaskDetail('${task.id}')">Review <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>` : ''}
+          ${!isLocked ? `<span class="task-disclosure" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>` : ''}
           ${isLocked ? '<div class="task-action" style="color:rgba(0,0,0,0.2);cursor:not-allowed;border-color:rgba(0,0,0,0.06);background:rgba(0,0,0,0.02);">Locked \uD83D\uDD12</div>' : ''}`;
         list.appendChild(item);
       });
