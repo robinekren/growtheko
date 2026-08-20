@@ -1653,215 +1653,187 @@
     }
     .portal-calendar-card {
       min-height: 560px;
+      padding: clamp(24px, 4vw, 48px);
       border: 1px solid rgba(180,200,240,0.45);
-      border-radius: 24px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.68);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
-    }
-    .portal-calendar-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 22px 24px;
-      border-bottom: 1px solid rgba(180,200,240,0.38);
-    }
-    .portal-calendar-title {
-      min-width: 0;
-      text-align: center;
-    }
-    .portal-calendar-title h2 {
-      margin: 0 0 5px;
-      color: #111;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.66);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78), 0 24px 70px rgba(84,137,230,0.08);
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      font-size: 18px;
-      line-height: 1.2;
-      font-weight: 850;
-      letter-spacing: 0;
     }
-    .portal-calendar-title p {
-      margin: 0;
-      color: rgba(0,0,0,0.46);
-      font-size: 12px;
-      line-height: 1.3;
-      font-weight: 700;
+    .portal-calendar-intro {
+      max-width: 720px;
+      margin-bottom: clamp(36px, 6vw, 62px);
     }
-    .portal-calendar-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex: none;
-    }
-    .portal-calendar-btn {
-      min-width: 42px;
-      height: 42px;
-      display: inline-grid;
-      place-items: center;
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 999px;
-      background: rgba(255,255,255,0.58);
-      color: rgba(0,0,0,0.68);
-      cursor: pointer;
-      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      font-size: 13px;
-      font-weight: 800;
-    }
-    .portal-calendar-btn.text {
-      padding: 0 16px;
-    }
-    .portal-calendar-btn.is-active {
-      background: rgba(17,17,17,0.84);
-      color: #fff;
-      border-color: rgba(17,17,17,0.16);
-    }
-    .portal-calendar-btn svg {
-      width: 18px;
-      height: 18px;
+    .portal-calendar-kicker {
       display: block;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .portal-calendar-view[hidden] {
-      display: none;
-    }
-    .portal-calendar-weekdays,
-    .portal-calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-    }
-    .portal-calendar-weekday {
-      padding: 14px 10px;
-      border-bottom: 1px solid rgba(180,200,240,0.38);
-      color: rgba(0,0,0,0.54);
-      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      font-size: 11px;
+      margin-bottom: 10px;
+      color: #477fd6;
+      font-size: 12px;
       font-weight: 850;
-      text-align: center;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
-    .portal-calendar-day {
-      min-height: 88px;
-      padding: 12px;
-      border-right: 1px solid rgba(180,200,240,0.28);
-      border-bottom: 1px solid rgba(180,200,240,0.28);
-      background: rgba(255,255,255,0.34);
-      color: rgba(0,0,0,0.72);
+    .portal-calendar-intro h2 {
+      margin: 0 0 10px;
+      color: #111;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 0.98;
+      font-weight: 900;
+      letter-spacing: -0.05em;
     }
-    .portal-calendar-day:nth-child(7n) {
-      border-right: 0;
+    .portal-calendar-intro p {
+      margin: 0;
+      color: rgba(0,0,0,0.48);
+      font-size: 14px;
+      line-height: 1.45;
+      font-weight: 700;
     }
-    .portal-calendar-day.is-muted {
-      color: rgba(0,0,0,0.28);
-      background: rgba(255,255,255,0.18);
+    .portal-calendar-week {
+      display: grid;
+      gap: clamp(38px, 6vw, 64px);
     }
-    .portal-calendar-day.is-today {
-      background: rgba(111,158,230,0.12);
-      box-shadow: inset 0 0 0 2px rgba(111,158,230,0.26);
+    .portal-calendar-day-group {
+      min-width: 0;
     }
-    .portal-calendar-date {
-      display: inline-grid;
-      place-items: center;
-      min-width: 26px;
-      height: 26px;
+    .portal-calendar-day-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 0 0 16px;
+    }
+    .portal-calendar-day-heading h3 {
+      margin: 0;
+      color: #111;
+      font-size: clamp(24px, 3.2vw, 36px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+    .portal-calendar-day-heading span {
+      color: rgba(0,0,0,0.38);
+      font-size: 13px;
+      font-weight: 750;
+    }
+    .portal-calendar-day-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+    .portal-live-card {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 24px;
+      padding: 0;
+      background: rgba(255,255,255,0.88);
+      color: inherit;
+      box-shadow: 0 16px 42px rgba(84,137,230,0.09), inset 0 1px 0 rgba(255,255,255,0.92);
+      cursor: pointer;
+      text-align: left;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+    .portal-live-card:not(:disabled):hover {
+      transform: translateY(-3px);
+      border-color: rgba(111,158,230,0.34);
+      box-shadow: 0 22px 54px rgba(84,137,230,0.16), inset 0 1px 0 rgba(255,255,255,0.94);
+    }
+    .portal-live-card:focus-visible {
+      outline: 3px solid rgba(111,158,230,0.34);
+      outline-offset: 3px;
+    }
+    .portal-live-card:disabled {
+      cursor: default;
+      opacity: 0.62;
+      box-shadow: none;
+    }
+    .portal-live-media {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #111;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .portal-live-media img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .portal-live-card.is-past .portal-live-media img {
+      filter: grayscale(1) contrast(0.88);
+    }
+    .portal-live-state {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
       border-radius: 999px;
-      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      padding: 0 11px;
+      background: rgba(17,17,17,0.72);
+      color: rgba(255,255,255,0.92);
+      box-shadow: 0 7px 22px rgba(0,0,0,0.18);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .portal-live-card.is-live .portal-live-state {
+      background: #eb3125;
+      color: #fff;
+    }
+    .portal-live-body {
+      min-height: 172px;
+      display: flex;
+      flex-direction: column;
+      padding: 22px 24px 24px;
+    }
+    .portal-live-time {
+      margin-bottom: 9px;
+      color: #477fd6;
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .portal-live-card.is-past .portal-live-time {
+      color: rgba(0,0,0,0.38);
+    }
+    .portal-live-title {
+      margin: 0 0 9px;
+      color: #111;
+      font-size: clamp(19px, 2.3vw, 25px);
+      line-height: 1.08;
+      font-weight: 900;
+      letter-spacing: -0.035em;
+    }
+    .portal-live-description {
+      display: -webkit-box;
+      overflow: hidden;
+      margin: 0;
+      color: rgba(0,0,0,0.52);
+      font-size: 13px;
+      line-height: 1.48;
+      font-weight: 650;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+    .portal-live-action {
+      margin-top: auto;
+      padding-top: 18px;
+      color: #111;
       font-size: 12px;
       font-weight: 850;
     }
-    .portal-calendar-day.is-today .portal-calendar-date {
-      background: #6F9EE6;
-      color: #fff;
-    }
-    .portal-calendar-list {
-      display: grid;
-      gap: 16px;
-      padding: 18px;
-    }
-    .portal-calendar-list-card {
-      min-height: 148px;
-      display: grid;
-      align-items: center;
-      grid-template-columns: 218px minmax(0, 1fr);
-      gap: 18px;
-      padding: 16px;
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px;
-      background: rgba(255,255,255,0.54);
-      color: inherit;
-      cursor: pointer;
-      text-align: left;
-    }
-    .portal-calendar-list-thumb {
-      height: 116px;
-      display: grid;
-      place-items: center;
-      border-radius: 10px;
-      background: rgba(17,17,17,0.08);
+    .portal-live-card.is-past .portal-live-action {
       color: rgba(0,0,0,0.34);
-    }
-    .portal-calendar-list-thumb svg {
-      width: 40px;
-      height: 40px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.1;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .portal-calendar-list-copy {
-      color: rgba(0,0,0,0.48);
-      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      font-size: 13px;
-      font-weight: 750;
-      line-height: 1.45;
-    }
-    .portal-calendar-events {
-      display: grid;
-      gap: 4px;
-      margin-top: 8px;
-    }
-    .portal-calendar-event {
-      width: 100%;
-      min-height: 22px;
-      display: block;
-      border: 0;
-      border-radius: 7px;
-      padding: 4px 6px;
-      background: rgba(111,158,230,0.18);
-      color: #477fd6;
-      cursor: pointer;
-      overflow: hidden;
-      text-align: left;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      font-size: 11px;
-      font-weight: 850;
-    }
-    .portal-calendar-event:hover {
-      background: rgba(111,158,230,0.28);
-      color: #2f68c4;
-    }
-    .portal-calendar-list-detail {
-      min-width: 0;
-      color: rgba(0,0,0,0.72);
-      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-    }
-    .portal-calendar-list-time {
-      margin-bottom: 8px;
-      color: rgba(0,0,0,0.5);
-      font-size: 13px;
-      font-weight: 700;
-    }
-    .portal-calendar-list-title {
-      color: #111;
-      font-size: 20px;
-      line-height: 1.2;
-      font-weight: 850;
     }
     .portal-calendar-modal[hidden] {
       display: none;
@@ -1982,6 +1954,24 @@
       position: relative;
       z-index: 3;
       margin-top: 28px;
+    }
+    .portal-calendar-join[hidden] {
+      display: none;
+    }
+    .portal-calendar-join {
+      width: 100%;
+      height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      background: #111;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 850;
+      letter-spacing: 0.02em;
     }
     .portal-calendar-add-button {
       width: 100%;
@@ -4020,23 +4010,23 @@
       .portal-msg {
         max-width: 94%;
       }
-      .portal-calendar-head {
-        align-items: stretch;
-        flex-direction: column;
+      .portal-calendar-card {
+        padding: 24px 18px 34px;
+        border-radius: 24px;
       }
-      .portal-calendar-title {
-        text-align: left;
-      }
-      .portal-calendar-actions {
-        justify-content: flex-start;
-        flex-wrap: wrap;
-      }
-      .portal-calendar-list-card {
+      .portal-calendar-day-list {
         grid-template-columns: 1fr;
       }
-      .portal-calendar-day {
-        min-height: 70px;
-        padding: 8px;
+      .portal-calendar-day-heading {
+        align-items: flex-end;
+      }
+      .portal-live-card,
+      .portal-live-media {
+        border-radius: 20px;
+      }
+      .portal-live-media {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
       }
       .portal-learning-sidebar {
         border-right: 0;
@@ -4422,40 +4412,12 @@
         </div>
         <div class="embedded-page-content">
           <div class="portal-calendar-card" aria-label="Customer calendar">
-            <div class="portal-calendar-head">
-              <div class="portal-calendar-actions">
-                <button class="portal-calendar-btn text" type="button" onclick="goToPortalCalendarToday()">Today</button>
-              </div>
-              <div class="portal-calendar-title">
-                <h2 id="portalCalendarMonth">Calendar</h2>
-                <p id="portalCalendarTimezone"></p>
-              </div>
-              <div class="portal-calendar-actions" aria-label="Calendar month controls">
-                <button class="portal-calendar-btn" type="button" aria-label="Previous month" onclick="changePortalCalendarMonth(-1)">‹</button>
-                <button class="portal-calendar-btn" type="button" aria-label="Next month" onclick="changePortalCalendarMonth(1)">›</button>
-                <button class="portal-calendar-btn" id="portalCalendarListViewButton" type="button" aria-label="Show calendar list" onclick="setPortalCalendarView('list')">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12"/><path d="M8 12h12"/><path d="M8 18h12"/><path d="M4 6h.01"/><path d="M4 12h.01"/><path d="M4 18h.01"/></svg>
-                </button>
-                <button class="portal-calendar-btn is-active" id="portalCalendarMonthViewButton" type="button" aria-label="Show calendar month" onclick="setPortalCalendarView('month')">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
-                </button>
-              </div>
+            <div class="portal-calendar-intro">
+              <span class="portal-calendar-kicker">Schedule</span>
+              <h2>Live streams this week</h2>
+              <p id="portalCalendarTimezone"></p>
             </div>
-            <div class="portal-calendar-view" id="portalCalendarMonthView">
-              <div class="portal-calendar-weekdays" aria-hidden="true">
-                <div class="portal-calendar-weekday">Mon</div>
-                <div class="portal-calendar-weekday">Tue</div>
-                <div class="portal-calendar-weekday">Wed</div>
-                <div class="portal-calendar-weekday">Thu</div>
-                <div class="portal-calendar-weekday">Fri</div>
-                <div class="portal-calendar-weekday">Sat</div>
-                <div class="portal-calendar-weekday">Sun</div>
-              </div>
-              <div class="portal-calendar-grid" id="portalCalendarGrid"></div>
-            </div>
-            <div class="portal-calendar-view" id="portalCalendarListView" hidden>
-              <div class="portal-calendar-list" id="portalCalendarList"></div>
-            </div>
+            <div class="portal-calendar-week" id="portalCalendarWeek"></div>
           </div>
           <div class="portal-calendar-modal" id="portalCalendarModal" hidden role="dialog" aria-modal="true" aria-labelledby="portalCalendarModalTitle">
             <div class="portal-calendar-dialog">
@@ -4472,6 +4434,7 @@
                 </div>
                 <p class="portal-calendar-dialog-description" id="portalCalendarModalDescription"></p>
                 <div class="portal-calendar-add">
+                  <a class="portal-calendar-join" id="portalCalendarJoin" href="#" target="_blank" rel="noopener" hidden>Open live stream</a>
                   <button class="portal-calendar-add-button" id="portalCalendarAddButton" type="button" onclick="togglePortalCalendarAddMenu()">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/><path d="M12 14v4"/><path d="M10 16h4"/></svg>
                     <span>Add to Calendar</span>
@@ -5656,26 +5619,40 @@
       chat: 'Support',
       listings: 'Listings'
     };
+    const PORTAL_CALENDAR_TIME_ZONE = 'Europe/Vienna';
     const PORTAL_CALENDAR_EVENT_RULES = [
       {
-        id: 'accountability-group',
-        weekday: 2,
+        id: 'growth-secret',
+        weekday: 1,
         order: 1,
-        timeMinutes: 18 * 60,
+        timeMinutes: 12 * 60,
         durationMinutes: 60,
-        title: '🤝 Accountability Group',
-        image: '/portal/assets/accountability-group.png',
-        description: 'Weekly accountability check-in for focus, commitments, execution blockers, and next actions.'
+        title: 'Growth Secret',
+        image: '/portal/assets/live/growth-secret-live.jpg',
+        liveUrl: 'https://www.skool.com/live/cGfV23MQxgF',
+        description: 'Weekly live breakdown of AI + Digital Estate: attention, hooks, content, paid exposure, digital asset systems, and monetization. Bring your bottleneck. Leave with one clear move for the next 7 days.'
+      },
+      {
+        id: 'accountability-system',
+        weekday: 1,
+        order: 2,
+        timeMinutes: 13 * 60,
+        durationMinutes: 60,
+        title: 'Accountability System',
+        image: '/portal/assets/live/accountability-live.jpg',
+        liveUrl: 'https://www.skool.com/live/Gh4MVHhjwWr',
+        description: 'Set the week\'s most important goal, define what winning looks like, and leave with one clear commitment for the next 7 days.'
       },
       {
         id: 'business-clarity',
-        weekday: 2,
-        order: 2,
-        timeMinutes: 19 * 60,
+        weekday: 4,
+        order: 1,
+        timeMinutes: 12 * 60,
         durationMinutes: 60,
-        title: '📈 Business Clarity',
-        image: '/portal/assets/business-clarity.png',
-        description: 'Weekly business clarity session for offer, positioning, priorities, and the next highest-leverage decision.'
+        title: 'Business Clarity',
+        image: '/portal/assets/live/business-clarity-live.jpg',
+        liveUrl: 'https://www.skool.com/live/YxXfJJjf7PM',
+        description: 'Live clarity session for your offer, niche, funnel, pricing, CTA, and monetization path. Before building more attention, we define what should actually be sold.'
       },
       {
         id: 'weekly-awards',
@@ -5683,13 +5660,12 @@
         order: 1,
         timeMinutes: 19 * 60,
         durationMinutes: 30,
-        title: '💰 Weekly Awards!',
+        title: 'Weekly Awards',
+        image: '/portal/assets/live/weekly-awards-live.jpg',
         description: 'Each week we review the 7 day leaderboard and dish out cash prizes to the top 3 members. Plus additional cash to the weekly challenge winner!'
       }
     ];
     let portalCalendarInstances = new Map();
-    let portalCalendarCursor = new Date();
-    let portalCalendarView = 'month';
     let activePortalCalendarEvent = null;
     let portalCalendarClockTimer = null;
     let portalCommunityNextEventTimer = null;
@@ -5699,7 +5675,24 @@
     const PORTAL_LEARNING_PROGRESS_KEY = 'growtheko:portal-learning-progress:v1';
 
     function getPortalTimeZone() {
-      return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+      return PORTAL_CALENDAR_TIME_ZONE;
+    }
+
+    function getPortalScheduleNow() {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: PORTAL_CALENDAR_TIME_ZONE,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hourCycle: 'h23'
+      }).formatToParts(new Date()).reduce((result, part) => {
+        if (part.type !== 'literal') result[part.type] = Number(part.value);
+        return result;
+      }, {});
+      return new Date(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
     }
 
     function getPortalDateKey(date) {
@@ -5782,7 +5775,7 @@
       return end;
     }
 
-    function getNextPortalCalendarEvent(now = new Date()) {
+    function getNextPortalCalendarEvent(now = getPortalScheduleNow()) {
       const start = new Date(now);
       start.setHours(0, 0, 0, 0);
       const end = new Date(now);
@@ -5805,7 +5798,7 @@
     function renderPortalCommunityNextEvent() {
       const text = document.getElementById('portalCommunityNextEventText');
       if (!text) return;
-      const now = new Date();
+      const now = getPortalScheduleNow();
       const event = getNextPortalCalendarEvent(now);
       if (!event) {
         text.innerHTML = 'Next class is being scheduled';
@@ -5825,11 +5818,10 @@
     }
 
     function openPortalCommunityNextEvent() {
-      const event = getNextPortalCalendarEvent(new Date());
+      const event = getNextPortalCalendarEvent(getPortalScheduleNow());
       if (!event) return;
-      portalCalendarCursor = new Date(event.date);
       setPortalTab('calendar', true);
-      renderPortalCalendar();
+      renderPortalCalendar(event.date);
       window.requestAnimationFrame(() => openPortalCalendarEvent(event.id));
     }
 
@@ -5885,21 +5877,16 @@
       link.remove();
     }
 
-    function renderPortalCalendarEventButton(event) {
-      const time = Number.isFinite(event.timeMinutes) ? `${formatPortalCalendarTime(event.timeMinutes)} · ` : '';
-      return `<button class="portal-calendar-event" type="button" onclick="openPortalCalendarEvent('${event.id}')">${escapeHTML(time + event.title)}</button>`;
-    }
-
     function updatePortalCalendarClock() {
       const timezoneLabel = document.getElementById('portalCalendarTimezone');
       if (!timezoneLabel) return;
-      const timeZone = getPortalTimeZone();
-      timezoneLabel.textContent = new Intl.DateTimeFormat(undefined, {
-        hour: 'numeric',
-        minute: '2-digit',
-        timeZoneName: 'short',
-        timeZone
-      }).format(new Date()) + ' · ' + timeZone;
+      const now = getPortalScheduleNow();
+      const weekStart = getPortalCalendarWeekStart(now);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6);
+      const startLabel = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(weekStart);
+      const endLabel = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(weekEnd);
+      timezoneLabel.textContent = `${startLabel} – ${endLabel} · Vienna time`;
     }
 
     function startPortalCalendarClock() {
@@ -5908,68 +5895,77 @@
       portalCalendarClockTimer = window.setInterval(updatePortalCalendarClock, 1000);
     }
 
-    function renderPortalCalendar() {
-      const grid = document.getElementById('portalCalendarGrid');
-      const list = document.getElementById('portalCalendarList');
-      const monthTitle = document.getElementById('portalCalendarMonth');
-      if (!grid || !monthTitle) return;
-
-      const now = new Date();
-      const year = portalCalendarCursor.getFullYear();
-      const month = portalCalendarCursor.getMonth();
-      const monthStart = new Date(year, month, 1);
-      const firstWeekday = (monthStart.getDay() + 6) % 7;
-      const gridStart = new Date(year, month, 1 - firstWeekday);
-      const gridEnd = new Date(gridStart);
-      gridEnd.setDate(gridStart.getDate() + 41);
-      const todayKey = getPortalDateKey(now);
-      const visibleEvents = generatePortalCalendarEvents(gridStart, gridEnd);
-      portalCalendarInstances = new Map(visibleEvents.map((event) => [event.id, event]));
-
-      monthTitle.textContent = new Intl.DateTimeFormat(undefined, {
-        month: 'long',
-        year: 'numeric'
-      }).format(monthStart);
-      updatePortalCalendarClock();
-
-      grid.innerHTML = Array.from({ length: 42 }, (_, index) => {
-        const day = new Date(gridStart);
-        day.setDate(gridStart.getDate() + index);
-        const dateKey = getPortalDateKey(day);
-        const dayEvents = visibleEvents.filter((event) => getPortalDateKey(event.date) === dateKey);
-        const classes = [
-          'portal-calendar-day',
-          day.getMonth() === month ? '' : 'is-muted',
-          dateKey === todayKey ? 'is-today' : ''
-        ].filter(Boolean).join(' ');
-        return `
-          <div class="${classes}">
-            <span class="portal-calendar-date">${day.getDate()}</span>
-            ${dayEvents.length ? `<div class="portal-calendar-events">${dayEvents.map(renderPortalCalendarEventButton).join('')}</div>` : ''}
-          </div>
-        `;
-      }).join('');
-
-      if (list) {
-        const monthEvents = visibleEvents.filter((event) => event.date.getMonth() === month);
-        list.innerHTML = monthEvents.map(renderPortalCalendarEvent).join('');
-      }
-
-      setPortalCalendarView(portalCalendarView, false);
+    function getPortalCalendarWeekStart(date) {
+      const start = new Date(date);
+      start.setHours(0, 0, 0, 0);
+      start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+      return start;
     }
 
-    function renderPortalCalendarEvent(event) {
+    function getPortalCalendarEventState(event, now) {
+      const start = getPortalEventStartDate(event);
+      const end = getPortalEventEndDate(event);
+      if (now >= start && now < end) return 'live';
+      if (now >= end) return 'past';
+      return 'upcoming';
+    }
+
+    function renderPortalCalendarEvent(event, now) {
+      const state = getPortalCalendarEventState(event, now);
+      const isPast = state === 'past';
+      const stateLabel = state === 'live' ? 'Live now' : isPast ? 'Finished' : 'Upcoming';
+      const actionLabel = isPast ? 'Stream finished' : state === 'live' ? 'Open live details →' : 'View details →';
+      const start = formatPortalCalendarTime(event.timeMinutes);
+      const end = formatPortalCalendarTime(event.timeMinutes + (event.durationMinutes || 0));
       return `
-        <button class="portal-calendar-list-card" type="button" onclick="openPortalCalendarEvent('${event.id}')">
-          <div class="portal-calendar-list-thumb">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
-          </div>
-          <div class="portal-calendar-list-detail">
-            <div class="portal-calendar-list-time">${escapeHTML(getPortalCalendarEventTimeLabel(event))}</div>
-            <div class="portal-calendar-list-title">${escapeHTML(event.title || '')}</div>
-          </div>
+        <button class="portal-live-card is-${state}" type="button" ${isPast ? 'disabled aria-disabled="true"' : `onclick="openPortalCalendarEvent('${event.id}')"`}>
+          <span class="portal-live-media">
+            <img src="${escapeHTML(event.image || '')}" alt="${escapeHTML(event.title || '')} live stream" loading="lazy">
+            <span class="portal-live-state">${escapeHTML(stateLabel)}</span>
+          </span>
+          <span class="portal-live-body">
+            <span class="portal-live-time">${escapeHTML(`${start} – ${end} · Vienna`)}</span>
+            <span class="portal-live-title">${escapeHTML(event.title || '')}</span>
+            <span class="portal-live-description">${escapeHTML(event.description || '')}</span>
+            <span class="portal-live-action">${escapeHTML(actionLabel)}</span>
+          </span>
         </button>
       `;
+    }
+
+    function renderPortalCalendar(referenceDate = getPortalScheduleNow()) {
+      const week = document.getElementById('portalCalendarWeek');
+      if (!week) return;
+      const now = getPortalScheduleNow();
+      const weekStart = getPortalCalendarWeekStart(referenceDate);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6);
+      const visibleEvents = generatePortalCalendarEvents(weekStart, weekEnd);
+      portalCalendarInstances = new Map(visibleEvents.map((event) => [event.id, event]));
+      const groupedEvents = visibleEvents.reduce((groups, event) => {
+        const key = getPortalDateKey(event.date);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(event);
+        return groups;
+      }, new Map());
+
+      week.innerHTML = Array.from(groupedEvents.values()).map((events) => {
+        const date = events[0].date;
+        const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+        const dateLabel = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric' }).format(date);
+        return `
+          <section class="portal-calendar-day-group" aria-labelledby="portalCalendarDay-${getPortalDateKey(date)}">
+            <div class="portal-calendar-day-heading">
+              <h3 id="portalCalendarDay-${getPortalDateKey(date)}">${escapeHTML(dayName)}</h3>
+              <span>${escapeHTML(dateLabel)}</span>
+            </div>
+            <div class="portal-calendar-day-list">
+              ${events.map((event) => renderPortalCalendarEvent(event, now)).join('')}
+            </div>
+          </section>
+        `;
+      }).join('');
+      updatePortalCalendarClock();
     }
 
     function openPortalCalendarEvent(id) {
@@ -5981,6 +5977,7 @@
       const hero = document.querySelector('.portal-calendar-dialog-hero');
       const image = document.getElementById('portalCalendarModalImage');
       const icon = document.getElementById('portalCalendarModalIcon');
+      const join = document.getElementById('portalCalendarJoin');
       if (!event || !modal || !title || !time || !description) return;
       activePortalCalendarEvent = event;
       title.textContent = event.title;
@@ -5999,6 +5996,15 @@
           image.alt = '';
           image.hidden = true;
           icon.hidden = false;
+        }
+      }
+      if (join) {
+        if (event.liveUrl) {
+          join.href = event.liveUrl;
+          join.hidden = false;
+        } else {
+          join.removeAttribute('href');
+          join.hidden = true;
         }
       }
       closePortalCalendarAddMenu();
@@ -6070,29 +6076,6 @@
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') closePortalCalendarEvent();
     });
-
-    function setPortalCalendarView(view, render = true) {
-      portalCalendarView = view === 'list' ? 'list' : 'month';
-      const monthView = document.getElementById('portalCalendarMonthView');
-      const listView = document.getElementById('portalCalendarListView');
-      const monthButton = document.getElementById('portalCalendarMonthViewButton');
-      const listButton = document.getElementById('portalCalendarListViewButton');
-      if (monthView) monthView.hidden = portalCalendarView !== 'month';
-      if (listView) listView.hidden = portalCalendarView !== 'list';
-      if (monthButton) monthButton.classList.toggle('is-active', portalCalendarView === 'month');
-      if (listButton) listButton.classList.toggle('is-active', portalCalendarView === 'list');
-      if (render) renderPortalCalendar();
-    }
-
-    function changePortalCalendarMonth(offset) {
-      portalCalendarCursor = new Date(portalCalendarCursor.getFullYear(), portalCalendarCursor.getMonth() + offset, 1);
-      renderPortalCalendar();
-    }
-
-    function goToPortalCalendarToday() {
-      portalCalendarCursor = new Date();
-      renderPortalCalendar();
-    }
 
     const START_HERE_LESSON_IDS = ['onboarding', 'survival-foundation', 'growth', 'calendar', 'team', 'roadmap', 'classroom'];
 
