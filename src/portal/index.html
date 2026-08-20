@@ -2407,8 +2407,8 @@
     }
     .support-intake-shell {
       display: grid;
-      gap: 22px;
-      max-width: 1120px;
+      gap: 14px;
+      max-width: 820px;
       margin: 0 auto;
     }
     .support-intake-head,
@@ -2423,28 +2423,36 @@
     }
     .support-intake-head {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       justify-content: space-between;
-      gap: 28px;
-      border-radius: 26px;
-      padding: 30px;
+      gap: 20px;
+      border-radius: 22px;
+      padding: 22px 24px;
     }
     .support-intake-head > div:first-child {
       max-width: 660px;
     }
     .support-intake-head h2 {
-      margin: 0 0 10px;
+      margin: 0 0 6px;
       color: #111;
-      font-family: 'Times New Roman', Times, serif;
-      font-size: clamp(34px, 5vw, 58px);
-      line-height: 0.98;
-      letter-spacing: -0.035em;
+      font-size: clamp(25px, 4vw, 34px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
     }
     .support-intake-head p {
       margin: 0;
       color: rgba(0,0,0,0.56);
-      font-size: 15px;
-      line-height: 1.65;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .support-head-meta {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: rgba(16,185,129,0.08);
+      color: #0f8d64;
+      font-size: 11px;
+      font-weight: 850;
     }
     .support-owner-card {
       flex: 0 0 auto;
@@ -2476,15 +2484,13 @@
       gap: 14px;
     }
     .support-progress {
-      position: sticky;
-      top: 10px;
-      z-index: 5;
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(180px, 310px);
       align-items: center;
       gap: 22px;
-      border-radius: 18px;
-      padding: 15px 18px;
+      border-radius: 16px;
+      padding: 12px 16px;
+      box-shadow: none;
     }
     .support-progress strong,
     .support-progress span {
@@ -2520,6 +2526,79 @@
       border-radius: 22px;
       padding: 24px;
       transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+    .support-step[hidden] {
+      display: none !important;
+    }
+    .support-step.is-active {
+      animation: supportStepIn 220ms ease both;
+    }
+    @keyframes supportStepIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .support-step-summary {
+      display: none;
+      width: 100%;
+      align-items: center;
+      gap: 13px;
+      border: 0;
+      padding: 16px 18px;
+      background: transparent;
+      color: #111;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+    }
+    .support-step.is-complete:not(.is-active) {
+      display: block;
+      padding: 0;
+      border-radius: 17px;
+      box-shadow: none;
+      background: rgba(255,255,255,0.58);
+    }
+    .support-step.is-complete:not(.is-active) > *:not(.support-step-summary) {
+      display: none;
+    }
+    .support-step.is-complete:not(.is-active) > .support-step-summary {
+      display: flex;
+    }
+    .support-step-summary-check {
+      display: grid;
+      place-items: center;
+      flex: 0 0 28px;
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      background: rgba(16,185,129,0.11);
+      color: #0f9f6e;
+      font-size: 13px;
+      font-weight: 950;
+    }
+    .support-step-summary-copy {
+      min-width: 0;
+      flex: 1;
+    }
+    .support-step-summary-copy strong,
+    .support-step-summary-copy small {
+      display: block;
+    }
+    .support-step-summary-copy strong {
+      font-size: 12px;
+    }
+    .support-step-summary-copy small {
+      overflow: hidden;
+      margin-top: 3px;
+      color: rgba(0,0,0,0.43);
+      font-size: 11px;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .support-step-summary-edit {
+      color: rgba(0,0,0,0.38);
+      font-size: 11px;
+      font-weight: 850;
     }
     .support-question-card.is-invalid,
     .support-submit-panel.is-invalid {
@@ -2643,6 +2722,23 @@
       color: rgba(111,74,17,0.72);
       font-size: 12px;
       line-height: 1.55;
+    }
+    .support-continue {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 138px;
+      height: 48px;
+      margin-top: 16px;
+      border: 0;
+      border-radius: 14px;
+      padding: 0 20px;
+      background: #111;
+      color: #fff;
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 900;
     }
     .support-submit-panel {
       border-radius: 24px;
@@ -3869,8 +3965,9 @@
       .support-intake-head {
         align-items: stretch;
         flex-direction: column;
-        padding: 22px;
+        padding: 18px 20px;
       }
+      .support-head-meta { display: none; }
       .support-owner-card {
         min-width: 0;
       }
@@ -3885,7 +3982,9 @@
       }
       .support-option-grid,
       .support-option-grid-wide,
-      .support-option-grid-four,
+      .support-option-grid-four {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
       .support-field-grid,
       .support-submit-copy {
         grid-template-columns: 1fr;
@@ -4124,29 +4223,23 @@
           <div class="support-intake-shell" aria-label="GrowthEko support request">
             <header class="support-intake-head">
               <div>
-                <div class="portal-chat-eyebrow">Direct Support</div>
-                <h2>Send one complete request.</h2>
-                <p>Work from top to bottom. Your answers create one structured request so the team can diagnose the issue without unnecessary back-and-forth.</p>
+                <div class="portal-chat-eyebrow">Private Support</div>
+                <h2>How can we help?</h2>
+                <p>One question at a time. Usually less than two minutes.</p>
               </div>
-              <div class="support-owner-card">
-                <div class="portal-avatar">R</div>
-                <div>
-                  <strong>Rayan · Customer Success</strong>
-                  <span>Private channel · Replies same business day</span>
-                </div>
-              </div>
+              <div class="support-head-meta">Replies same business day</div>
             </header>
 
             <form class="support-intake-form" id="portalSupportForm" novalidate onsubmit="event.preventDefault(); submitPortalSupportRequest();">
               <div class="support-progress" aria-live="polite">
                 <div>
-                  <strong id="portalSupportProgressText">0 of 7 required answers complete</strong>
-                  <span>Required questions are marked with *</span>
+                  <strong id="portalSupportProgressText">Step 1 of 8</strong>
+                  <span>Support request</span>
                 </div>
                 <div class="support-progress-track" aria-hidden="true"><span id="portalSupportProgressBar"></span></div>
               </div>
 
-              <section class="support-question-card" data-support-required="support_category">
+              <section class="support-question-card support-step is-active" data-support-step="0" data-support-required="support_category">
                 <div class="support-question-number">01</div>
                 <div class="support-question-body">
                   <h3>What do you need help with? <span>*</span></h3>
@@ -4165,7 +4258,7 @@
                 </div>
               </section>
 
-              <section class="support-question-card" data-support-required="support_stage">
+              <section class="support-question-card support-step" data-support-step="1" data-support-required="support_stage" hidden>
                 <div class="support-question-number">02</div>
                 <div class="support-question-body">
                   <h3>Where are you in the Operator System? <span>*</span></h3>
@@ -4187,7 +4280,7 @@
                 </div>
               </section>
 
-              <section class="support-question-card" data-support-required="support_request_type">
+              <section class="support-question-card support-step" data-support-step="2" data-support-required="support_request_type" hidden>
                 <div class="support-question-number">03</div>
                 <div class="support-question-body">
                   <h3>What response do you need? <span>*</span></h3>
@@ -4203,7 +4296,7 @@
                 </div>
               </section>
 
-              <section class="support-question-card" data-support-required="support_priority">
+              <section class="support-question-card support-step" data-support-step="3" data-support-required="support_priority" hidden>
                 <div class="support-question-number">04</div>
                 <div class="support-question-body">
                   <h3>How urgent is it? <span>*</span></h3>
@@ -4217,25 +4310,27 @@
                 </div>
               </section>
 
-              <section class="support-question-card" data-support-required="support_situation">
+              <section class="support-question-card support-step" data-support-step="4" data-support-required="support_situation" hidden>
                 <div class="support-question-number">05</div>
                 <div class="support-question-body">
                   <h3>What is the current situation? <span>*</span></h3>
                   <p>Explain the exact context, what is happening now, and the point where you became blocked.</p>
                   <textarea class="support-field support-textarea" name="support_situation" rows="5" placeholder="Example: I published 12 Reels this week. Views increased, but profile visits and follows stayed flat..."></textarea>
+                  <button class="support-continue" type="button" onclick="continuePortalSupportStep(4)">Continue</button>
                 </div>
               </section>
 
-              <section class="support-question-card" data-support-required="support_outcome">
+              <section class="support-question-card support-step" data-support-step="5" data-support-required="support_outcome" hidden>
                 <div class="support-question-number">06</div>
                 <div class="support-question-body">
                   <h3>What outcome do you need? <span>*</span></h3>
                   <p>Describe what a useful answer or successful resolution should make possible.</p>
                   <textarea class="support-field support-textarea" name="support_outcome" rows="4" placeholder="Example: Identify the main conversion bottleneck and tell me the one change to test next."></textarea>
+                  <button class="support-continue" type="button" onclick="continuePortalSupportStep(5)">Continue</button>
                 </div>
               </section>
 
-              <section class="support-question-card">
+              <section class="support-question-card support-step" data-support-step="6" hidden>
                 <div class="support-question-number">07</div>
                 <div class="support-question-body">
                   <h3>Add the evidence</h3>
@@ -4265,10 +4360,11 @@
                     </label>
                   </div>
                   <div class="support-security-note"><strong>Never submit</strong> passwords, login codes, card or bank details, identity documents, or private customer data. Share only secure, permission-safe evidence links.</div>
+                  <button class="support-continue" type="button" onclick="continuePortalSupportStep(6)">Review request</button>
                 </div>
               </section>
 
-              <section class="support-submit-panel" data-support-required="support_confirmed">
+              <section class="support-submit-panel support-step" data-support-step="7" data-support-required="support_confirmed" hidden>
                 <div class="support-submit-copy">
                   <div class="portal-chat-eyebrow">Request preview</div>
                   <h3>Check once. Submit once.</h3>
@@ -4697,6 +4793,9 @@
       'support_outcome',
       'support_confirmed'
     ];
+    const PORTAL_SUPPORT_STEP_COUNT = 8;
+    let portalSupportActiveStep = 0;
+    const portalSupportCompletedSteps = new Set();
 
     function getPortalSupportValue(name) {
       const field = document.querySelector(`[name="${name}"]`);
@@ -4707,15 +4806,91 @@
       return String(field.value || '').trim();
     }
 
-    function updatePortalSupportForm() {
-      const completed = PORTAL_SUPPORT_REQUIRED_FIELDS.filter(name => Boolean(getPortalSupportValue(name))).length;
-      const total = PORTAL_SUPPORT_REQUIRED_FIELDS.length;
-      const percent = Math.round((completed / total) * 100);
+    function getPortalSupportStepSummary(step) {
+      const summaries = {
+        0: getPortalSupportValue('support_category'),
+        1: getPortalSupportValue('support_stage'),
+        2: getPortalSupportValue('support_request_type'),
+        3: getPortalSupportValue('support_priority'),
+        4: getPortalSupportValue('support_situation'),
+        5: getPortalSupportValue('support_outcome'),
+        6: [
+          getPortalSupportValue('support_tried'),
+          getPortalSupportValue('support_links'),
+          getPortalSupportValue('support_metrics')
+        ].some(Boolean) ? 'Evidence added' : 'Skipped — no evidence added'
+      };
+      return summaries[step] || '';
+    }
+
+    function renderPortalSupportSteps(scroll = false) {
+      document.querySelectorAll('.support-step').forEach(step => {
+        const index = Number(step.dataset.supportStep);
+        const isActive = index === portalSupportActiveStep;
+        const isComplete = portalSupportCompletedSteps.has(index);
+        step.hidden = !isActive && !isComplete;
+        step.classList.toggle('is-active', isActive);
+        step.classList.toggle('is-complete', isComplete);
+        const summary = step.querySelector('[data-support-step-summary]');
+        if (summary) summary.textContent = getPortalSupportStepSummary(index);
+      });
+
       const progressText = document.getElementById('portalSupportProgressText');
       const progressBar = document.getElementById('portalSupportProgressBar');
-      if (progressText) progressText.textContent = `${completed} of ${total} required answers complete`;
-      if (progressBar) progressBar.style.width = `${percent}%`;
+      if (progressText) progressText.textContent = `Step ${portalSupportActiveStep + 1} of ${PORTAL_SUPPORT_STEP_COUNT}`;
+      if (progressBar) progressBar.style.width = `${Math.round(((portalSupportActiveStep + 1) / PORTAL_SUPPORT_STEP_COUNT) * 100)}%`;
 
+      if (scroll) {
+        const active = document.querySelector(`.support-step[data-support-step="${portalSupportActiveStep}"]`);
+        window.setTimeout(() => active?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 40);
+      }
+    }
+
+    function createPortalSupportStepSummaries() {
+      document.querySelectorAll('.support-question-card.support-step').forEach(step => {
+        if (step.querySelector('.support-step-summary')) return;
+        const index = Number(step.dataset.supportStep);
+        const title = step.querySelector('h3')?.textContent.replace('*', '').trim() || `Step ${index + 1}`;
+        const button = document.createElement('button');
+        button.className = 'support-step-summary';
+        button.type = 'button';
+        button.setAttribute('aria-label', `Edit ${title}`);
+        button.innerHTML = `
+          <span class="support-step-summary-check">✓</span>
+          <span class="support-step-summary-copy">
+            <strong>${escapeHTML(title)}</strong>
+            <small data-support-step-summary></small>
+          </span>
+          <span class="support-step-summary-edit">Edit</span>
+        `;
+        button.addEventListener('click', () => openPortalSupportStep(index));
+        step.prepend(button);
+      });
+    }
+
+    function openPortalSupportStep(step) {
+      if (step < 0 || step >= PORTAL_SUPPORT_STEP_COUNT) return;
+      portalSupportActiveStep = step;
+      renderPortalSupportSteps(true);
+    }
+
+    function continuePortalSupportStep(step) {
+      const card = document.querySelector(`.support-step[data-support-step="${step}"]`);
+      const requiredName = card?.dataset.supportRequired;
+      if (requiredName && !getPortalSupportValue(requiredName)) {
+        card.classList.add('is-invalid');
+        card.querySelector('input, select, textarea')?.focus();
+        return;
+      }
+
+      card?.classList.remove('is-invalid');
+      portalSupportCompletedSteps.add(step);
+      portalSupportActiveStep = Math.min(step + 1, PORTAL_SUPPORT_STEP_COUNT - 1);
+      updatePortalSupportForm();
+      renderPortalSupportSteps(true);
+    }
+
+    function updatePortalSupportForm() {
       document.querySelectorAll('[data-support-required]').forEach(card => {
         const name = card.dataset.supportRequired;
         if (getPortalSupportValue(name)) card.classList.remove('is-invalid');
@@ -4733,6 +4908,10 @@
         ${escapeHTML(stage)}<br>
         <span>${escapeHTML(outcome)}</span>
       `;
+      document.querySelectorAll('[data-support-step-summary]').forEach(summary => {
+        const step = Number(summary.closest('.support-step')?.dataset.supportStep);
+        summary.textContent = getPortalSupportStepSummary(step);
+      });
     }
 
     function buildPortalSupportMessage() {
@@ -4780,6 +4959,8 @@
         error.hidden = false;
       }
       const firstCard = document.querySelector(`[data-support-required="${missing[0]}"]`);
+      const firstStep = Number(firstCard?.dataset.supportStep);
+      if (Number.isFinite(firstStep)) openPortalSupportStep(firstStep);
       firstCard?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       firstCard?.querySelector('input, select, textarea')?.focus({ preventScroll: true });
       return false;
@@ -4789,10 +4970,13 @@
       const form = document.getElementById('portalSupportForm');
       if (!form) return;
       form.reset();
+      portalSupportCompletedSteps.clear();
+      portalSupportActiveStep = 0;
       document.querySelectorAll('[data-support-required]').forEach(card => card.classList.remove('is-invalid'));
       const error = document.getElementById('portalSupportError');
       if (error) error.hidden = true;
       updatePortalSupportForm();
+      renderPortalSupportSteps();
     }
 
     async function submitPortalSupportRequest() {
@@ -4809,9 +4993,17 @@
       const form = document.getElementById('portalSupportForm');
       if (!form || form.dataset.initialized === 'true') return;
       form.dataset.initialized = 'true';
+      createPortalSupportStepSummaries();
       form.addEventListener('input', updatePortalSupportForm);
-      form.addEventListener('change', updatePortalSupportForm);
+      form.addEventListener('change', event => {
+        updatePortalSupportForm();
+        const step = event.target.closest('.support-step');
+        const index = Number(step?.dataset.supportStep);
+        const isInstantChoice = index >= 0 && index <= 3 && (event.target.matches('input[type="radio"]') || event.target.matches('select'));
+        if (isInstantChoice) window.setTimeout(() => continuePortalSupportStep(index), 120);
+      });
       updatePortalSupportForm();
+      renderPortalSupportSteps();
     }
 
     async function sendPortalChatMessage(messageOverride = null, buttonId = 'portalChatSend') {
