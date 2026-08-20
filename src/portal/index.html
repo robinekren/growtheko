@@ -2354,9 +2354,9 @@
       text-align: center;
     }
     .portal-chat-error {
-      border-color: rgba(225,92,92,0.28);
-      background: rgba(255,245,245,0.82);
-      color: #9d2f2f;
+      border-color: rgba(111,158,230,0.28);
+      background: rgba(245,249,255,0.82);
+      color: #4c77b8;
     }
     .portal-chat-composer {
       padding: 18px 24px 22px;
@@ -2602,8 +2602,8 @@
     }
     .support-question-card.is-invalid,
     .support-submit-panel.is-invalid {
-      border-color: rgba(198,57,57,0.5);
-      box-shadow: 0 18px 48px rgba(198,57,57,0.08);
+      border-color: rgba(111,158,230,0.62);
+      box-shadow: 0 18px 48px rgba(84,137,230,0.10);
     }
     .support-question-number {
       display: grid;
@@ -2791,8 +2791,8 @@
       margin-bottom: 12px;
       border-radius: 12px;
       padding: 11px 13px;
-      background: rgba(198,57,57,0.08);
-      color: #9d2f2f;
+      background: rgba(111,158,230,0.10);
+      color: #4c77b8;
       font-size: 12px;
       font-weight: 800;
     }
@@ -4225,7 +4225,6 @@
               <div>
                 <div class="portal-chat-eyebrow">Private Support</div>
                 <h2>How can we help?</h2>
-                <p>One question at a time. Usually less than two minutes.</p>
               </div>
               <div class="support-head-meta">Replies same business day</div>
             </header>
@@ -4380,7 +4379,7 @@
               </section>
             </form>
 
-            <details class="support-history" id="portalSupportHistory">
+            <details class="support-history" id="portalSupportHistory" hidden>
               <summary>
                 <span>Previous requests &amp; replies</span>
                 <small>Open private support history</small>
@@ -4698,7 +4697,7 @@
       const status = document.getElementById('portalChatStatus');
       if (!status) return;
       status.textContent = message;
-      status.style.color = isError ? '#9d2f2f' : 'rgba(0,0,0,0.42)';
+      status.style.color = isError ? '#4c77b8' : 'rgba(0,0,0,0.42)';
     }
 
     function normalizePortalMessage(message) {
@@ -4717,12 +4716,17 @@
       if (!container) return;
 
       if (!portalChatMessages.length) {
-        container.innerHTML = `
-          <div class="portal-date-divider">History</div>
-          <div class="portal-chat-empty">No previous support requests yet. Your first structured request will appear here after submission.</div>
-        `;
+        container.innerHTML = '';
+        const history = document.getElementById('portalSupportHistory');
+        if (history) {
+          history.hidden = true;
+          history.open = false;
+        }
         return;
       }
+
+      const history = document.getElementById('portalSupportHistory');
+      if (history) history.hidden = false;
 
       container.innerHTML = '<div class="portal-date-divider">Today</div>' + portalChatMessages.map(message => {
         const isCustomer = message.sender_type === 'customer';
@@ -4759,14 +4763,24 @@
       if (!force && portalChatLoadedFor === applicationId) return;
 
       const container = document.getElementById('portalChatMessages');
-      if (container) {
-        container.innerHTML = '<div class="portal-date-divider">Today</div><div class="portal-chat-empty">Loading customer channel...</div>';
+      const history = document.getElementById('portalSupportHistory');
+      if (history) {
+        history.hidden = true;
+        history.open = false;
       }
+      if (container) container.innerHTML = '';
 
       try {
-        const res = await fetch(`/api/customer-reply?application_id=${encodeURIComponent(applicationId)}`);
+        const res = await fetch('/api/portal-support', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'load',
+            session_token: getToken()
+          })
+        });
         const data = await res.json();
-        if (!res.ok || data.error) throw new Error(data.error || 'Could not load chat');
+        if (!res.ok || data.error) throw new Error('Could not load private support history');
 
         portalChatMessages = (data.messages || []).map(normalizePortalMessage);
         portalChatLoadedFor = applicationId;
@@ -4774,13 +4788,13 @@
         setPortalChatStatus('Support requests and replies sync privately with the GrowthEko CRM.');
       } catch (error) {
         console.error('[Portal Chat] Load failed:', error);
-        if (container) {
-          container.innerHTML = `
-            <div class="portal-date-divider">Today</div>
-            <div class="portal-chat-error">Chat could not load from the CRM right now. You can still try sending a message.</div>
-          `;
+        portalChatMessages = [];
+        if (container) container.innerHTML = '';
+        if (history) {
+          history.hidden = true;
+          history.open = false;
         }
-        setPortalChatStatus('CRM chat connection failed. Check API/Supabase config if this persists.', true);
+        setPortalChatStatus('Your request remains private. Complete the steps above to contact support.');
       }
     }
 
@@ -5045,11 +5059,12 @@
       setPortalChatStatus('Sending to Rayan in the CRM...');
 
       try {
-        const res = await fetch('/api/customer-reply', {
+        const res = await fetch('/api/portal-support', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            application_id: applicationId,
+            action: 'send',
+            session_token: getToken(),
             content: text,
             sender_name: getPortalCustomerName()
           })
@@ -5067,7 +5082,7 @@
         portalChatMessages = portalChatMessages.filter(message => message.id !== localMessage.id);
         renderPortalChatMessages();
         if (input && !isStructuredRequest) input.value = text;
-        setPortalChatStatus('Request was not delivered. Nothing was stored in CRM. Try again.', true);
+        setPortalChatStatus('We could not submit this request yet. Nothing was stored. Please try again.', true);
         return false;
       } finally {
         portalChatSending = false;
