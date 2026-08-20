@@ -2921,7 +2921,7 @@
     }
     .phases-scroll {
       display: grid;
-      gap: 10px;
+      gap: 3px;
       overflow: visible;
       padding: 0;
       margin: 0;
@@ -2931,12 +2931,13 @@
       width: 100%;
       min-width: 0;
       display: grid;
-      grid-template-columns: 76px minmax(0, 1fr) 38px;
+      grid-template-columns: 68px minmax(0, 1fr) 44px;
       align-items: center;
+      min-height: 34px;
       padding: 0;
       background: linear-gradient(135deg, rgba(210,225,250,0.55) 0%, rgba(200,218,248,0.45) 40%, rgba(195,215,245,0.4) 100%);
       border: 1px solid rgba(180,200,240,0.5);
-      border-radius: 16px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.25s ease;
       position: relative;
@@ -2957,7 +2958,7 @@
     }
     .phase-card.active {
       border-color: rgba(100,150,230,0.7);
-      box-shadow: 0 16px 38px rgba(84,137,230,0.11);
+      box-shadow: 0 12px 32px rgba(84,137,230,0.1);
     }
     .phase-card.locked { opacity: 0.45; cursor: not-allowed; }
     .phase-card.complete { opacity: 0.7; }
@@ -2968,24 +2969,30 @@
       border-right: 1px solid rgba(17,24,39,0.08);
       color: rgba(0,0,0,0.38);
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      font-size: 12px;
+      font-size: 9px;
       font-weight: 750;
-      letter-spacing: 0.04em;
+      letter-spacing: 0;
       text-align: center;
     }
     .phase-block-main {
       min-width: 0;
       display: grid;
-      gap: 5px;
-      padding: 18px 20px;
+      gap: 4px;
+      padding: 7px 10px;
     }
     .phase-block-state {
       align-self: stretch;
       display: grid;
       place-items: center;
       align-content: center;
-      gap: 4px;
       border-left: 1px solid rgba(17,24,39,0.08);
+    }
+    .phase-block-count {
+      color: rgba(0,0,0,0.42);
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      white-space: nowrap;
     }
     .phase-block-chevron {
       width: 10px;
@@ -2998,34 +3005,40 @@
     .phase-card.active .phase-block-chevron {
       transform: rotate(225deg) translate(-2px, -2px);
     }
+    .phase-card:not(.active) .phase-block-chevron,
+    .phase-card.active .phase-block-count {
+      display: none;
+    }
     .phase-number {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      display: none;
+      font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
       color: rgba(0,0,0,0.35); font-weight: 600; margin: 0;
     }
     .phase-title {
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 20px; font-weight: 700; color: #111; margin: 0;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 12px; font-weight: 700; color: #111; margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .phase-desc {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      font-size: 13px; line-height: 1.5; color: rgba(0,0,0,0.5); margin: 0;
+      display: none;
+      font-size: 11px; line-height: 1.4; color: rgba(0,0,0,0.5); margin: 0;
     }
-    .phase-progress { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+    .phase-progress { display: none; align-items: center; gap: 10px; margin-top: 4px; }
+    .phase-card.active .phase-number,
+    .phase-card.active .phase-desc,
+    .phase-card.active .phase-progress { display: flex; }
+    .phase-card.active .phase-block-main { padding: 11px 12px; }
+    .phase-card.active .phase-title { font-size: 15px; white-space: normal; }
     .phase-progress-bar { flex: 1; height: 4px; background: rgba(180,200,240,0.3); border-radius: 2px; overflow: hidden; }
     .phase-progress-fill { height: 100%; background: linear-gradient(90deg, #8AB4F3, #6F9EE6); border-radius: 2px; transition: width 0.6s ease; }
     .phase-progress-text {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       font-size: 11px; color: rgba(0,0,0,0.4); font-weight: 600; white-space: nowrap;
     }
-    .phase-status-icon {
-      width: 28px; height: 28px;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;
-    }
-    .phase-status-icon.done { background: rgba(16,185,129,0.15); color: #10b981; }
-    .phase-status-icon.lock { background: rgba(0,0,0,0.06); color: rgba(0,0,0,0.25); }
-    .phase-status-icon.current { background: rgba(100,150,230,0.15); color: #6F9EE6; }
-
     /* ===== PHASE DETAIL ===== */
     .phase-detail {
       grid-column: 1 / -1;
@@ -3043,7 +3056,7 @@
       padding: 22px 20px 24px;
       background: rgba(255,255,255,0.34);
       border: 0;
-      border-radius: 0 0 16px 16px;
+      border-radius: 0 0 8px 8px;
       position: relative; overflow: hidden; backdrop-filter: blur(12px);
     }
     .detail-card::before {
@@ -3070,7 +3083,19 @@
     }
 
     /* ===== TASKS ===== */
-    .tasks-list { display: flex; flex-direction: column; gap: 16px; }
+    .tasks-list { display: flex; flex-direction: column; gap: 3px; }
+    .phase-card .detail-card { padding: 8px 8px 10px; }
+    .phase-card .task-item {
+      min-height: 42px;
+      padding: 7px 8px;
+      gap: 9px;
+      border-radius: 7px;
+    }
+    .phase-card .task-checkbox { width: 18px; height: 18px; border-radius: 4px; border-width: 1px; }
+    .phase-card .task-checkbox::after { font-size: 10px; }
+    .phase-card .task-name { font-size: 11px; margin-bottom: 2px; }
+    .phase-card .task-description { font-size: 9px; line-height: 1.3; }
+    .phase-card .task-action { padding: 5px 8px; border-radius: 7px; font-size: 9px; }
     .task-item {
       background: rgba(255,255,255,0.5); border: 1px solid rgba(180,200,240,0.4);
       border-radius: 16px; padding: 24px; display: flex; gap: 20px;
@@ -3483,10 +3508,12 @@
       .task-item { padding: 20px; flex-direction: column; align-items: flex-start; }
       .task-action { align-self: flex-start; }
       .phase-card { grid-template-columns: 58px minmax(0, 1fr) 34px; }
-      .phase-block-main { padding: 16px 14px; }
-      .phase-block-index { font-size: 10px; }
-      .phase-title { font-size: 18px; }
-      .phase-desc { font-size: 12px; }
+      .phase-block-main { padding: 6px 8px; }
+      .phase-card.active .phase-block-main { padding: 10px; }
+      .phase-block-index { font-size: 8px; }
+      .phase-title { font-size: 11px; }
+      .phase-card.active .phase-title { font-size: 14px; }
+      .phase-desc { font-size: 10px; }
       .task-detail-actions { flex-direction: column; }
       .btn { width: 100%; }
     }
@@ -5882,8 +5909,6 @@
       const tierBadge = document.getElementById('tierBadge');
       if (tierBadge) tierBadge.textContent = CUSTOMER.tier;
       renderPhases();
-      const visible = getVisiblePhases();
-      selectPhase(visible.length > 0 ? PHASES.indexOf(visible[0]) : 0);
       updateProgress();
       renderPortalCalendar();
       startPortalCalendarClock();
@@ -5908,7 +5933,7 @@
         const isCurrent = vi === curVisible;
         const isLocked = vi > curVisible + 1;
         const card = document.createElement('div');
-        card.className = `phase-card${isComplete ? ' complete' : ''}${isLocked ? ' locked' : ''}${isCurrent ? ' active' : ''}`;
+        card.className = `phase-card${isComplete ? ' complete' : ''}${isLocked ? ' locked' : ''}${isCurrent ? ' current' : ''}`;
         card.dataset.origIndex = origIdx;
         card.setAttribute('role', 'button');
         card.setAttribute('tabindex', isLocked ? '-1' : '0');
@@ -5933,7 +5958,7 @@
             </div>
           </div>
           <div class="phase-block-state">
-            <span class="phase-status-icon ${isComplete ? 'done' : isLocked ? 'lock' : 'current'}">${isComplete ? '\u2713' : isLocked ? '\uD83D\uDD12' : '\u2192'}</span>
+            <span class="phase-block-count">${done}/${total}</span>
             <span class="phase-block-chevron" aria-hidden="true"></span>
           </div>`;
         scroll.appendChild(card);
@@ -5997,12 +6022,13 @@
     // ===== TOGGLE CHECKBOX (on/off) =====
     function toggleTask(taskId) {
       const phaseInfo = findPhaseForTask(taskId);
+      const phaseIndex = PHASES.indexOf(phaseInfo);
       if (completedTasks.has(taskId)) {
         // Uncheck
         completedTasks.delete(taskId);
         syncToggleTask(taskId, phaseInfo.id, false);
         renderPhases();
-        selectPhase(currentPhaseIndex);
+        selectPhase(phaseIndex);
         updateProgress();
         showToast('Task unchecked');
       } else {
@@ -6014,13 +6040,21 @@
           triggerEmail('task_complete', taskId);
         }
         triggerEmailMilestones();
+        const phaseComplete = phaseInfo.tasks.every(t => completedTasks.has(t.id));
         renderPhases();
-        selectPhase(currentPhaseIndex);
+        if (phaseComplete) {
+          const visible = getVisiblePhases();
+          const visibleIndex = visible.indexOf(phaseInfo);
+          const nextPhase = visible[visibleIndex + 1];
+          if (nextPhase) selectPhase(PHASES.indexOf(nextPhase));
+        } else {
+          selectPhase(phaseIndex);
+        }
         updateProgress();
         showToast('Task completed!');
         // Phase completion check
-        const phase = PHASES[currentPhaseIndex];
-        if (phase.tasks.every(t => completedTasks.has(t.id))) {
+        const phase = phaseInfo;
+        if (phaseComplete) {
           triggerConfetti();
           const phaseKey = 'phase_complete_' + phase.id;
           if (!emailsSent.has(phaseKey)) {
