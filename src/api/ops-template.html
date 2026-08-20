@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>GrowthEko Ops</title>
+  <style>
+    :root {
+      --bg: #f5f8ff;
+      --panel: rgba(255, 255, 255, 0.78);
+      --panel-solid: #ffffff;
+      --ink: #0d1220;
+      --muted: #697386;
+      --quiet: #98a2b3;
+      --line: rgba(15, 23, 42, 0.08);
+      --blue: #276ef1;
+      --blue-soft: #e7f0ff;
+      --green: #0f8b62;
+      --gold: #d8a84e;
+      --red: #d64b4b;
+      --shadow: 0 20px 60px rgba(31, 45, 76, 0.12);
+      --radius: 18px;
+      --sidebar: 232px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(86, 144, 255, 0.20), transparent 26%),
+        radial-gradient(circle at 86% 4%, rgba(198, 218, 255, 0.55), transparent 24%),
+        linear-gradient(135deg, #f8fbff 0%, #eef5ff 44%, #f7f9ff 100%);
+      color: var(--ink);
+      overflow: hidden;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+    }
+
+    .sidebar {
+      min-height: 100vh;
+      padding: 22px 16px;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.64);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 8px;
+    }
+
+    .mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0d1220, #26345d);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+    }
+
+    .brand-title {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.08;
+    }
+
+    .brand-title strong {
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-title span {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 7px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      min-height: 42px;
+      padding: 0 12px;
+      border-radius: 12px;
+      color: var(--muted);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+      font-weight: 700;
+      transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--ink);
+    }
+
+    .nav-btn.active {
+      background: #0d1220;
+      color: #fff;
+      box-shadow: 0 10px 26px rgba(13, 18, 32, 0.16);
+    }
+
+    .nav-icon {
+      width: 19px;
+      height: 19px;
+      stroke: currentColor;
+      stroke-width: 2.1;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+
+    .sidebar-card {
+      margin-top: auto;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.62);
+    }
+
+    .sidebar-card small {
+      color: var(--muted);
+      display: block;
+      line-height: 1.45;
+    }
+
+    .main {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      min-width: 0;
+    }
+
+    .topbar {
+      padding: 18px 24px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.50);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .headline {
+      min-width: 0;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 34px);
+      letter-spacing: -0.035em;
+      line-height: 1.02;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .search {
+      width: 260px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      padding: 0 16px;
+      color: var(--ink);
+      outline: none;
+      box-shadow: 0 8px 26px rgba(31, 45, 76, 0.05);
+    }
+
+    .primary-btn {
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: #0d1220;
+      color: #fff;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .content {
+      min-height: 0;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .workspace {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 15px;
+      box-shadow: 0 10px 34px rgba(31, 45, 76, 0.06);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+      margin-bottom: 2px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .view {
+      min-height: 0;
+      min-width: 0;
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .board-wrap {
+      height: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 10px;
+    }
+
+    .board {
+      height: 100%;
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 286px;
+      gap: 12px;
+      min-width: max-content;
+    }
+
+    .column {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.56);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .column.over {
+      outline: 2px solid rgba(39, 110, 241, 0.28);
+      background: rgba(231, 240, 255, 0.78);
+    }
+
+    .column-head {
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .column-title {
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: -0.01em;
+    }
+
+    .count {
+      min-width: 24px;
+      height: 24px;
+      padding: 0 7px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(13, 18, 32, 0.08);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .cards {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .lead-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 13px;
+      box-shadow: 0 10px 28px rgba(31, 45, 76, 0.07);
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+      user-select: none;
+    }
+
+    .lead-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(31, 45, 76, 0.12);
+      border-color: rgba(39, 110, 241, 0.20);
+    }
+
+    .lead-card.dragging {
+      opacity: 0.52;
+      transform: scale(0.98);
+    }
+
+    .lead-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .lead-name {
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .lead-company {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .value {
+      color: var(--green);
+      font-weight: 850;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 11px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: rgba(13, 18, 32, 0.06);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .chip.blue { background: var(--blue-soft); color: var(--blue); }
+    .chip.green { background: #e5f7ef; color: var(--green); }
+    .chip.gold { background: #fff3d8; color: #9a6a0d; }
+    .chip.red { background: #ffe8e8; color: var(--red); }
+
+    .next {
+      border-top: 1px solid rgba(15, 23, 42, 0.06);
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .due {
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .panel {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+
+    .panel-head {
+      padding: 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -0.035em;
+    }
+
+    .panel-sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .close-drawer {
+      display: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: rgba(13, 18, 32, 0.06);
+      color: var(--ink);
+      font-size: 20px;
+    }
+
+    .panel-body {
+      overflow-y: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 11px;
+      background: rgba(255, 255, 255, 0.76);
+      min-width: 0;
+    }
+
+    .field label {
+      display: block;
+      color: var(--quiet);
+      font-size: 10px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 5px;
+    }
+
+    .field div {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 750;
+      overflow-wrap: anywhere;
+      line-height: 1.35;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .note {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 13px;
+      background: rgba(255, 255, 255, 0.72);
+      color: #30394c;
+      font-size: 13px;
+      line-height: 1.48;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .event {
+      display: grid;
+      grid-template-columns: 8px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      margin-top: 6px;
+      background: var(--blue);
+    }
+
+    .event strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .event span {
+      color: var(--muted);
+      font-size: 12px;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .panel-actions {
+      border-top: 1px solid var(--line);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      background: rgba(255, 255, 255, 0.65);
+    }
+
+    .action {
+      min-height: 40px;
+      border-radius: 12px;
+      background: rgba(13, 18, 32, 0.06);
+      color: var(--ink);
+      font-weight: 850;
+    }
+
+    .action.dark {
+      background: #0d1220;
+      color: #fff;
+    }
+
+    .list-view {
+      height: 100%;
+      overflow-y: auto;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+    }
+
+    .row {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      padding: 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .row strong {
+      display: block;
+      letter-spacing: -0.01em;
+    }
+
+    .row span {
+      color: var(--muted);
+      font-size: 13px;
+      display: block;
+      margin-top: 3px;
+    }
+
+    .admin-grid {
+      height: 100%;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-content: start;
+      gap: 12px;
+    }
+
+    .admin-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      padding: 15px;
+      min-height: 116px;
+      box-shadow: 0 10px 30px rgba(31, 45, 76, 0.06);
+    }
+
+    .admin-card.wide {
+      grid-column: span 2;
+    }
+
+    .admin-card.full {
+      grid-column: 1 / -1;
+    }
+
+    .admin-card h3 {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 24px;
+      letter-spacing: -0.035em;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .danger-list,
+    .event-list,
+    .chat-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .danger-item,
+    .event-log,
+    .message {
+      border: 1px solid rgba(15, 23, 42, 0.07);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.76);
+      padding: 10px;
+      color: #30394c;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .danger-item {
+      border-color: rgba(214, 75, 75, 0.20);
+      background: rgba(255, 232, 232, 0.62);
+    }
+
+    .message.team {
+      background: rgba(231, 240, 255, 0.76);
+      border-color: rgba(39, 110, 241, 0.16);
+    }
+
+    .message-meta {
+      color: var(--muted);
+      display: block;
+      font-size: 11px;
+      font-weight: 850;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .ai-box {
+      border: 1px solid rgba(39, 110, 241, 0.18);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(231, 240, 255, 0.86), rgba(255, 255, 255, 0.82));
+      padding: 13px;
+    }
+
+    .ai-box p {
+      margin: 0;
+      color: #25324a;
+      font-size: 13px;
+      line-height: 1.48;
+    }
+
+    .script-box {
+      border: 1px solid rgba(216, 168, 78, 0.28);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255, 243, 216, 0.78), rgba(255, 255, 255, 0.84));
+      padding: 13px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .script-box p {
+      margin: 0;
+      color: #332a17;
+      font-size: 13px;
+      line-height: 1.48;
+    }
+
+    .script-line {
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.72);
+      padding: 10px;
+    }
+
+    .script-line strong {
+      display: block;
+      color: #9a6a0d;
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .drawer-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .mobile-tabs {
+      display: none;
+    }
+
+    @media (max-width: 1080px) {
+      :root { --sidebar: 76px; }
+      .brand-title, .nav-label, .sidebar-card { display: none; }
+      .brand { justify-content: center; padding: 0; }
+      .nav-btn { justify-content: center; padding: 0; }
+      .content { grid-template-columns: minmax(0, 1fr) 330px; }
+      .stats { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
+    }
+
+    @media (max-width: 780px) {
+      html, body { overflow: auto; }
+      .app {
+        min-height: 100svh;
+        display: block;
+        padding-bottom: 76px;
+      }
+      .sidebar { display: none; }
+      .main {
+        height: auto;
+        min-height: 100svh;
+        display: block;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 15;
+        padding: 16px 15px 12px;
+        align-items: flex-start;
+      }
+      .top-actions { display: none; }
+      h1 { font-size: 27px; }
+      .content {
+        display: block;
+        padding: 12px;
+      }
+      .workspace {
+        display: block;
+      }
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-bottom: 12px;
+      }
+      .stat {
+        border-radius: 16px;
+        padding: 12px;
+      }
+      .stat strong { font-size: 20px; }
+      .view.active {
+        min-height: calc(100svh - 250px);
+      }
+      .board-wrap {
+        height: calc(100svh - 254px);
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+      .board {
+        grid-auto-columns: 82vw;
+      }
+      .panel {
+        position: fixed;
+        inset: auto 10px 84px 10px;
+        max-height: 78svh;
+        z-index: 30;
+        transform: translateY(calc(100% + 92px));
+        transition: transform 220ms ease;
+      }
+      .panel.open {
+        transform: translateY(0);
+      }
+      .close-drawer { display: grid; place-items: center; }
+      .field-grid { grid-template-columns: 1fr; }
+      .panel-actions { grid-template-columns: 1fr; }
+      .mobile-tabs {
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        z-index: 35;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 6px;
+        padding: 8px;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.84);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        box-shadow: 0 18px 50px rgba(31, 45, 76, 0.18);
+      }
+      .mobile-tabs .nav-btn {
+        min-height: 48px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        gap: 0;
+      }
+      .mobile-tabs .nav-label { display: none; }
+      .row {
+        grid-template-columns: 1fr;
+      }
+      .admin-grid {
+        grid-template-columns: 1fr;
+      }
+      .admin-card,
+      .admin-card.wide,
+      .admin-card.full {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="GrowthEko Ops Navigation">
+      <div class="brand">
+        <div class="mark">G</div>
+        <div class="brand-title">
+          <strong>GrowthEko</strong>
+          <span>Ops Command</span>
+        </div>
+      </div>
+      <nav class="nav" data-nav></nav>
+      <div class="sidebar-card">
+        <small>One team view. Pipeline, customers, tasks, messages, and revenue stay in one internal place.</small>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="headline">
+          <div class="eyebrow">Internal CRM</div>
+          <h1 id="viewTitle">Pipeline</h1>
+        </div>
+        <div class="top-actions">
+          <input class="search" id="searchInput" type="search" placeholder="Search client, email, source">
+          <button class="primary-btn" type="button" id="newTaskBtn">
+            <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            New Action
+          </button>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="workspace">
+          <div class="stats" id="stats"></div>
+          <section class="view active" id="pipelineView">
+            <div class="board-wrap">
+              <div class="board" id="board"></div>
+            </div>
+          </section>
+          <section class="view" id="inboxView"></section>
+          <section class="view" id="customersView"></section>
+          <section class="view" id="tasksView"></section>
+          <section class="view" id="revenueView"></section>
+          <section class="view" id="adminView"></section>
+        </div>
+
+        <aside class="panel" id="detailPanel" aria-label="Customer detail">
+          <div class="panel-head">
+            <div>
+              <h2 class="panel-title" id="detailName">Select a card</h2>
+              <div class="panel-sub" id="detailSub">Click any customer to see the full operating context.</div>
+            </div>
+            <button class="close-drawer" id="closeDrawer" type="button" aria-label="Close">x</button>
+          </div>
+          <div class="panel-body" id="detailBody"></div>
+          <div class="panel-actions">
+            <button class="action dark" type="button" data-action="follow-up">Send Follow-Up</button>
+            <button class="action" type="button" data-action="note">Add Note</button>
+            <button class="action" type="button" data-action="payment">Send Payment</button>
+            <button class="action" type="button" data-action="portal">Activate Portal</button>
+          </div>
+        </aside>
+      </section>
+    </main>
+  </div>
+  <nav class="mobile-tabs" data-mobile-nav></nav>
+
+  <script>
+    const icons = {
+      pipeline: '<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/><path d="M8 4v4"/><path d="M16 10v4"/><path d="M11 16v4"/>',
+      inbox: '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+      customers: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+      tasks: '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+      revenue: '<path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14.5a3.5 3.5 0 0 1 0 7H6"/>',
+      admin: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>'
+    };
+
+    const navItems = [
+      ['pipeline', 'Pipeline'],
+      ['inbox', 'Inbox'],
+      ['customers', 'Customers'],
+      ['tasks', 'Tasks'],
+      ['revenue', 'Revenue'],
+      ['admin', 'Admin']
+    ];
+
+    const stages = [
+      'New Lead',
+      'Qualified',
+      'Webinar',
+      'Application',
+      'Call Booked',
+      'Call Completed',
+      'Offer Sent',
+      'Follow-Up',
+      'Payment Pending',
+      'Agreement Pending',
+      'Paid + Signed',
+      'Portal Active',
+      'Onboarding',
+      'Delivery Active',
+      'Content / Testimonial',
+      'Upsell ($4,997 / $5,000)',
+      'Retained'
+    ];
+
+    let people = [
+      {
+        id: 'p1',
+        name: 'Maya Klein',
+        company: 'Fitness Coaching',
+        email: 'maya@example.com',
+        phone: '+43 660 000 110',
+        instagram: '@mayafit',
+        source: 'Webinar',
+        product: 'Private Growth Setup',
+        upsellProduct: 'Premium Implementation',
+        contentStatus: 'Not started',
+        testimonialStatus: 'Not ready',
+        activeStatus: 'Lead active',
+        value: 1997,
+        stage: 'New Lead',
+        owner: 'Director of Growth',
+        next: 'Send qualification follow-up',
+        due: 'Today',
+        payment: 'Open',
+        agreement: 'Open',
+        portal: 'Locked',
+        notes: 'Has a coaching offer and wants more qualified calls. Good fit if she can make decisions this week.',
+        timeline: ['Webinar registered', 'Clicked application CTA', 'No call booked yet'],
+        messages: [
+          ['customer', 'I watched the training but I am not sure what the next step is.'],
+          ['team', 'Good. Send me your current offer and I will tell you if a private call makes sense.']
+        ],
+        events: ['Lead source captured: Webinar', 'CSM reply drafted', 'Follow-up due today'],
+        upsellSignal: 'Potential'
+      },
+      {
+        id: 'p2',
+        name: 'Leon Hart',
+        company: 'Agency Owner',
+        email: 'leon@example.com',
+        phone: '+49 151 000 230',
+        instagram: '@leonbuilds',
+        source: 'DM',
+        product: 'Premium Implementation',
+        upsellProduct: 'Retainer / Renewal',
+        contentStatus: 'Not started',
+        testimonialStatus: 'Not ready',
+        activeStatus: 'Hot lead',
+        value: 4997,
+        stage: 'Qualified',
+        owner: 'Robin',
+        next: 'Review application',
+        due: 'Today',
+        payment: 'Open',
+        agreement: 'Open',
+        portal: 'Locked',
+        notes: 'Already has buyers and a service. Main bottleneck is offer clarity and outbound system.',
+        timeline: ['Warm DM reply', 'Sent onboarding link', 'Submitted core business answers'],
+        messages: [
+          ['customer', 'I have service clients, but the system is not predictable.'],
+          ['team', 'That is a growth path issue. We should review your offer and acquisition path properly.']
+        ],
+        events: ['Warm DM converted', 'Application submitted', 'Robin assigned as owner'],
+        upsellSignal: 'High'
+      },
+      {
+        id: 'p3',
+        name: 'Sofia Brandt',
+        company: 'Creator Education',
+        email: 'sofia@example.com',
+        phone: '+43 676 000 401',
+        instagram: '@sofiacreates',
+        source: 'Meta Ad',
+        product: 'Private Growth Setup',
+        upsellProduct: 'Premium Implementation',
+        contentStatus: 'Not started',
+        testimonialStatus: 'Not ready',
+        activeStatus: 'Qualified active',
+        value: 1997,
+        stage: 'Application',
+        owner: 'Director of Growth',
+        next: 'Invite to private call',
+        due: 'Tomorrow',
+        payment: 'Open',
+        agreement: 'Open',
+        portal: 'Locked',
+        notes: 'Strong creator audience. Needs a clearer product path and follow-up system.',
+        timeline: ['Ad lead captured', 'Application submitted', 'Qualified pending booking'],
+        messages: [
+          ['customer', 'I want to turn my audience into something more structured.'],
+          ['team', 'We can map that. I will send the private call path if the fit is clear.']
+        ],
+        events: ['Meta source captured', 'Application submitted', 'Booking invite pending'],
+        upsellSignal: 'Medium'
+      },
+      {
+        id: 'p4',
+        name: 'David Sommer',
+        company: 'Local Consulting',
+        email: 'david@example.com',
+        phone: '+43 664 000 984',
+        instagram: '@davidsommer',
+        source: 'Referral',
+        product: 'Private Growth Setup',
+        upsellProduct: 'Premium Implementation',
+        contentStatus: 'Not started',
+        testimonialStatus: 'Not ready',
+        activeStatus: 'Call active',
+        value: 1997,
+        stage: 'Call Booked',
+        owner: 'Director of Growth',
+        next: 'Prepare call notes',
+        due: '14:30',
+        payment: 'Open',
+        agreement: 'Open',
+        portal: 'Locked',
+        notes: 'Referral from warm contact. Wants a simple funnel and paid ads path.',
+        timeline: ['Referral intro', 'Application submitted', 'Call booked'],
+        messages: [
+          ['team', 'Your call is booked. Bring the numbers and current funnel path.'],
+          ['customer', 'Perfect, I will prepare everything.']
+        ],
+        events: ['Referral recorded', 'Call booked', 'Prep note required'],
+        upsellSignal: 'Call booked'
+      },
+      {
+        id: 'p5',
+        name: 'Nina Weber',
+        company: 'Ecom Brand',
+        email: 'nina@example.com',
+        phone: '+49 170 000 441',
+        instagram: '@ninaecom',
+        source: 'Webinar',
+        product: 'Premium Implementation',
+        upsellProduct: 'Retainer / Renewal',
+        contentStatus: 'Not started',
+        testimonialStatus: 'Not ready',
+        activeStatus: 'Offer active',
+        value: 4997,
+        stage: 'Offer Sent',
+        owner: 'Robin',
+        next: 'Follow up on premium option',
+        due: 'Today',
+        payment: 'Pending',
+        agreement: 'Open',
+        portal: 'Locked',
+        notes: 'Premium implementation is the right fit. She asked for one night to review.',
+        timeline: ['Attended webinar', 'Booked call', 'Offer sent'],
+        messages: [
+          ['customer', 'The premium option is probably what I need, I just want to review it once.'],
+          ['team', 'Take the night. I will follow up tomorrow with the clean next step.']
+        ],
+        events: ['Offer sent', 'Follow-up due today', 'Premium implementation recommended'],
+        upsellSignal: 'High'
+      },
+      {
+        id: 'p6',
+        name: 'Jonas Ritter',
+        company: 'Info Product',
+        email: 'jonas@example.com',
+        phone: '+43 699 000 112',
+        instagram: '@jonasrit',
+        source: 'Organic',
+        product: 'Private Growth Setup',
+        upsellProduct: 'Premium Implementation',
+        contentStatus: 'Not started',
+        testimonialStatus: 'Not ready',
+        activeStatus: 'Closing active',
+        value: 1997,
+        stage: 'Payment Pending',
+        owner: 'Director of Growth',
+        next: 'Confirm payment link',
+        due: 'Today',
+        payment: 'Pending',
+        agreement: 'Sent',
+        portal: 'Locked',
+        notes: 'Verbally agreed. Needs payment and signature before portal unlock.',
+        timeline: ['Call completed', 'Accepted $1,997', 'Agreement sent'],
+        messages: [
+          ['team', 'Payment and agreement are the two setup steps before we open your portal.'],
+          ['customer', 'Send it again please, I want to finish it today.']
+        ],
+        events: ['Call completed', '$1,997 accepted', 'Payment pending', 'Agreement sent'],
+        upsellSignal: 'Closing'
+      },
+      {
+        id: 'p7',
+        name: 'Amira Stahl',
+        company: 'Consulting',
+        email: 'amira@example.com',
+        phone: '+43 650 000 616',
+        instagram: '@amiraops',
+        source: 'Referral',
+        product: 'Private Growth Setup',
+        upsellProduct: 'Premium Implementation',
+        contentStatus: 'Queued',
+        testimonialStatus: 'Not ready',
+        activeStatus: 'Client active',
+        value: 1997,
+        stage: 'Paid + Signed',
+        owner: 'CSM',
+        next: 'Create portal',
+        due: 'Now',
+        payment: 'Paid',
+        agreement: 'Signed',
+        portal: 'Ready',
+        notes: 'Clean handoff. Needs onboarding and first assets inside portal.',
+        timeline: ['Payment collected', 'Agreement signed', 'Portal creation queued'],
+        messages: [
+          ['team', 'You are paid and signed. I am opening the portal now.'],
+          ['customer', 'Great, send me the first task.']
+        ],
+        events: ['Payment paid', 'Agreement signed', 'Portal activation required'],
+        upsellSignal: 'Delivery'
+      },
+      {
+        id: 'p8',
+        name: 'Timo Adler',
+        company: 'SaaS Founder',
+        email: 'timo@example.com',
+        phone: '+49 160 000 802',
+        instagram: '@timoadler',
+        source: 'Meta Ad',
+        product: 'Premium Implementation',
+        upsellProduct: 'Retainer / Renewal',
+        contentStatus: 'In progress',
+        testimonialStatus: 'Ready soon',
+        activeStatus: 'Delivery active',
+        value: 4997,
+        stage: 'Content / Testimonial',
+        owner: 'CSM',
+        next: 'Review tracking dashboard',
+        due: 'Friday',
+        payment: 'Paid',
+        agreement: 'Signed',
+        portal: 'Active',
+        notes: 'Active client. Funnel map complete. Current focus is campaign tracking and proof.',
+        timeline: ['Portal active', 'Offer map finished', 'Content/testimonial step active'],
+        messages: [
+          ['customer', 'The funnel is clearer now. I want to scale the campaign faster.'],
+          ['team', 'That is the right next bottleneck. I will mark this for an expansion review.']
+        ],
+        events: ['Portal active', 'Delivery active', 'Expansion signal detected'],
+        upsellSignal: 'High'
+      }
+    ];
+
+    const OPS_STORAGE_KEY = 'growtheko_ops_people_v1';
+    try {
+      const storedPeople = JSON.parse(localStorage.getItem(OPS_STORAGE_KEY) || 'null');
+      if (Array.isArray(storedPeople) && storedPeople.length) people = storedPeople;
+    } catch {}
+
+    function persistPeople() {
+      try {
+        localStorage.setItem(OPS_STORAGE_KEY, JSON.stringify(people));
+      } catch {}
+    }
+
+    let currentView = 'pipeline';
+    let selectedId = people[0].id;
+
+    const navRoot = document.querySelector('[data-nav]');
+    const mobileNavRoot = document.querySelector('[data-mobile-nav]');
+    const board = document.getElementById('board');
+    const stats = document.getElementById('stats');
+    const searchInput = document.getElementById('searchInput');
+    const detailPanel = document.getElementById('detailPanel');
+
+    function icon(key) {
+      return '<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">' + icons[key] + '</svg>';
+    }
+
+    function money(value) {
+      return '$' + Number(value || 0).toLocaleString('en-US');
+    }
+
+    function statusChip(label, value) {
+      let tone = '';
+      if (['Paid', 'Signed', 'Active', 'Ready'].includes(value)) tone = 'green';
+      if (['Pending', 'Sent'].includes(value)) tone = 'gold';
+      if (['Locked', 'Open'].includes(value)) tone = value === 'Locked' ? 'red' : '';
+      return '<span class="chip ' + tone + '">' + label + ': ' + value + '</span>';
+    }
+
+    function dangerStates() {
+      const states = [];
+      people.forEach(p => {
+        if (p.payment === 'Paid' && p.agreement !== 'Signed') states.push({ id: p.id, title: p.name + ': paid but not signed', meta: 'Agreement risk' });
+        if (p.agreement === 'Signed' && p.payment !== 'Paid') states.push({ id: p.id, title: p.name + ': signed but not paid', meta: 'Cash risk' });
+        if (p.payment === 'Paid' && p.agreement === 'Signed' && !['Ready', 'Active'].includes(p.portal)) states.push({ id: p.id, title: p.name + ': paid + signed but portal locked', meta: 'Delivery risk' });
+        if (p.stage === 'Call Booked' && !p.timeline.some(t => t.toLowerCase().includes('prep'))) states.push({ id: p.id, title: p.name + ': call booked without prep note', meta: 'Sales risk' });
+        if (p.stage === 'Offer Sent' && !p.due) states.push({ id: p.id, title: p.name + ': offer sent without follow-up', meta: 'Follow-up risk' });
+        if (p.owner === 'CSM' && !p.next) states.push({ id: p.id, title: p.name + ': active customer without next action', meta: 'CSM risk' });
+      });
+      return states;
+    }
+
+    function adminMetrics() {
+      const collected = people.filter(p => p.payment === 'Paid').reduce((sum, p) => sum + p.value, 0);
+      const pending = people.filter(p => p.payment === 'Pending').reduce((sum, p) => sum + p.value, 0);
+      const forecast = people.reduce((sum, p) => sum + (['Offer Sent', 'Follow-Up', 'Payment Pending', 'Agreement Pending'].includes(p.stage) ? p.value : 0), 0);
+      const calls = people.filter(p => ['Call Booked', 'Call Completed', 'Offer Sent', 'Payment Pending', 'Paid + Signed'].includes(p.stage)).length;
+      const offers = people.filter(p => ['Offer Sent', 'Follow-Up', 'Payment Pending', 'Agreement Pending', 'Paid + Signed'].includes(p.stage)).length;
+      const paid = people.filter(p => p.payment === 'Paid').length;
+      const highSignals = people.filter(p => p.upsellSignal === 'High').length;
+      return { collected, pending, forecast, calls, offers, paid, highSignals, danger: dangerStates().length };
+    }
+
+    function filteredPeople() {
+      const q = searchInput.value.trim().toLowerCase();
+      if (!q) return people;
+      return people.filter(p => [p.name, p.company, p.email, p.instagram, p.source, p.stage, p.product, p.upsellProduct, p.activeStatus, p.contentStatus, p.testimonialStatus].join(' ').toLowerCase().includes(q));
+    }
+
+    function renderNav() {
+      const html = navItems.map(([key, label]) => {
+        const active = key === currentView ? ' active' : '';
+        return '<button class="nav-btn' + active + '" type="button" data-view="' + key + '">' + icon(key) + '<span class="nav-label">' + label + '</span></button>';
+      }).join('');
+      navRoot.innerHTML = html;
+      mobileNavRoot.innerHTML = html;
+      document.querySelectorAll('[data-view]').forEach(btn => {
+        btn.addEventListener('click', () => setView(btn.dataset.view));
+      });
+    }
+
+    function renderStats() {
+      const won = people.filter(p => ['Paid + Signed', 'Portal Active', 'Onboarding', 'Delivery Active', 'Content / Testimonial', 'Upsell ($4,997 / $5,000)', 'Retained'].includes(p.stage));
+      const pending = people.filter(p => p.payment === 'Pending' || p.agreement === 'Sent');
+      const forecast = people.reduce((sum, p) => sum + (['Offer Sent', 'Follow-Up', 'Payment Pending', 'Agreement Pending'].includes(p.stage) ? p.value : 0), 0);
+      const tasks = people.filter(p => ['Today', 'Now'].includes(p.due)).length;
+      const data = [
+        [people.length, 'Active records'],
+        [money(won.reduce((sum, p) => sum + p.value, 0)), 'Collected value'],
+        [money(forecast), 'Open forecast'],
+        [tasks, 'Due today']
+      ];
+      stats.innerHTML = data.map(([num, label]) => '<div class="stat"><strong>' + num + '</strong><span>' + label + '</span></div>').join('');
+    }
+
+    function renderBoard() {
+      const list = filteredPeople();
+      board.innerHTML = stages.map(stage => {
+        const stagePeople = list.filter(p => p.stage === stage);
+        const cards = stagePeople.map(renderCard).join('');
+        return '<section class="column" data-stage="' + stage + '"><div class="column-head"><div class="column-title">' + stage + '</div><div class="count">' + stagePeople.length + '</div></div><div class="cards">' + cards + '</div></section>';
+      }).join('');
+
+      document.querySelectorAll('.lead-card').forEach(card => {
+        card.addEventListener('click', () => selectPerson(card.dataset.id));
+        card.addEventListener('dragstart', event => {
+          card.classList.add('dragging');
+          event.dataTransfer.setData('text/plain', card.dataset.id);
+        });
+        card.addEventListener('dragend', () => card.classList.remove('dragging'));
+      });
+
+      document.querySelectorAll('.column').forEach(column => {
+        column.addEventListener('dragover', event => {
+          event.preventDefault();
+          column.classList.add('over');
+        });
+        column.addEventListener('dragleave', () => column.classList.remove('over'));
+        column.addEventListener('drop', event => {
+          event.preventDefault();
+          column.classList.remove('over');
+          const id = event.dataTransfer.getData('text/plain');
+          const person = people.find(p => p.id === id);
+          if (!person) return;
+          person.stage = column.dataset.stage;
+          person.timeline.unshift('Moved to ' + person.stage);
+          selectedId = id;
+          persistPeople();
+          renderAll();
+        });
+      });
+    }
+
+    function renderCard(p) {
+      const selected = p.id === selectedId ? ' style="border-color: rgba(39,110,241,.38)"' : '';
+      return '<article class="lead-card" draggable="true" data-id="' + p.id + '"' + selected + '>' +
+        '<div class="lead-top"><div><div class="lead-name">' + p.name + '</div><div class="lead-company">' + p.company + '</div></div><div class="value">' + money(p.value) + '</div></div>' +
+        '<div class="chips"><span class="chip blue">' + p.product + '</span><span class="chip green">' + p.activeStatus + '</span></div>' +
+        '<div class="chips"><span class="chip gold">Upsell: ' + p.upsellProduct + '</span></div>' +
+        '<div class="chips"><span class="chip">' + p.source + '</span><span class="chip">' + p.owner + '</span></div>' +
+        '<div class="chips">' + statusChip('Pay', p.payment) + statusChip('Sign', p.agreement) + statusChip('Portal', p.portal) + '</div>' +
+        '<div class="next"><span>' + p.next + '</span><span class="due">' + p.due + '</span></div>' +
+      '</article>';
+    }
+
+    function selectPerson(id) {
+      selectedId = id;
+      detailPanel.classList.add('open');
+      renderAll();
+    }
+
+    function selectedPerson() {
+      return people.find(p => p.id === selectedId) || people[0];
+    }
+
+    function renderDetail() {
+      const p = selectedPerson();
+      document.getElementById('detailName').textContent = p.name;
+      document.getElementById('detailSub').textContent = p.company + ' - ' + p.stage;
+      const aiDraft = getAiDraft(p);
+      const upsellScript = getUpsellScript(p);
+      document.getElementById('detailBody').innerHTML =
+        '<div class="field-grid">' +
+          field('Email', p.email) + field('Phone', p.phone) + field('Instagram', p.instagram) + field('Source', p.source) +
+          field('Product', p.product) + field('Upsell Target', p.upsellProduct) + field('Content Status', p.contentStatus) + field('Testimonial Status', p.testimonialStatus) + field('Active Status', p.activeStatus) + field('Owner', p.owner) + field('Deal Value', money(p.value)) + field('Payment', p.payment) + field('Agreement', p.agreement) +
+          field('Portal', p.portal) + field('Next Action', p.next + ' - ' + p.due) +
+        '</div>' +
+        '<div><div class="section-title">Operator Notes</div><div class="note">' + p.notes + '</div></div>' +
+        '<div><div class="section-title">Chat</div><div class="chat-list">' + p.messages.map(m => '<div class="message ' + (m[0] === 'team' ? 'team' : '') + '"><span class="message-meta">' + (m[0] === 'team' ? 'GrowthEko' : 'Customer') + '</span>' + m[1] + '</div>').join('') + '</div></div>' +
+        '<div><div class="section-title">AI Draft</div><div class="ai-box"><p>' + aiDraft + '</p></div></div>' +
+        '<div><div class="section-title">CSM Upsell Script (' + p.upsellProduct + ')</div><div class="script-box">' + upsellScript + '</div></div>' +
+        '<div><div class="section-title">Event Log</div><div class="event-list">' + p.events.map(e => '<div class="event-log">' + e + '</div>').join('') + '</div></div>' +
+        '<div><div class="section-title">Timeline</div><div class="timeline">' + p.timeline.map((t, i) => '<div class="event"><span class="dot"></span><div><strong>' + t + '</strong><span>' + (i === 0 ? 'Latest update' : 'Previous step') + '</span></div></div>').join('') + '</div></div>';
+    }
+
+    function getUpsellScript(p) {
+      const product = p.upsellProduct;
+      const trigger = p.upsellSignal === 'High'
+        ? 'Customer is asking for speed, implementation, scale, or direct help.'
+        : 'Use only if the customer shows a clear bottleneck, not for normal support.';
+      return [
+        '<div class="script-line"><strong>When to use</strong><p>' + trigger + '</p></div>',
+        '<div class="script-line"><strong>Positioning</strong><p>This sounds less like a support question and more like a growth path issue. The next step would be ' + product + ', but only if we can clearly see that it solves the current bottleneck.</p></div>',
+        '<div class="script-line"><strong>Message</strong><p>If you want, I can get you on a private growth call so we map the next move properly. No pressure. The goal is to see whether this should stay as support, or whether it needs a deeper implementation path.</p></div>',
+        '<div class="script-line"><strong>Internal action</strong><p>Mark Upsell Signal, set next action, and move the card only when the customer agrees to the next step.</p></div>'
+      ].join('');
+    }
+
+    function getAiDraft(p) {
+      if (p.upsellSignal === 'High') return 'This sounds like the next bottleneck is not more information, but the exact growth path. I can get you on a private growth call so we map the next move properly.';
+      if (p.payment === 'Paid' && p.agreement === 'Signed' && p.portal !== 'Active') return 'You are paid and signed. The next clean step is portal activation, then your first delivery task.';
+      if (p.payment === 'Pending' || p.agreement === 'Sent') return 'The next step is simple: finish payment and agreement, then we can open the portal and start delivery.';
+      return 'Send me the one bottleneck that feels most unclear right now. I will keep the next step simple.';
+    }
+
+    function field(label, value) {
+      return '<div class="field"><label>' + label + '</label><div>' + value + '</div></div>';
+    }
+
+    function renderListView(id, rows) {
+      document.getElementById(id).innerHTML = '<div class="list-view">' + rows.map(row => '<button class="row" type="button" data-id="' + row.id + '"><div><strong>' + row.title + '</strong><span>' + row.sub + '</span></div><span class="chip ' + (row.tone || '') + '">' + row.meta + '</span></button>').join('') + '</div>';
+      document.querySelectorAll('#' + id + ' [data-id]').forEach(row => row.addEventListener('click', () => selectPerson(row.dataset.id)));
+    }
+
+    function renderSecondaryViews() {
+      renderListView('inboxView', people.map(p => ({ id: p.id, title: p.name + ' - ' + (p.messages[p.messages.length - 1] ? p.messages[p.messages.length - 1][1] : p.next), sub: p.product + ' / ' + p.email + ' / ' + p.instagram, meta: p.upsellSignal, tone: p.upsellSignal === 'High' ? 'gold' : '' })));
+      renderListView('customersView', people.filter(p => ['Paid + Signed', 'Portal Active', 'Onboarding', 'Delivery Active', 'Content / Testimonial', 'Upsell ($4,997 / $5,000)', 'Retained'].includes(p.stage)).map(p => ({ id: p.id, title: p.name + ' - ' + p.company, sub: p.product + ' / Content: ' + p.contentStatus + ' / Testimonial: ' + p.testimonialStatus, meta: p.stage, tone: 'green' })));
+      renderListView('tasksView', people.map(p => ({ id: p.id, title: p.next, sub: p.name + ' - ' + p.stage, meta: p.due, tone: ['Today', 'Now'].includes(p.due) ? 'red' : '' })));
+      renderListView('revenueView', people.map(p => ({ id: p.id, title: p.name + ' - ' + money(p.value), sub: p.product + ' / ' + p.stage + ' / Payment: ' + p.payment + ' / Agreement: ' + p.agreement, meta: p.source, tone: p.payment === 'Paid' ? 'green' : 'gold' })));
+      renderAdminView();
+    }
+
+    function renderAdminView() {
+      const m = adminMetrics();
+      const danger = dangerStates();
+      const productMix = [
+        ['Private Growth Setup', people.filter(p => p.product === 'Private Growth Setup').length],
+        ['Premium Implementation', people.filter(p => p.product === 'Premium Implementation').length],
+        ['Operator Membership', people.filter(p => p.product === 'GrowthEko Operator Membership').length]
+      ];
+      document.getElementById('adminView').innerHTML =
+        '<div class="admin-grid">' +
+          '<div class="admin-card"><h3>Cash</h3><div class="metric-grid">' +
+            metric(money(m.collected), 'Collected') + metric(money(m.pending), 'Pending') + metric(money(m.forecast), 'Forecast') + metric(m.paid, 'Paid records') +
+          '</div></div>' +
+          '<div class="admin-card"><h3>Pipeline</h3><div class="metric-grid">' +
+            metric(people.length, 'Records') + metric(m.calls, 'Call path') + metric(m.offers, 'Offer path') + metric(m.highSignals, 'High signals') +
+          '</div></div>' +
+          '<div class="admin-card"><h3>Team</h3><div class="metric-grid">' +
+            metric(people.filter(p => p.owner === 'Director of Growth').length, 'Director') + metric(people.filter(p => p.owner === 'CSM').length, 'CSM') + metric(people.filter(p => ['Today', 'Now'].includes(p.due)).length, 'Due today') + metric(m.danger, 'Danger') +
+          '</div></div>' +
+          '<div class="admin-card wide"><h3>Danger States</h3><div class="danger-list">' + (danger.length ? danger.map(d => '<button class="danger-item" type="button" data-id="' + d.id + '"><strong>' + d.title + '</strong><br><span>' + d.meta + '</span></button>').join('') : '<div class="event-log">No danger states in demo data.</div>') + '</div></div>' +
+          '<div class="admin-card"><h3>Product Mix</h3><div class="danger-list">' + productMix.map(p => '<div class="event-log"><strong>' + p[0] + '</strong><br><span>' + p[1] + ' records</span></div>').join('') + '</div></div>' +
+          '<div class="admin-card full"><h3>Admin Daily Brief</h3><div class="event-log"><strong>Best next action:</strong> build Inbox + real event persistence next. Current demo shows where revenue, danger states, CSM signals, and delivery blockers must appear before Supabase/Auth are connected.</div></div>' +
+        '</div>';
+      document.querySelectorAll('#adminView [data-id]').forEach(row => row.addEventListener('click', () => selectPerson(row.dataset.id)));
+    }
+
+    function metric(value, label) {
+      return '<div class="metric"><strong>' + value + '</strong><span>' + label + '</span></div>';
+    }
+
+    function setView(view) {
+      currentView = view;
+      document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+      document.getElementById(view + 'View').classList.add('active');
+      document.getElementById('viewTitle').textContent = navItems.find(item => item[0] === view)[1];
+      renderNav();
+    }
+
+    function renderAll() {
+      renderStats();
+      renderBoard();
+      renderSecondaryViews();
+      renderDetail();
+    }
+
+    searchInput.addEventListener('input', renderBoard);
+    document.getElementById('closeDrawer').addEventListener('click', () => detailPanel.classList.remove('open'));
+    document.getElementById('newTaskBtn').addEventListener('click', () => {
+      const p = selectedPerson();
+      p.timeline.unshift('New manual action prepared');
+      p.events.unshift('Manual action created');
+      p.next = 'Review next operator action';
+      p.due = 'Today';
+      persistPeople();
+      renderAll();
+    });
+
+    document.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const p = selectedPerson();
+        const action = btn.dataset.action;
+        const labels = {
+          'follow-up': 'Follow-up prepared',
+          note: 'Internal note added',
+          payment: 'Payment action prepared',
+          portal: 'Portal activation action prepared'
+        };
+        p.events.unshift(labels[action] || 'Action prepared');
+        p.timeline.unshift(labels[action] || 'Action prepared');
+        if (action === 'portal' && p.payment === 'Paid' && p.agreement === 'Signed') {
+          p.portal = 'Active';
+          p.stage = 'Portal Active';
+          p.activeStatus = 'Portal active';
+        }
+        persistPeople();
+        renderAll();
+      });
+    });
+
+    renderNav();
+    renderAll();
+  </script>
+</body>
+</html>

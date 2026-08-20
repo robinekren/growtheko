@@ -1,0 +1,29 @@
+{
+  "name": "GrowthEko",
+  "short_name": "GrowthEko",
+  "description": "Instagram Theme Pages, AI and digital real estate.",
+  "start_url": "/start",
+  "display": "standalone",
+  "background_color": "#09271b",
+  "theme_color": "#09271b",
+  "icons": [
+    {
+      "src": "/og/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/og/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/og/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

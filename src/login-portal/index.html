@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Your Growth Portal</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #F7F8FC;
+      background-image:
+        radial-gradient(ellipse 120% 80% at 50% 40%, #FCFDFF 0%, transparent 70%),
+        radial-gradient(ellipse 100% 70% at 30% 20%, #EDF4FF 0%, transparent 60%),
+        radial-gradient(ellipse 90% 80% at 75% 30%, #F1EEFF 0%, transparent 55%),
+        radial-gradient(ellipse 130% 90% at 60% 70%, #EEF3FF 0%, transparent 65%),
+        radial-gradient(ellipse 80% 60% at 20% 80%, #EDEBFA 0%, transparent 50%),
+        radial-gradient(ellipse 100% 80% at 80% 75%, #E7F0FF 0%, transparent 55%),
+        radial-gradient(ellipse 140% 100% at 50% 50%, #E9EDF5 0%, transparent 80%),
+        linear-gradient(160deg, #F7F8FC 0%, #EEF3FF 30%, #E7F0FF 50%, #EDEBFA 70%, #F7F8FC 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Times New Roman', Times, serif;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0; opacity: 0.3;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+    body > * { position: relative; z-index: 1; }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #111;
+      text-decoration: none;
+      margin-bottom: 48px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 20px;
+      padding: 40px 36px;
+      box-shadow: 0 8px 32px rgba(100,120,180,0.08);
+    }
+
+    .card h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: #111;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .card p.subtitle {
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 13px;
+      color: #888;
+      text-align: center;
+      margin-bottom: 32px;
+      letter-spacing: 0.3px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field label {
+      display: block;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(100,150,230,0.25);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.6);
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      color: #222;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus {
+      border-color: rgba(100,150,230,0.55);
+      box-shadow: 0 0 0 3px rgba(138,180,243,0.15);
+    }
+
+    .field input::placeholder {
+      color: #bbb;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #8AB4F3 0%, #6F9EE6 100%);
+      color: #fff;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      margin-top: 8px;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error-msg {
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 12px;
+      color: #e55;
+      text-align: center;
+      margin-top: 16px;
+      min-height: 18px;
+    }
+
+    .success-msg {
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 12px;
+      color: #4a9;
+      text-align: center;
+      margin-top: 16px;
+      min-height: 18px;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(100,150,230,0.15);
+      margin: 24px 0;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 12px;
+      color: #8AB4F3;
+      text-decoration: none;
+      margin-top: 16px;
+      cursor: pointer;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Password strength indicator */
+    .pw-strength {
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(0,0,0,0.06);
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .pw-strength-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.3s, background 0.3s;
+    }
+
+    /* View transitions */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 480px) {
+      .card { margin: 0 16px; padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="logo" href="https://www.growtheko.com/start">GrowthEko</a>
+
+  <!-- ===== LOGIN VIEW ===== -->
+  <div id="loginView" class="view active">
+    <div class="card">
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Sign in to your Growth Portal</p>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" />
+      </div>
+
+      <button class="btn-primary" id="loginBtn" onclick="handleLogin()">Sign In</button>
+      <div class="error-msg" id="loginError"></div>
+    </div>
+  </div>
+
+  <!-- ===== CHANGE PASSWORD VIEW ===== -->
+  <div id="changePasswordView" class="view">
+    <div class="card">
+      <h2>Set Your Password</h2>
+      <p class="subtitle">For security, please create a new password</p>
+
+      <div class="field">
+        <label>Current Password</label>
+        <input type="password" id="cpOldPassword" placeholder="Enter current password" autocomplete="current-password" />
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="field">
+        <label>New Password</label>
+        <input type="password" id="cpNewPassword" placeholder="Create a strong password" oninput="checkStrength()" autocomplete="new-password" />
+        <div class="pw-strength"><div class="pw-strength-bar" id="pwBar"></div></div>
+      </div>
+
+      <div class="field">
+        <label>Confirm New Password</label>
+        <input type="password" id="cpConfirmPassword" placeholder="Re-enter new password" autocomplete="new-password" />
+      </div>
+
+      <button class="btn-primary" id="changePwBtn" onclick="handleChangePassword()">Save New Password</button>
+      <div class="error-msg" id="cpError"></div>
+      <div class="success-msg" id="cpSuccess"></div>
+    </div>
+  </div>
+
+<script>
+  // ===== CONFIG =====
+  const SUPABASE_URL = 'https://wwwxnxufhxmarcnhnoni.supabase.co';
+  const AUTH_BASE = `${SUPABASE_URL}/functions/v1/portal-auth`;
+  const LOCAL_PORTAL_PREVIEW_KEY = 'growtheko_portal_local_preview_v1';
+  const LOCAL_PORTAL_PREVIEW_EMAIL = 'robinekrenn@gmail.com';
+  const LOCAL_PORTAL_PREVIEW_CUSTOMER = 'local-robin-ekren';
+
+  let sessionToken = null;
+  let customerId = null;
+  let customerEmail = null;
+
+  function isLocalPortalPreviewOrigin() {
+    return window.location.protocol === 'http:'
+      && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
+      && window.location.port === '3004';
+  }
+
+  function isLocalRobinPreviewLogin(email, password) {
+    return isLocalPortalPreviewOrigin()
+      && String(email || '').trim().toLowerCase() === LOCAL_PORTAL_PREVIEW_EMAIL
+      && password === '';
+  }
+
+  function openLocalRobinPreview() {
+    sessionStorage.removeItem('portal_token');
+    sessionStorage.setItem(LOCAL_PORTAL_PREVIEW_KEY, '1');
+    sessionStorage.setItem('portal_customer', LOCAL_PORTAL_PREVIEW_CUSTOMER);
+    sessionStorage.setItem('customer_email', LOCAL_PORTAL_PREVIEW_EMAIL);
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('customer_id');
+    localStorage.removeItem('customer_email');
+    window.location.href = '/portal/';
+  }
+
+  // ===== HELPERS =====
+  function showView(id) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function setLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    if (loading) {
+      btn.disabled = true;
+      btn.dataset.origText = btn.textContent;
+      btn.innerHTML = '<span class="spinner"></span>Please wait...';
+    } else {
+      btn.disabled = false;
+      btn.textContent = btn.dataset.origText || 'Submit';
+    }
+  }
+
+  function clearErrors() {
+    document.querySelectorAll('.error-msg, .success-msg').forEach(el => el.textContent = '');
+  }
+
+  // ===== PASSWORD STRENGTH =====
+  function checkStrength() {
+    const pw = document.getElementById('cpNewPassword').value;
+    const bar = document.getElementById('pwBar');
+    let score = 0;
+    if (pw.length >= 8) score++;
+    if (pw.length >= 12) score++;
+    if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+    if (/\d/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+    const pct = Math.min(score / 5 * 100, 100);
+    const colors = ['#e55', '#e55', '#e95', '#eb5', '#4a9', '#4a9'];
+    bar.style.width = pct + '%';
+    bar.style.background = colors[score] || '#e55';
+  }
+
+  // ===== LOGIN =====
+  async function handleLogin() {
+    clearErrors();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    if (!email) {
+      document.getElementById('loginError').textContent = 'Please enter your email.';
+      return;
+    }
+
+    // Owner preview only: exact Robin email + blank password on the dedicated
+    // local port. This branch cannot run from file://, LAN hosts or production.
+    if (isLocalRobinPreviewLogin(email, password)) {
+      openLocalRobinPreview();
+      return;
+    }
+
+    if (!password) {
+      document.getElementById('loginError').textContent = 'Please enter your email and password.';
+      return;
+    }
+
+    setLoading('loginBtn', true);
+
+    try {
+      const res = await fetch(`${AUTH_BASE}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        document.getElementById('loginError').textContent = data.error || 'Login failed. Please try again.';
+        setLoading('loginBtn', false);
+        return;
+      }
+
+      sessionToken = data.session_token;
+      customerId = data.customer.id;
+      customerEmail = data.customer.email;
+
+      // Check if password needs to be changed (first login)
+      if (data.customer.password_changed === false) {
+        // Pre-fill old password field since they just typed it
+        document.getElementById('cpOldPassword').value = password;
+        showView('changePasswordView');
+        document.getElementById('cpNewPassword').focus();
+      } else {
+        // Redirect to portal with session
+        redirectToPortal();
+      }
+
+    } catch (err) {
+      document.getElementById('loginError').textContent = 'Connection error. Please try again.';
+    }
+
+    setLoading('loginBtn', false);
+  }
+
+  // ===== CHANGE PASSWORD =====
+  async function handleChangePassword() {
+    clearErrors();
+    const oldPw = document.getElementById('cpOldPassword').value;
+    const newPw = document.getElementById('cpNewPassword').value;
+    const confirmPw = document.getElementById('cpConfirmPassword').value;
+
+    if (!oldPw || !newPw || !confirmPw) {
+      document.getElementById('cpError').textContent = 'Please fill in all fields.';
+      return;
+    }
+
+    if (newPw.length < 8) {
+      document.getElementById('cpError').textContent = 'New password must be at least 8 characters.';
+      return;
+    }
+
+    if (newPw !== confirmPw) {
+      document.getElementById('cpError').textContent = 'New passwords do not match.';
+      return;
+    }
+
+    if (newPw === oldPw) {
+      document.getElementById('cpError').textContent = 'New password must be different from your current password.';
+      return;
+    }
+
+    setLoading('changePwBtn', true);
+
+    try {
+      const res = await fetch(`${AUTH_BASE}/change-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_token: sessionToken,
+          old_password: oldPw,
+          new_password: newPw
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        document.getElementById('cpError').textContent = data.error || 'Failed to change password.';
+        setLoading('changePwBtn', false);
+        return;
+      }
+
+      // Success — show message, then redirect to login
+      document.getElementById('cpSuccess').textContent = 'Password updated. Redirecting to login...';
+      sessionToken = null;
+      customerId = null;
+
+      setTimeout(() => {
+        // Clear all fields
+        document.querySelectorAll('input').forEach(i => i.value = '');
+        clearErrors();
+        showView('loginView');
+        document.getElementById('loginEmail').focus();
+      }, 1800);
+
+    } catch (err) {
+      document.getElementById('cpError').textContent = 'Connection error. Please try again.';
+    }
+
+    setLoading('changePwBtn', false);
+  }
+
+  // ===== REDIRECT TO PORTAL =====
+  function redirectToPortal() {
+    // Store session in both storages for portal + chat compatibility
+    sessionStorage.setItem('portal_token', sessionToken);
+    sessionStorage.setItem('portal_customer', customerId);
+    localStorage.setItem('auth_token', sessionToken);
+    localStorage.setItem('customer_id', customerId);
+    localStorage.setItem('customer_email', customerEmail || '');
+
+    // The customer binding stays in the authenticated browser session; never
+    // expose or trust it as a URL selector.
+    window.location.href = '/portal';
+  }
+
+  // ===== ENTER KEY SUPPORT =====
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter') return;
+    const loginView = document.getElementById('loginView');
+    const cpView = document.getElementById('changePasswordView');
+    if (loginView.classList.contains('active')) {
+      handleLogin();
+    } else if (cpView.classList.contains('active')) {
+      handleChangePassword();
+    }
+  });
+
+  // ===== AUTO-FOCUS =====
+  document.getElementById('loginEmail').focus();
+</script>
+
+</body>
+</html>

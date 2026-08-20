@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0" }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ],
+  "redirects": [
+    { "source": "/", "destination": "/ai-growth-training", "permanent": false },
+    { "source": "/routine", "destination": "https://www.robinekren.com/routine", "permanent": false },
+    { "source": "/routine/:path*", "destination": "https://www.robinekren.com/routine", "permanent": false },
+    { "source": "/connect", "destination": "/contact", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/ops", "destination": "/api/ops-page" },
+    { "source": "/ops/:path*", "destination": "/api/ops-page" },
+    { "source": "/onboard/:path*", "destination": "/onboard" }
+  ],
+  "functions": {
+    "api/webhook.js": { "maxDuration": 30 },
+    "api/cron/nurture.js": { "maxDuration": 60 },
+    "api/cron/process-billing-outbox.js": { "maxDuration": 60 }
+  },
+  "crons": [
+    { "path": "/api/cron/nurture", "schedule": "0 9 * * *" },
+    { "path": "/api/cron/process-billing-outbox", "schedule": "*/5 * * * *" }
+  ]
+}

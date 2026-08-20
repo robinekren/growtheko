@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/og/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/og/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/og/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#09271b">
+  <meta name="referrer" content="no-referrer">
+  <title>Onboarding — GrowthEko</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #F7F8FC;
+      background-image:
+        radial-gradient(ellipse 120% 80% at 50% 40%, #FCFDFF 0%, transparent 70%),
+        radial-gradient(ellipse 100% 70% at 30% 20%, #EDF4FF 0%, transparent 60%),
+        radial-gradient(ellipse 90% 80% at 75% 30%, #F1EEFF 0%, transparent 55%),
+        radial-gradient(ellipse 130% 90% at 60% 70%, #EEF3FF 0%, transparent 65%),
+        radial-gradient(ellipse 80% 60% at 20% 80%, #EDEBFA 0%, transparent 50%),
+        radial-gradient(ellipse 100% 80% at 80% 75%, #E7F0FF 0%, transparent 55%),
+        radial-gradient(ellipse 140% 100% at 50% 50%, #E9EDF5 0%, transparent 80%),
+        linear-gradient(160deg, #F7F8FC 0%, #EEF3FF 30%, #E7F0FF 50%, #EDEBFA 70%, #F7F8FC 100%);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 20px;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      position: relative;
+    }
+    body::before {
+      content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 1; opacity: 0.15;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+    body > * { position: relative; z-index: 2; }
+    .wizard { width: 100%; max-width: 600px; }
+
+    /* Header */
+    .wizard-header { text-align: center; margin-bottom: 32px; }
+    .wizard-header h1 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 32px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: #000; margin-bottom: 8px;
+    }
+    .wizard-header p { color: #888; font-size: 15px; }
+    .wizard-brand-mark { width: 68px; height: 68px; object-fit: contain; margin: 0 auto 12px; }
+    .tier-badge {
+      display: inline-block; padding: 4px 14px; border-radius: 20px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 12px;
+    }
+    .tier-secret { background: #EDF4FF; color: #5A8AE6; }
+    .tier-audit { background: #EDF4FF; color: #5A8AE6; }
+    .tier-membership { background: #EDFCF2; color: #287A47; }
+    .tier-growth { background: #EDFCF2; color: #38A169; }
+    .tier-empire { background: #FFF5ED; color: #C05621; }
+
+    /* Progress */
+    .progress-bar { width: 100%; height: 4px; background: #E5E9F2; border-radius: 2px; margin-bottom: 8px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #6B9EF7, #5A8AE6); border-radius: 2px; transition: width 0.4s ease; }
+    .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: #999; margin-bottom: 32px; }
+
+    /* Card */
+    .step-card {
+      background: rgba(255,255,255,0.7); border: 1px solid rgba(200,210,235,0.5);
+      border-radius: 20px; padding: 36px 32px; backdrop-filter: blur(12px);
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .step-title { font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+    .step-subtitle { font-size: 14px; color: #888; margin-bottom: 28px; }
+
+    /* Form fields */
+    .field { margin-bottom: 20px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; }
+    .field label .required { color: #E53E3E; margin-left: 2px; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 12px 16px; border: 1px solid rgba(200,210,235,0.6);
+      border-radius: 12px; font-family: inherit; font-size: 15px; color: #1a1a2e;
+      background: rgba(255,255,255,0.9); outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: #5A8AE6; box-shadow: 0 0 0 3px rgba(90,138,230,0.12);
+    }
+    .field input::placeholder, .field textarea::placeholder { color: #bbb; }
+    .field textarea { min-height: 80px; resize: vertical; }
+    .field select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; cursor: pointer;
+    }
+
+    /* Pill select */
+    .pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill {
+      padding: 10px 18px; border-radius: 24px; border: 1px solid rgba(200,210,235,0.6);
+      background: rgba(255,255,255,0.9); color: #555; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .pill:hover { border-color: #5A8AE6; color: #5A8AE6; }
+    .pill.selected { background: linear-gradient(135deg, #6B9EF7, #5A8AE6); color: #fff; border-color: transparent; }
+
+    /* Market pills (bigger) */
+    .market-pill-group { display: flex; gap: 10px; margin-bottom: 4px; }
+    .market-pill {
+      flex: 1; padding: 16px 12px; border-radius: 14px; border: 1px solid rgba(200,210,235,0.6);
+      background: rgba(255,255,255,0.9); color: #555; font-size: 15px; font-weight: 600;
+      text-align: center; cursor: pointer; transition: all 0.15s;
+    }
+    .market-pill:hover { border-color: #5A8AE6; color: #5A8AE6; }
+    .market-pill.selected { background: linear-gradient(135deg, #6B9EF7, #5A8AE6); color: #fff; border-color: transparent; }
+
+    /* Generate container */
+    .gen-section { margin-bottom: 20px; }
+    .gen-section.locked { display: none; }
+    .gen-section.visible { display: block; animation: slideIn 0.3s ease; }
+    .gen-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .gen-header label { margin-bottom: 0; }
+    .gen-pills { display: flex; flex-wrap: wrap; gap: 8px; max-height: none; }
+    .gen-disabled { font-size: 13px; color: #aaa; font-style: italic; padding: 12px; background: rgba(200,210,235,0.15); border-radius: 10px; text-align: center; }
+    .other-text-input {
+      margin-top: 10px; width: 100%; padding: 10px 14px; border: 1px solid rgba(200,210,235,0.6);
+      border-radius: 10px; font-family: inherit; font-size: 14px; color: #1a1a2e;
+      background: rgba(255,255,255,0.9); outline: none; transition: border-color 0.2s;
+    }
+    .other-text-input:focus { border-color: #5A8AE6; box-shadow: 0 0 0 3px rgba(90,138,230,0.12); }
+
+    /* Search input for market fields */
+    .search-wrap { position: relative; margin-bottom: 10px; }
+    .search-wrap input {
+      width: 100%; padding: 10px 14px 10px 36px; border: 1px solid rgba(200,210,235,0.6);
+      border-radius: 10px; font-family: inherit; font-size: 14px; color: #1a1a2e;
+      background: rgba(255,255,255,0.9); outline: none; transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: #5A8AE6; box-shadow: 0 0 0 3px rgba(90,138,230,0.12); }
+    .search-wrap input::placeholder { color: #bbb; opacity: 0.7; }
+    .search-wrap .search-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; opacity: 0.35; pointer-events: none;
+    }
+    .search-results-count {
+      font-size: 11px; color: #aaa; margin-bottom: 6px; margin-left: 2px;
+    }
+    /* Selected tag display */
+    .selected-tag {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
+      background: linear-gradient(135deg, #6B9EF7, #5A8AE6); color: #fff;
+      border-radius: 24px; font-size: 14px; font-weight: 500; margin-bottom: 10px;
+    }
+    .selected-tag .remove-tag {
+      cursor: pointer; width: 16px; height: 16px; border-radius: 50%;
+      background: rgba(255,255,255,0.25); display: flex; align-items: center;
+      justify-content: center; font-size: 11px; font-weight: 700; transition: background 0.15s;
+    }
+    .selected-tag .remove-tag:hover { background: rgba(255,255,255,0.4); }
+
+    /* Checkbox group */
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .check-pill {
+      padding: 10px 18px; border-radius: 24px; border: 1px solid rgba(200,210,235,0.6);
+      background: rgba(255,255,255,0.9); color: #555; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .check-pill:hover { border-color: #5A8AE6; color: #5A8AE6; }
+    .check-pill.selected { background: linear-gradient(135deg, #6B9EF7, #5A8AE6); color: #fff; border-color: transparent; }
+
+    /* Radio group */
+    .radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .radio-pill {
+      padding: 10px 18px; border-radius: 24px; border: 1px solid rgba(200,210,235,0.6);
+      background: rgba(255,255,255,0.9); color: #555; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .radio-pill:hover { border-color: #5A8AE6; color: #5A8AE6; }
+    .radio-pill.selected { background: linear-gradient(135deg, #6B9EF7, #5A8AE6); color: #fff; border-color: transparent; }
+
+    /* Animated placeholder wrapper */
+    .input-wrap { position: relative; }
+    .input-wrap .cycle-ph {
+      position: absolute; left: 17px; top: 50%; transform: translateY(-50%);
+      color: #bbb; font-size: 15px; pointer-events: none; transition: opacity 0.4s ease;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: calc(100% - 34px);
+    }
+    .input-wrap textarea ~ .cycle-ph { top: 13px; transform: none; }
+    .cycle-ph.hidden { opacity: 0; }
+
+    /* Other input for selects */
+    .select-other-input {
+      margin-top: 8px; width: 100%; padding: 10px 14px; border: 1px solid rgba(200,210,235,0.6);
+      border-radius: 10px; font-family: inherit; font-size: 14px; color: #1a1a2e;
+      background: rgba(255,255,255,0.9); outline: none; display: none;
+    }
+    .select-other-input:focus { border-color: #5A8AE6; }
+
+    /* Error */
+    .field-error { font-size: 12px; color: #E53E3E; margin-top: 4px; display: none; }
+    .field-error.visible { display: block; }
+
+    /* Buttons */
+    .wizard-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; }
+    .btn { padding: 12px 28px; border-radius: 12px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s; border: none; }
+    .btn-back { background: transparent; color: #888; padding: 12px 16px; }
+    .btn-back:hover { color: #555; }
+    .btn-next { background: linear-gradient(135deg, #6B9EF7, #5A8AE6); color: #fff; box-shadow: 0 4px 14px rgba(90,138,230,0.3); }
+    .btn-next:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(90,138,230,0.35); }
+    .btn-next:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-submit { background: linear-gradient(135deg, #38A169, #2F855A); color: #fff; box-shadow: 0 4px 14px rgba(56,161,105,0.3); width: 100%; padding: 16px; font-size: 16px; margin-top: 28px; }
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(56,161,105,0.35); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Verify */
+    .verify-screen { text-align: center; }
+    .verify-screen .verify-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, #6B9EF7, #5A8AE6);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; box-shadow: 0 6px 20px rgba(90,138,230,0.3);
+    }
+    .verify-screen .verify-icon svg { width: 32px; height: 32px; fill: #fff; }
+    .verify-error { color: #E53E3E; font-size: 14px; margin-top: 12px; display: none; }
+
+    /* Success */
+    .success-screen { text-align: center; }
+    .success-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg, #38A169, #2F855A);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px; box-shadow: 0 6px 20px rgba(56,161,105,0.3);
+    }
+    .success-icon svg { width: 36px; height: 36px; fill: #fff; }
+    .next-steps { text-align: left; margin-top: 24px; }
+    .next-step-item { display: flex; gap: 12px; margin-bottom: 16px; }
+    .next-step-num {
+      width: 28px; height: 28px; border-radius: 50%; background: #EDF4FF; color: #5A8AE6;
+      font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .next-step-text { font-size: 14px; color: #555; line-height: 1.5; padding-top: 3px; }
+
+    /* Review */
+    .review-section { margin-bottom: 20px; }
+    .review-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .review-section h3 { font-size: 14px; font-weight: 700; color: #5A8AE6; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0; }
+    .review-edit-icon { color: #C0C8D8; opacity: 0.4; cursor: pointer; transition: opacity 0.2s, color 0.2s; flex-shrink: 0; }
+    .review-edit-icon:hover { opacity: 1; color: #5A8AE6; }
+    .review-save-icon { color: #38A169; opacity: 0.8; cursor: pointer; transition: opacity 0.2s; flex-shrink: 0; }
+    .review-save-icon:hover { opacity: 1; }
+    .review-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 14px; border-bottom: 1px solid rgba(200,210,235,0.3); }
+    .review-row:last-child { border: none; }
+    .review-label { color: #888; flex-shrink: 0; }
+    .review-value { color: #1a1a2e; font-weight: 500; text-align: right; max-width: 60%; }
+    .review-input { width: 100%; max-width: 58%; padding: 4px 8px; border: 1px solid rgba(90,138,230,0.4); border-radius: 6px; font-size: 13px; font-family: inherit; color: #1a1a2e; background: #fff; outline: none; text-align: right; transition: border-color 0.2s; }
+    .review-input:focus { border-color: #5A8AE6; box-shadow: 0 0 0 2px rgba(90,138,230,0.1); }
+    .review-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #38A169; color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 999; pointer-events: none; }
+    .review-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .slack-cta {
+      margin-top: 24px; padding: 16px 20px; background: rgba(74,21,75,0.06);
+      border: 1px solid rgba(74,21,75,0.12); border-radius: 12px; font-size: 14px; color: #555; line-height: 1.6;
+    }
+    .slack-cta strong { color: #1a1a2e; }
+
+    @media (max-width: 600px) {
+      body { padding: 20px 12px; }
+      .step-card { padding: 24px 20px; border-radius: 16px; }
+      .wizard-header h1 { font-size: 26px; }
+      .review-row { flex-direction: column; gap: 2px; }
+      .review-value { text-align: left; max-width: 100%; }
+      .market-pill-group { flex-direction: column; }
+      .market-pill { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wizard" id="wizard">
+  <div class="wizard-header">
+    <img class="wizard-brand-mark" src="/og/growtheko-mark-gold-512.png" width="68" height="68" alt="GrowthEko">
+    <div class="tier-badge" id="tierBadge"></div>
+    <h1>Onboarding</h1>
+    <p id="headerSubtitle">Let's learn about your business</p>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="progress-info">
+    <span id="stepLabel">Step 1 of 10</span>
+    <span id="stepPct">0%</span>
+  </div>
+  <div id="stepContainer"></div>
+</div>
+
+<script>
+// ============================
+// DATA
+// ============================
+const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo (Brazzaville)","Congo (Kinshasa)","Costa Rica","Croatia","Cuba","Cyprus","Czechia","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
+
+// MARKET_DATA loaded dynamically from market-data.json
+let MARKET_TAXONOMY = null;
+let marketDataLoaded = false;
+
+async function loadMarketData() {
+  if (marketDataLoaded) return;
+  try {
+    const res = await fetch('/market-data.json');
+    MARKET_TAXONOMY = await res.json();
+    marketDataLoaded = true;
+  } catch (e) {
+    console.error('Failed to load market data:', e);
+  }
+}
+// Preload on page load
+loadMarketData();
+
+const PLACEHOLDERS = {
+  name: ["John Smith","Sarah Johnson","Alex Chen","Maria Garcia","David Kim"],
+  company: ["Growth Labs","FitLife Pro","Smart Academy","Digital Edge","Mindful Co"],
+  website: ["https://mycompany.com","https://growthlab.io","www.example.com"],
+  product_description: ["Online course teaching busy moms to meal prep in 30 min","1-on-1 coaching for SaaS founders to hit $10K MRR","AI automation toolkit for real estate agents"],
+  ideal_customer: ["35-year-old entrepreneur struggling with lead generation","New mom wanting to lose pregnancy weight at home","Freelancer wanting to scale to $10K/mo"],
+  primary_goal: ["Launch my first digital product and get 10 sales","Scale from $2K to $10K monthly revenue","Build an automated funnel that runs while I sleep"],
+  current_tools: ["Google Workspace, Canva, Stripe, Notion","WordPress, Mailchimp, Calendly","Nothing yet, starting from scratch"],
+  social_media: ["Instagram 2K, TikTok 500","LinkedIn 5K, YouTube 200 subs","No social media yet"],
+  customer_count: ["0","3","12","50+"],
+  product_price: ["$497","$2,000/mo","$97 one-time","Free lead magnet"],
+  support_email: ["support@mycompany.com","hello@mybrand.com","info@example.com"],
+  additional_notes: ["I work full-time and need this to work around my schedule","I've tried other programs before but nothing stuck"]
+};
+
+// ============================
+// STATE
+// ============================
+const urlParams = new URLSearchParams(window.location.search);
+const rawTier = urlParams.get('tier') || 'audit';
+const tokenFromUrl = urlParams.get('token') || '';
+if (tokenFromUrl) sessionStorage.setItem('ge_onboarding_token', tokenFromUrl);
+const onboardingToken = tokenFromUrl || sessionStorage.getItem('ge_onboarding_token') || '';
+if (tokenFromUrl) {
+  urlParams.delete('token');
+  const cleanQuery = urlParams.toString();
+  history.replaceState({}, '', location.pathname + (cleanQuery ? '?' + cleanQuery : ''));
+}
+const billingOfferKey = rawTier === 'monthly_97' || rawTier === 'onetime_1997' ? rawTier : '';
+const tierAliases = { monthly_97: 'membership', onetime_1997: 'audit', audit: 'audit', membership: 'membership', growth: 'sprint', sprint: 'sprint', empire: 'retainer', retainer: 'retainer', secret: 'secret' };
+const tier = tierAliases[rawTier] || rawTier;
+const tierNames = { membership: 'GrowthEko Operator Membership', audit: 'GrowthEko AI Operator Audit', secret: 'AI Operator Secret', sprint: 'AI System Sprint', retainer: 'AI Operator Retainer' };
+const tierBadge = document.getElementById('tierBadge');
+tierBadge.textContent = tierNames[tier] || 'GrowthEko';
+tierBadge.className = 'tier-badge tier-' + tier;
+
+const customerData = {};
+let currentStep = 0;
+let verified = false;
+let selectedMarket = '';
+const genState = {
+  sub: { selected: '', searchQuery: '' },
+  niche: { selected: '', searchQuery: '' },
+  blue: { selected: '', searchQuery: '' }
+};
+
+const steps = [
+  { id: 'verify', title: 'Verify Your Email', subtitle: 'Enter the email you used during checkout.', type: 'verify' },
+  { id: 'about', title: 'About You', subtitle: 'Basic info to get started.', fields: [
+    { key: 'name', label: 'Your Name', type: 'text', required: true },
+    { key: 'company', label: 'Company Name', type: 'text', required: true },
+    { key: 'website', label: 'Website', type: 'text' },
+    { key: 'country', label: 'Country', type: 'country', required: true },
+    { key: 'business_age', label: 'Time in Business', type: 'pills', options: ['Not started','0-6 months','6-12 months','1-3 years','3+ years'], required: true }
+  ]},
+  { id: 'market', title: 'Your Market', subtitle: 'Where you play and who you serve.', type: 'market' },
+  { id: 'audience', title: 'Your Audience', subtitle: 'Geographic reach and company profile.', type: 'audience' },
+  { id: 'product', title: 'Your Product', subtitle: 'What you sell and how you deliver.', type: 'product' },
+  { id: 'status', title: 'Where You Are Now', subtitle: 'Current numbers so we know where to focus.', fields: [
+    { key: 'monthly_revenue', label: 'Monthly Revenue', type: 'pills', options: ['$0','$1-1K','$1K-5K','$5K-10K','$10K-25K','$25K-50K','$50K+'], required: true },
+    { key: 'customer_count', label: 'Active Customers/Clients', type: 'text', required: true },
+    { key: 'acquisition_channels', label: 'How You Get Customers', type: 'select', options: ['Social Media','Paid Ads','Referrals','Cold Outreach','SEO/Content','No system yet','Other'], required: true },
+    { key: 'biggest_problem', label: 'Biggest Problem Right Now', type: 'select', options: ['Not enough leads','Leads don\'t convert','Too much manual work','No clear product','No team','Tech overwhelm','Don\'t know where to start','Other'], required: true }
+  ]},
+  { id: 'goals', title: 'Where You Want to Go', subtitle: '90-day vision.', fields: [
+    { key: 'primary_goal', label: 'Primary Goal (90 Days)', type: 'textarea', required: true },
+    { key: 'revenue_target', label: 'Revenue Target (Monthly)', type: 'text', required: true },
+    { key: 'hours_available', label: 'Hours Per Week', type: 'pills', options: ['5-10h (side)','10-20h (part-time)','20-40h (full-time)','40h+ (all in)'], required: true },
+    { key: 'ai_experience', label: 'AI Experience', type: 'pills', options: ['Complete beginner','Used ChatGPT a bit','Use AI actively','AI power user'], required: true }
+  ]},
+  { id: 'tech', title: 'Tech & Tools', subtitle: 'What you currently use.', fields: [
+    { key: 'current_tools', label: 'Current Tools', type: 'textarea', required: true },
+    { key: 'email_list_size', label: 'Email List Size', type: 'pills', options: ['No list','Under 100','100-1,000','1K-10K','10K+'], required: true },
+    { key: 'social_media', label: 'Social Media Presence', type: 'text', required: true }
+  ]},
+  { id: 'legal', title: 'Business & Brand', subtitle: 'Final details to set everything up.', fields: [
+    { key: 'legal_entity_type', label: 'Legal Entity', type: 'select', options: ['Sole Proprietor','GmbH','UG','LLC','Ltd','Not registered yet','Other'], required: true },
+    { key: 'tax_id', label: 'Have a Tax ID?', type: 'pills', options: ['Yes','No','Not sure'], required: true },
+    { key: 'vat_registered', label: 'VAT Registered?', type: 'pills', options: ['Yes','No','Not sure'], required: true },
+    { key: 'support_email', label: 'Support Email', type: 'text' },
+    { key: 'brand_voice', label: 'Brand Voice', type: 'pills', options: ['Professional','Casual & friendly','Bold & direct','Luxury & exclusive','Educational'], required: true },
+    { key: 'timezone', label: 'Timezone', type: 'select', options: ['CET (Europe)','GMT (UK)','EST (US East)','PST (US West)','Other'], required: true },
+    { key: 'referral_source', label: 'How Did You Find Us?', type: 'select', options: ['Instagram','TikTok','YouTube','Referral','Google','DM/Outreach','Other'] },
+    { key: 'additional_notes', label: 'Anything Else?', type: 'textarea' }
+  ]},
+  { id: 'review', title: 'Review & Submit', subtitle: 'Make sure everything looks good.', type: 'review' }
+];
+
+const totalSteps = steps.length;
+
+const VISION_SAMPLE_DATA = {
+  email: 'marcus@growthlab.ai',
+  purchased_tier: tier,
+  name: 'Marcus Weber',
+  company: 'GrowthLab AI',
+  website: 'https://growthlab.ai',
+  country: 'Germany',
+  business_age: '1-3 years',
+  market: 'Wealth',
+  sub_market: 'Business Growth',
+  niche: 'AI consulting for creator-led companies',
+  blue_ocean: 'Revenue operating systems for creators with existing demand',
+  ideal_customer: 'Creator, coach, or expert business with existing attention, but no predictable revenue system.',
+  primary_geo_market: 'DACH',
+  additional_markets: ['United States', 'United Kingdom'],
+  company_size: '1-10',
+  product_type: 'Service/Consulting',
+  product_description: 'Done-with-you AI growth systems: offer, funnel, CRM, automation, and reporting.',
+  product_price: '€5,800',
+  delivery_method: 'Done-With-You',
+  monthly_revenue: '$10K-25K',
+  customer_count: '12 active clients',
+  acquisition_channels: 'Social Media',
+  biggest_problem: 'Too much manual work',
+  primary_goal: 'Build a predictable path from attention to booked calls and first automated delivery wins.',
+  revenue_target: '€50K/month',
+  hours_available: '20-40h (full-time)',
+  ai_experience: 'Use AI actively',
+  current_tools: 'Notion, Stripe, Calendly, Gmail, Google Sheets, ChatGPT, Make.',
+  email_list_size: '100-1,000',
+  social_media: 'Instagram 12K, YouTube 2K, TikTok 8K.',
+  legal_entity_type: 'GmbH',
+  tax_id: 'Yes',
+  vat_registered: 'Yes',
+  support_email: 'support@growthlab.ai',
+  brand_voice: 'Bold & direct',
+  timezone: 'CET (Europe)',
+  referral_source: 'YouTube',
+  additional_notes: 'Vision-board capture mode: representative client data for internal documentation.'
+};
+
+function enableVisionStepMode() {
+  const visionStep = urlParams.get('visionStep');
+  if (!visionStep) return;
+  Object.assign(customerData, VISION_SAMPLE_DATA);
+  verified = true;
+  selectedMarket = customerData.market;
+  genState.sub.selected = customerData.sub_market;
+  genState.niche.selected = customerData.niche;
+  genState.blue.selected = customerData.blue_ocean;
+  window._hasApplicationData = false;
+  window.verifiedTier = tier;
+  const index = steps.findIndex(step => step.id === visionStep);
+  currentStep = index >= 0 ? index : 0;
+  document.body.classList.add('vision-step-mode');
+}
+
+// ============================
+// ANIMATED PLACEHOLDERS
+// ============================
+const cycleTimers = [];
+function startCyclePlaceholder(inputEl, phEl, key) {
+  const examples = PLACEHOLDERS[key];
+  if (!examples || !examples.length) return;
+  let idx = 0;
+  phEl.textContent = examples[0];
+  function cycle() {
+    phEl.style.opacity = '0';
+    setTimeout(() => {
+      idx = (idx + 1) % examples.length;
+      phEl.textContent = examples[idx];
+      if (!inputEl.value && document.activeElement !== inputEl) phEl.style.opacity = '1';
+    }, 400);
+  }
+  const timer = setInterval(cycle, 3000);
+  cycleTimers.push(timer);
+  inputEl.addEventListener('focus', () => { phEl.style.opacity = '0'; });
+  inputEl.addEventListener('blur', () => { if (!inputEl.value) phEl.style.opacity = '1'; });
+  inputEl.addEventListener('input', () => { phEl.style.opacity = inputEl.value ? '0' : '0'; });
+}
+function clearCycleTimers() { cycleTimers.forEach(t => clearInterval(t)); cycleTimers.length = 0; }
+
+// ============================
+// RENDER
+// ============================
+function updateProgress() {
+  const pct = Math.round((currentStep / (totalSteps - 1)) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stepPct').textContent = pct + '%';
+  document.getElementById('stepLabel').textContent = 'Step ' + (currentStep + 1) + ' of ' + totalSteps;
+}
+
+function renderStep() {
+  clearCycleTimers();
+  const step = steps[currentStep];
+  const c = document.getElementById('stepContainer');
+  updateProgress();
+  if (step.type === 'verify') renderVerifyStep(c, step);
+  else if (step.type === 'market') { renderMarketStep(c, step); return; }
+  else if (step.type === 'audience') renderAudienceStep(c, step);
+  else if (step.type === 'product') renderProductStep(c, step);
+  else if (step.type === 'review') renderReviewStep(c, step);
+  else renderFormStep(c, step);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderVerifyStep(c, step) {
+  c.innerHTML = '<div class="step-card verify-screen">' +
+    '<div class="verify-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>' +
+    '<h2 class="step-title">' + step.title + '</h2>' +
+    '<p class="step-subtitle" style="margin-bottom:24px">' + step.subtitle + '</p>' +
+    '<div class="field"><input type="email" id="verifyEmail" placeholder="your@email.com" autofocus></div>' +
+    '<div class="verify-error" id="verifyError">No payment found for this email.</div>' +
+    '<button class="btn btn-next" style="width:100%;margin-top:20px" id="verifyBtn" onclick="verifyEmail()">Verify & Continue</button>' +
+    '<p style="font-size:12px;color:#999;margin-top:16px">This is the email you used when purchasing ' + (tierNames[tier] || 'your package') + '.</p></div>';
+  document.getElementById('verifyEmail').addEventListener('keydown', function(e) { if (e.key === 'Enter') verifyEmail(); });
+}
+
+async function verifyEmail() {
+  const email = document.getElementById('verifyEmail').value.trim().toLowerCase();
+  const err = document.getElementById('verifyError');
+  const btn = document.getElementById('verifyBtn');
+  if (!email || !email.includes('@')) { err.textContent = 'Please enter a valid email address.'; err.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'Verifying...'; err.style.display = 'none';
+  try {
+    const res = await fetch('/api/onboard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'verify', email: email, tier: tier, offerKey: billingOfferKey, onboardingToken: onboardingToken }) });
+    if (res.ok) {
+      const result = await res.json().catch(() => ({}));
+      if (result.tier) {
+        const normalizedTier = tierAliases[result.tier] || result.tier;
+        window.verifiedTier = normalizedTier;
+        tierBadge.textContent = tierNames[normalizedTier] || tierNames[tier] || 'GrowthEko';
+        tierBadge.className = 'tier-badge tier-' + normalizedTier;
+      }
+      customerData.email = email; customerData.purchased_tier = window.verifiedTier || tier; verified = true;
+
+      // Pre-fill from /apply application data (avoid duplicate questions)
+      if (result.applicationData) {
+        const app = result.applicationData;
+        if (app.first_name && app.last_name) customerData.name = customerData.name || (app.first_name + ' ' + app.last_name);
+        if (app.website) customerData.website = customerData.website || app.website;
+        if (app.product_type) {
+          // Map /apply product_type → /onboard product_type (normalize "Service / Consulting" → "Service/Consulting")
+          const ptMap = { 'Service / Consulting': 'Service/Consulting', 'SaaS / Software': 'SaaS/Software' };
+          customerData.product_type = customerData.product_type || (ptMap[app.product_type] || app.product_type);
+        }
+        if (app.revenue_stage) {
+          // Map /apply revenue stages → /onboard monthly_revenue pills
+          const revMap = {
+            'Complete zero': '$0', 'Stuck under $10K/mo': '$1-1K',
+            '$10K-$50K — growing': '$10K-25K', '$50K-$100K — scaling': '$50K+',
+            '$100K-$250K — stuck': '$50K+', '$250K-$500K — need systems': '$50K+',
+            '$500K-$1M — scaling': '$50K+', '$1M+ — want empire': '$50K+'
+          };
+          customerData.monthly_revenue = customerData.monthly_revenue || (revMap[app.revenue_stage] || '');
+        }
+        if (app.primary_geo_market) customerData.primary_geo_market = customerData.primary_geo_market || app.primary_geo_market;
+        if (app.additional_markets && app.additional_markets.length) customerData.additional_markets = customerData.additional_markets || app.additional_markets;
+        if (app.company_size) customerData.company_size = customerData.company_size || app.company_size;
+        if (app.holding_back) {
+          // Map /apply holding_back → /onboard biggest_problem
+          const hbMap = {
+            "Don't know where to start": "Don't know where to start",
+            'No system — just guessing': 'Too much manual work',
+            'No network or connections': 'Not enough leads',
+            "Tried before — didn't work": "Don't know where to start",
+            'No time — overwhelmed': 'Too much manual work',
+            "Have knowledge — can't monetize": 'No clear product'
+          };
+          customerData.biggest_problem = customerData.biggest_problem || (hbMap[app.holding_back] || '');
+        }
+        if (app.goal) customerData.primary_goal = customerData.primary_goal || app.goal;
+        window._hasApplicationData = true;
+      }
+
+      currentStep++; renderStep();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      err.textContent = data.error || 'No payment found for this email.'; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Verify & Continue';
+    }
+  } catch (e) { err.textContent = 'Connection error. Please try again.'; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Verify & Continue'; }
+}
+
+function renderFormStep(c, step) {
+  let html = '';
+  for (const f of step.fields) {
+    const val = customerData[f.key] || '';
+    const req = f.required ? '<span class="required">*</span>' : '';
+    if (f.type === 'text' || f.type === 'email') {
+      const hasPh = PLACEHOLDERS[f.key];
+      if (hasPh) {
+        html += '<div class="field"><label>' + f.label + req + '</label><div class="input-wrap"><input type="text" data-key="' + f.key + '" value="' + escapeAttr(val) + '" ' + (f.required ? 'required' : '') + '><span class="cycle-ph" id="ph_' + f.key + '"></span></div></div>';
+      } else {
+        html += '<div class="field"><label>' + f.label + req + '</label><input type="text" data-key="' + f.key + '" value="' + escapeAttr(val) + '" placeholder="' + (f.placeholder || '') + '" ' + (f.required ? 'required' : '') + '></div>';
+      }
+    } else if (f.type === 'textarea') {
+      const hasPh = PLACEHOLDERS[f.key];
+      if (hasPh) {
+        html += '<div class="field"><label>' + f.label + req + '</label><div class="input-wrap"><textarea data-key="' + f.key + '" ' + (f.required ? 'required' : '') + '>' + escapeHtml(val) + '</textarea><span class="cycle-ph" id="ph_' + f.key + '"></span></div></div>';
+      } else {
+        html += '<div class="field"><label>' + f.label + req + '</label><textarea data-key="' + f.key + '" placeholder="' + (f.placeholder || '') + '" ' + (f.required ? 'required' : '') + '>' + escapeHtml(val) + '</textarea></div>';
+      }
+    } else if (f.type === 'select') {
+      let opts = '<option value="">Select...</option>';
+      for (const o of f.options) opts += '<option value="' + escapeAttr(o) + '" ' + (val === o ? 'selected' : '') + '>' + o + '</option>';
+      html += '<div class="field"><label>' + f.label + req + '</label><select data-key="' + f.key + '" onchange="handleSelectOther(this)" ' + (f.required ? 'required' : '') + '>' + opts + '</select><input type="text" class="select-other-input" data-other-for="' + f.key + '" placeholder="Please specify..." style="display:' + (val === 'Other' ? 'block' : 'none') + '" value="' + escapeAttr(customerData[f.key + '_other'] || '') + '"></div>';
+    } else if (f.type === 'pills') {
+      let pills = '';
+      for (const o of f.options) pills += '<div class="pill ' + (val === o ? 'selected' : '') + '" data-key="' + f.key + '" data-value="' + escapeAttr(o) + '">' + o + '</div>';
+      html += '<div class="field"><label>' + f.label + req + '</label><div class="pill-group">' + pills + '</div></div>';
+    } else if (f.type === 'country') {
+      let opts = '<option value="">Select country...</option>';
+      for (const co of COUNTRIES) opts += '<option value="' + escapeAttr(co) + '" ' + (val === co ? 'selected' : '') + '>' + co + '</option>';
+      html += '<div class="field"><label>' + f.label + req + '</label><select data-key="' + f.key + '" ' + (f.required ? 'required' : '') + '>' + opts + '</select></div>';
+    }
+  }
+  c.innerHTML = '<div class="step-card"><h2 class="step-title">' + step.title + '</h2><p class="step-subtitle">' + step.subtitle + '</p>' + html +
+    '<div class="wizard-nav">' + (currentStep > 1 ? '<button class="btn btn-back" onclick="goBack()">Back</button>' : '<div></div>') +
+    '<button class="btn btn-next" onclick="goNext()">Continue</button></div></div>';
+  // Pill clicks
+  c.querySelectorAll('.pill').forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      c.querySelectorAll('.pill[data-key="' + pill.dataset.key + '"]').forEach(function(p) { p.classList.remove('selected'); });
+      pill.classList.add('selected');
+    });
+  });
+  // Start animated placeholders
+  for (const f of step.fields) {
+    if (PLACEHOLDERS[f.key]) {
+      const inp = c.querySelector('[data-key="' + f.key + '"]');
+      const ph = document.getElementById('ph_' + f.key);
+      if (inp && ph) startCyclePlaceholder(inp, ph, f.key);
+    }
+  }
+  // Focus first empty
+  const first = c.querySelector('input:not([value]), input[value=""], textarea:empty, select');
+  if (first) setTimeout(function() { first.focus(); }, 100);
+}
+
+function handleSelectOther(sel) {
+  const otherInput = sel.parentElement.querySelector('.select-other-input');
+  if (otherInput) {
+    otherInput.style.display = sel.value === 'Other' ? 'block' : 'none';
+    if (sel.value === 'Other') setTimeout(function() { otherInput.focus(); }, 50);
+  }
+}
+
+// ============================
+// MARKET STEP v2 — Search + Progressive Disclosure
+// ============================
+const SEARCH_ICON_SVG = '<svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>';
+
+function getMarketItems(type) {
+  if (!MARKET_TAXONOMY || !selectedMarket) return [];
+  const mkt = MARKET_TAXONOMY[selectedMarket];
+  if (!mkt) return [];
+  if (type === 'sub') return mkt.subs || [];
+  if (type === 'niche') {
+    const sub = genState.sub.selected;
+    if (!sub || sub === '__other__') return [];
+    return mkt.nicheMap[sub] || [];
+  }
+  if (type === 'blue') {
+    const niche = genState.niche.selected;
+    if (!niche || niche === '__other__') return [];
+    return mkt.blueMap[niche] || [];
+  }
+  return [];
+}
+
+function getIdealCustomers() {
+  if (!MARKET_TAXONOMY || !selectedMarket) return [];
+  const mkt = MARKET_TAXONOMY[selectedMarket];
+  if (!mkt) return [];
+  const blue = genState.blue.selected;
+  if (!blue || blue === '__other__') return [];
+  return mkt.icMap[blue] || [];
+}
+
+function filterItems(items, query) {
+  if (!query) return items.slice(0, 3);
+  const q = query.toLowerCase();
+  const matches = items.filter(function(item) { return item.toLowerCase().includes(q); });
+  return matches.slice(0, 3);
+}
+
+function isLevelVisible(type) {
+  if (type === 'sub') return !!selectedMarket;
+  if (type === 'niche') return !!genState.sub.selected;
+  if (type === 'blue') return !!genState.niche.selected;
+  return false;
+}
+
+async function renderMarketStep(c, step) {
+  await loadMarketData();
+  let marketPills = '';
+  ['Health','Wealth','Relationships'].forEach(function(m) {
+    marketPills += '<div class="market-pill ' + (selectedMarket === m ? 'selected' : '') + '" onclick="selectMarket(\'' + m + '\')">' + m + '</div>';
+  });
+
+  const subVis = isLevelVisible('sub') ? 'visible' : 'locked';
+  const nicheVis = isLevelVisible('niche') ? 'visible' : 'locked';
+  const blueVis = isLevelVisible('blue') ? 'visible' : 'locked';
+  const icVis = genState.blue.selected ? 'visible' : 'locked';
+
+  c.innerHTML = '<div class="step-card"><h2 class="step-title">' + step.title + '</h2><p class="step-subtitle">' + step.subtitle + '</p>' +
+    '<div class="field"><label>Primary Market<span class="required">*</span></label><div class="market-pill-group">' + marketPills + '</div></div>' +
+    '<div id="genSub" class="gen-section ' + subVis + '">' + renderSearchField('sub', 'Sub-Market') + '</div>' +
+    '<div id="genNiche" class="gen-section ' + nicheVis + '">' + renderSearchField('niche', 'Niche') + '</div>' +
+    '<div id="genBlue" class="gen-section ' + blueVis + '">' + renderSearchField('blue', 'Blue Ocean') + '</div>' +
+    '<div id="genIC" class="gen-section ' + icVis + '"><div class="field"><label>Ideal Customer<span class="required">*</span></label>' + renderIdealCustomerField() + '</div></div>' +
+    '<div class="wizard-nav">' + (currentStep > 1 ? '<button class="btn btn-back" onclick="goBack()">Back</button>' : '<div></div>') +
+    '<button class="btn btn-next" onclick="goNext()">Continue</button></div></div>';
+  bindSearchEvents();
+}
+
+function renderSearchField(type, label) {
+  const selected = genState[type].selected;
+  const items = getMarketItems(type);
+  const query = genState[type].searchQuery || '';
+  const key = type === 'sub' ? 'sub_market' : (type === 'blue' ? 'blue_ocean' : type);
+
+  // If already selected, show selected tag
+  if (selected && selected !== '__other__') {
+    return '<div class="gen-header"><label>' + label + '<span class="required">*</span></label></div>' +
+      '<div class="selected-tag">' + escapeHtml(selected) + '<span class="remove-tag" onclick="clearSelection(\'' + type + '\')">✕</span></div>';
+  }
+
+  // If "Other" selected, show text input
+  if (selected === '__other__') {
+    return '<div class="gen-header"><label>' + label + '<span class="required">*</span></label></div>' +
+      '<div class="selected-tag">Other <span class="remove-tag" onclick="clearSelection(\'' + type + '\')">✕</span></div>' +
+      '<input type="text" class="other-text-input" id="other_' + type + '" placeholder="Type your own ' + label.toLowerCase() + '..." style="display:block" value="' + escapeAttr(customerData[key] || '') + '">';
+  }
+
+  // Search input + filtered pills
+  const filtered = filterItems(items, query);
+  let pills = '';
+  filtered.forEach(function(item) {
+    pills += '<div class="pill" onclick="selectSearchPill(\'' + type + '\',this)">' + escapeHtml(item) + '</div>';
+  });
+  pills += '<div class="pill" onclick="selectOther(\'' + type + '\')">Other</div>';
+
+  const countText = query && items.length ? '<div class="search-results-count">' + filtered.length + ' of ' + items.length + ' results</div>' : '';
+
+  return '<div class="gen-header"><label>' + label + '<span class="required">*</span></label></div>' +
+    '<div class="search-wrap">' + SEARCH_ICON_SVG + '<input type="text" id="search_' + type + '" placeholder="Search" value="' + escapeAttr(query) + '" data-type="' + type + '"></div>' +
+    countText +
+    '<div class="gen-pills" id="pills_' + type + '">' + pills + '</div>';
+}
+
+function renderIdealCustomerField() {
+  const suggestions = getIdealCustomers();
+  const val = customerData.ideal_customer || '';
+
+  if (suggestions.length > 0) {
+    let pills = '';
+    suggestions.forEach(function(s) {
+      const sel = val === s ? ' selected' : '';
+      pills += '<div class="pill' + sel + '" onclick="selectIdealCustomer(this)">' + escapeHtml(s) + '</div>';
+    });
+    pills += '<div class="pill ' + (val && !suggestions.includes(val) ? 'selected' : '') + '" onclick="showCustomIC()">Other</div>';
+    const otherShow = val && !suggestions.includes(val) ? 'display:block' : 'display:none';
+    return '<div class="gen-pills" id="pills_ic">' + pills + '</div>' +
+      '<div class="input-wrap" style="margin-top:10px;' + otherShow + '" id="ic_custom_wrap"><textarea id="ic_custom_textarea" placeholder="Describe your ideal customer..." style="min-height:60px">' + escapeHtml(val && !suggestions.includes(val) ? val : '') + '</textarea></div>';
+  }
+
+  return '<div class="input-wrap"><textarea data-key="ideal_customer" required placeholder="Describe your ideal customer...">' + escapeHtml(val) + '</textarea><span class="cycle-ph" id="ph_ideal_customer"></span></div>';
+}
+
+function bindSearchEvents() {
+  ['sub','niche','blue'].forEach(function(type) {
+    const input = document.getElementById('search_' + type);
+    if (input) {
+      input.addEventListener('input', function() {
+        genState[type].searchQuery = input.value;
+        updateSearchResults(type);
+      });
+    }
+  });
+  // Ideal customer placeholder
+  const icInput = document.querySelector('[data-key="ideal_customer"]');
+  const icPh = document.getElementById('ph_ideal_customer');
+  if (icInput && icPh) startCyclePlaceholder(icInput, icPh, 'ideal_customer');
+}
+
+function updateSearchResults(type) {
+  const items = getMarketItems(type);
+  const query = genState[type].searchQuery || '';
+  const filtered = filterItems(items, query);
+  const pillsContainer = document.getElementById('pills_' + type);
+  if (!pillsContainer) return;
+
+  let pills = '';
+  filtered.forEach(function(item) {
+    pills += '<div class="pill" onclick="selectSearchPill(\'' + type + '\',this)">' + escapeHtml(item) + '</div>';
+  });
+  pills += '<div class="pill" onclick="selectOther(\'' + type + '\')">Other</div>';
+  pillsContainer.innerHTML = pills;
+
+  // Update count
+  const section = document.getElementById('gen' + type.charAt(0).toUpperCase() + type.slice(1));
+  const countEl = section ? section.querySelector('.search-results-count') : null;
+  if (countEl) {
+    countEl.textContent = query ? filtered.length + ' of ' + items.length + ' results' : '';
+  } else if (query && section) {
+    const searchWrap = section.querySelector('.search-wrap');
+    if (searchWrap) {
+      const countDiv = document.createElement('div');
+      countDiv.className = 'search-results-count';
+      countDiv.textContent = filtered.length + ' of ' + items.length + ' results';
+      searchWrap.after(countDiv);
+    }
+  }
+}
+
+function selectMarket(m) {
+  selectedMarket = m;
+  customerData.market = m;
+  // Reset all downstream
+  genState.sub = { selected: '', searchQuery: '' };
+  genState.niche = { selected: '', searchQuery: '' };
+  genState.blue = { selected: '', searchQuery: '' };
+  customerData.sub_market = '';
+  customerData.niche = '';
+  customerData.blue_ocean = '';
+  customerData.ideal_customer = '';
+  renderMarketStep(document.getElementById('stepContainer'), steps[currentStep]);
+}
+
+function selectSearchPill(type, el) {
+  const value = el.textContent;
+  genState[type].selected = value;
+  genState[type].searchQuery = '';
+  const key = type === 'sub' ? 'sub_market' : (type === 'blue' ? 'blue_ocean' : type);
+  customerData[key] = value;
+
+  // Clear downstream selections
+  if (type === 'sub') {
+    genState.niche = { selected: '', searchQuery: '' };
+    genState.blue = { selected: '', searchQuery: '' };
+    customerData.niche = '';
+    customerData.blue_ocean = '';
+    customerData.ideal_customer = '';
+  } else if (type === 'niche') {
+    genState.blue = { selected: '', searchQuery: '' };
+    customerData.blue_ocean = '';
+    customerData.ideal_customer = '';
+  }
+
+  renderMarketStep(document.getElementById('stepContainer'), steps[currentStep]);
+  // Focus next search input
+  const nextType = type === 'sub' ? 'niche' : (type === 'niche' ? 'blue' : null);
+  if (nextType) {
+    setTimeout(function() {
+      const nextInput = document.getElementById('search_' + nextType);
+      if (nextInput) nextInput.focus();
+    }, 150);
+  }
+}
+
+function selectOther(type) {
+  genState[type].selected = '__other__';
+  genState[type].searchQuery = '';
+  // Clear downstream
+  if (type === 'sub') {
+    genState.niche = { selected: '', searchQuery: '' };
+    genState.blue = { selected: '', searchQuery: '' };
+  } else if (type === 'niche') {
+    genState.blue = { selected: '', searchQuery: '' };
+  }
+  renderMarketStep(document.getElementById('stepContainer'), steps[currentStep]);
+  const otherInput = document.getElementById('other_' + type);
+  if (otherInput) setTimeout(function() { otherInput.focus(); }, 100);
+}
+
+function clearSelection(type) {
+  genState[type].selected = '';
+  genState[type].searchQuery = '';
+  const key = type === 'sub' ? 'sub_market' : (type === 'blue' ? 'blue_ocean' : type);
+  customerData[key] = '';
+  // Clear downstream
+  if (type === 'sub') {
+    genState.niche = { selected: '', searchQuery: '' };
+    genState.blue = { selected: '', searchQuery: '' };
+    customerData.niche = '';
+    customerData.blue_ocean = '';
+    customerData.ideal_customer = '';
+  } else if (type === 'niche') {
+    genState.blue = { selected: '', searchQuery: '' };
+    customerData.blue_ocean = '';
+    customerData.ideal_customer = '';
+  } else if (type === 'blue') {
+    customerData.ideal_customer = '';
+  }
+  renderMarketStep(document.getElementById('stepContainer'), steps[currentStep]);
+  const searchInput = document.getElementById('search_' + type);
+  if (searchInput) setTimeout(function() { searchInput.focus(); }, 100);
+}
+
+function selectIdealCustomer(el) {
+  const container = document.getElementById('pills_ic');
+  if (container) container.querySelectorAll('.pill').forEach(function(p) { p.classList.remove('selected'); });
+  el.classList.add('selected');
+  customerData.ideal_customer = el.textContent;
+  // Hide custom input
+  const customWrap = document.getElementById('ic_custom_wrap');
+  if (customWrap) customWrap.style.display = 'none';
+}
+
+function showCustomIC() {
+  const container = document.getElementById('pills_ic');
+  if (container) container.querySelectorAll('.pill').forEach(function(p) { p.classList.remove('selected'); });
+  // Select the Other pill
+  const pills = container ? container.querySelectorAll('.pill') : [];
+  if (pills.length) pills[pills.length - 1].classList.add('selected');
+  const customWrap = document.getElementById('ic_custom_wrap');
+  if (customWrap) {
+    customWrap.style.display = 'block';
+    const ta = customWrap.querySelector('textarea');
+    if (ta) { ta.focus(); customerData.ideal_customer = ta.value; }
+  }
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+// ============================
+// AUDIENCE STEP
+// ============================
+// ============================
+// PRODUCT STEP (conditional)
+// ============================
+const PRODUCT_TYPES = ['Digital Product','Service/Consulting','SaaS/Software','Physical Product','Nothing yet'];
+const DELIVERY_METHODS = ['Video Calls','Email','Online Course','Community/Chat','Manual/Custom','No system yet','Other'];
+
+function renderProductStep(c, step) {
+  const ptVal = customerData.product_type || '';
+  const isNothingYet = ptVal === 'Nothing yet';
+
+  // Product Type pills
+  let pills = '';
+  PRODUCT_TYPES.forEach(function(o) {
+    pills += '<div class="pill ' + (ptVal === o ? 'selected' : '') + '" data-key="product_type" data-value="' + escapeAttr(o) + '">' + o + '</div>';
+  });
+
+  // Full product fields (hidden when "Nothing yet")
+  let productFields = '';
+  if (!isNothingYet) {
+    const descVal = customerData.product_description || '';
+    const priceVal = customerData.product_price || '';
+    const delVal = customerData.delivery_method || '';
+    let delOpts = '<option value="">Select...</option>';
+    DELIVERY_METHODS.forEach(function(o) {
+      delOpts += '<option value="' + escapeAttr(o) + '" ' + (delVal === o ? 'selected' : '') + '>' + o + '</option>';
+    });
+    productFields = '<div id="productDetailFields">' +
+      '<div class="field"><label>Describe Your Offer<span class="required">*</span></label><textarea data-key="product_description" required>' + escapeHtml(descVal) + '</textarea></div>' +
+      '<div class="field"><label>Price Point<span class="required">*</span></label><input type="text" data-key="product_price" value="' + escapeAttr(priceVal) + '" placeholder="e.g. $497, $2,000/mo" required></div>' +
+      '<div class="field"><label>Delivery Method<span class="required">*</span></label><select data-key="delivery_method" onchange="handleSelectOther(this)" required>' + delOpts + '</select></div></div>';
+  }
+
+  // "Nothing yet" message
+  let nothingYetMsg = '';
+  if (isNothingYet) {
+    const nothingYetCopy = tier === 'audit' || tier === 'membership'
+      ? 'That is useful audit context. We will diagnose the highest-priority marketing and operator gaps and reflect them in the bounded roadmap or monthly guidance included in your order; product creation is not automatically included.'
+      : 'We\'ll build your complete offer for you — including pricing tiers, value stack, and delivery system — based on your market data. This is included in your package.';
+    nothingYetMsg = '<div id="nothingYetMessage" style="margin-top:16px;padding:20px;background:linear-gradient(135deg,rgba(90,138,230,0.08),rgba(107,158,247,0.04));border:1px solid rgba(90,138,230,0.2);border-radius:12px">' +
+      '<p style="font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:8px">No product yet? Tell us.</p>' +
+      '<p style="font-size:14px;color:#666;line-height:1.6">' + nothingYetCopy + '</p></div>';
+  }
+
+  c.innerHTML = '<div class="step-card"><h2 class="step-title">' + step.title + '</h2><p class="step-subtitle">' + step.subtitle + '</p>' +
+    '<div class="field"><label>Product Type<span class="required">*</span></label><div class="pill-group" id="productTypePills">' + pills + '</div></div>' +
+    productFields + nothingYetMsg +
+    '<div class="wizard-nav"><button class="btn btn-back" onclick="goBack()">Back</button>' +
+    '<button class="btn btn-next" onclick="goNext()">Continue</button></div></div>';
+
+  // Pill click handlers — re-render on change
+  c.querySelectorAll('#productTypePills .pill').forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      c.querySelectorAll('#productTypePills .pill').forEach(function(p) { p.classList.remove('selected'); });
+      pill.classList.add('selected');
+      customerData.product_type = pill.dataset.value;
+      // Re-render to show/hide detail fields
+      renderProductStep(c, step);
+    });
+  });
+}
+
+const GEO_MARKETS = ['North America','Europe','Asia-Pacific','Latin America','Middle East and Africa','India','Japan','Korea'];
+const COMPANY_SIZES = ['1-50','51-200','201-1,000','1,001-5,000','5,000+'];
+
+function renderAudienceStep(c, step) {
+  const primaryVal = customerData.primary_geo_market || '';
+  const additionalArr = customerData.additional_markets || [];
+  const sizeVal = customerData.company_size || '';
+
+  // Primary Geographic Market dropdown
+  let primaryOpts = '<option value="">Select primary market...</option>';
+  GEO_MARKETS.forEach(function(m) {
+    primaryOpts += '<option value="' + escapeAttr(m) + '" ' + (primaryVal === m ? 'selected' : '') + '>' + m + '</option>';
+  });
+
+  // Additional Markets checkboxes
+  let checkboxes = '';
+  GEO_MARKETS.forEach(function(m) {
+    const sel = additionalArr.includes(m) ? ' selected' : '';
+    checkboxes += '<div class="check-pill' + sel + '" data-market="' + escapeAttr(m) + '" onclick="toggleAdditionalMarket(this)">' + m + '</div>';
+  });
+
+  // Company Size radio pills
+  let radios = '';
+  COMPANY_SIZES.forEach(function(s) {
+    const sel = sizeVal === s ? ' selected' : '';
+    radios += '<div class="radio-pill' + sel + '" data-size="' + escapeAttr(s) + '" onclick="selectCompanySize(this)">' + s + '</div>';
+  });
+
+  c.innerHTML = '<div class="step-card"><h2 class="step-title">' + step.title + '</h2><p class="step-subtitle">' + step.subtitle + '</p>' +
+    '<div class="field"><label>Primary Geographic Market Served<span class="required">*</span></label>' +
+    '<select data-key="primary_geo_market" onchange="customerData.primary_geo_market=this.value">' + primaryOpts + '</select></div>' +
+    '<div class="field"><label>Additional Markets</label><p style="font-size:12px;color:#999;margin-bottom:8px">Select all that apply</p>' +
+    '<div class="checkbox-group" id="additionalMarketsGroup">' + checkboxes + '</div></div>' +
+    '<div class="field"><label>Company Size<span class="required">*</span></label><p style="font-size:12px;color:#999;margin-bottom:8px">Your typical customer\'s company size</p>' +
+    '<div class="radio-group" id="companySizeGroup">' + radios + '</div></div>' +
+    '<div class="wizard-nav"><button class="btn btn-back" onclick="goBack()">Back</button>' +
+    '<button class="btn btn-next" onclick="goNext()">Continue</button></div></div>';
+}
+
+function toggleAdditionalMarket(el) {
+  el.classList.toggle('selected');
+  // Collect all selected
+  const group = document.getElementById('additionalMarketsGroup');
+  const selected = [];
+  group.querySelectorAll('.check-pill.selected').forEach(function(p) { selected.push(p.dataset.market); });
+  customerData.additional_markets = selected;
+}
+
+function selectCompanySize(el) {
+  const group = document.getElementById('companySizeGroup');
+  group.querySelectorAll('.radio-pill').forEach(function(p) { p.classList.remove('selected'); });
+  el.classList.add('selected');
+  customerData.company_size = el.dataset.size;
+}
+
+// ============================
+// REVIEW STEP
+// ============================
+const _reviewSections = [
+  { title: 'About You', keys: ['name','company','email','website','country','business_age'], stepIdx: 1 },
+  { title: 'Market', keys: ['market','sub_market','niche','blue_ocean','ideal_customer'], stepIdx: 2 },
+  { title: 'Audience', keys: ['primary_geo_market','additional_markets','company_size'], stepIdx: 3 },
+  { title: 'Product', keys: ['product_type','product_description','product_price','delivery_method'], stepIdx: 4 },
+  { title: 'Business Status', keys: ['monthly_revenue','customer_count','acquisition_channels','biggest_problem'], stepIdx: 5 },
+  { title: 'Goals', keys: ['primary_goal','revenue_target','hours_available','ai_experience'], stepIdx: 6 },
+  { title: 'Tech & Tools', keys: ['current_tools','email_list_size','social_media'], stepIdx: 7 },
+  { title: 'Business & Brand', keys: ['legal_entity_type','tax_id','vat_registered','brand_voice','timezone'], stepIdx: 8 }
+];
+const _labelMap = {
+  name:'Name', company:'Company', email:'Email', website:'Website', country:'Country',
+  business_age:'Time in Business', market:'Market', sub_market:'Sub-Market', niche:'Niche',
+  blue_ocean:'Blue Ocean', ideal_customer:'Ideal Customer',
+  primary_geo_market:'Primary Market', additional_markets:'Additional Markets', company_size:'Company Size',
+  product_type:'Product Type', product_description:'Description', product_price:'Price', delivery_method:'Delivery',
+  monthly_revenue:'Revenue', customer_count:'Customers', acquisition_channels:'Acquisition',
+  biggest_problem:'Biggest Problem', primary_goal:'Goal', revenue_target:'Revenue Target',
+  hours_available:'Hours/Week', ai_experience:'AI Level', current_tools:'Tools',
+  email_list_size:'Email List', social_media:'Social Media', legal_entity_type:'Entity',
+  tax_id:'Tax ID', vat_registered:'VAT', brand_voice:'Brand Voice', timezone:'Timezone'
+};
+const _editPencil = '<svg viewBox="0 0 24 24" width="14" height="14"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/></svg>';
+const _saveCheck = '<svg viewBox="0 0 24 24" width="14" height="14"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor"/></svg>';
+
+function showReviewToast(msg) {
+  let toast = document.getElementById('reviewToast');
+  if (!toast) { toast = document.createElement('div'); toast.id = 'reviewToast'; toast.className = 'review-toast'; document.body.appendChild(toast); }
+  toast.textContent = msg || 'Saved';
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 1500);
+}
+
+function editSectionInline(idx) {
+  const sec = _reviewSections[idx];
+  const container = document.getElementById('rev_sec_' + idx);
+  if (!container) return;
+  // Build editable rows
+  let html = '';
+  for (const k of sec.keys) {
+    const v = customerData[k];
+    if (v && (Array.isArray(v) ? v.length : true)) {
+      const displayVal = Array.isArray(v) ? v.join(', ') : v;
+      html += '<div class="review-row"><span class="review-label">' + (_labelMap[k] || k) + '</span>' +
+        '<input class="review-input" data-rkey="' + k + '" value="' + escapeAttr(displayVal) + '"></div>';
+    }
+  }
+  container.innerHTML = html;
+  // Swap header icon to save
+  const hdr = container.previousElementSibling;
+  const icon = hdr.querySelector('svg');
+  if (icon) {
+    const saveBtn = document.createElement('span');
+    saveBtn.className = 'review-save-icon';
+    saveBtn.innerHTML = _saveCheck;
+    saveBtn.onclick = function() { saveSectionInline(idx); };
+    icon.replaceWith(saveBtn);
+  }
+  // Focus first input + Enter-key to save
+  const first = container.querySelector('.review-input');
+  if (first) first.focus();
+  container.querySelectorAll('.review-input').forEach(function(inp) {
+    inp.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); saveSectionInline(idx); }
+    });
+  });
+}
+
+function saveSectionInline(idx) {
+  const container = document.getElementById('rev_sec_' + idx);
+  if (!container) return;
+  // Save values back to customerData
+  container.querySelectorAll('.review-input').forEach(function(inp) {
+    const k = inp.dataset.rkey;
+    const val = inp.value.trim();
+    // Handle array fields
+    if (k === 'additional_markets' || k === 'platforms') {
+      customerData[k] = val ? val.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
+    } else {
+      customerData[k] = val;
+    }
+  });
+  // Re-render this section as read-only
+  let html = '';
+  const sec = _reviewSections[idx];
+  for (const k of sec.keys) {
+    const v = customerData[k];
+    if (v && (Array.isArray(v) ? v.length : true)) {
+      const displayVal = Array.isArray(v) ? v.join(', ') : v;
+      const display = displayVal.length > 60 ? displayVal.substring(0, 60) + '...' : displayVal;
+      html += '<div class="review-row"><span class="review-label">' + (_labelMap[k] || k) + '</span><span class="review-value">' + escapeHtml(display) + '</span></div>';
+    }
+  }
+  container.innerHTML = html;
+  // Swap back to edit icon
+  const hdr = container.previousElementSibling;
+  const saveBtn = hdr.querySelector('.review-save-icon');
+  if (saveBtn) {
+    const editBtn = document.createElement('span');
+    editBtn.className = 'review-edit-icon';
+    editBtn.innerHTML = _editPencil;
+    editBtn.onclick = function() { editSectionInline(idx); };
+    saveBtn.replaceWith(editBtn);
+  }
+  showReviewToast('Saved');
+}
+
+function renderReviewStep(c, step) {
+  let reviewHtml = '<div id="reviewToast" class="review-toast"></div>';
+  for (let i = 0; i < _reviewSections.length; i++) {
+    const s = _reviewSections[i];
+    let rows = '';
+    for (const k of s.keys) {
+      const v = customerData[k];
+      if (v && (Array.isArray(v) ? v.length : true)) {
+        const displayVal = Array.isArray(v) ? v.join(', ') : v;
+        const display = displayVal.length > 60 ? displayVal.substring(0, 60) + '...' : displayVal;
+        rows += '<div class="review-row"><span class="review-label">' + (_labelMap[k] || k) + '</span><span class="review-value">' + escapeHtml(display) + '</span></div>';
+      }
+    }
+    if (rows) {
+      reviewHtml += '<div class="review-section">' +
+        '<div class="review-section-header"><h3>' + s.title + '</h3><span class="review-edit-icon" onclick="editSectionInline(' + i + ')">' + _editPencil + '</span></div>' +
+        '<div id="rev_sec_' + i + '">' + rows + '</div></div>';
+    }
+  }
+  c.innerHTML = '<div class="step-card"><h2 class="step-title">' + step.title + '</h2><p class="step-subtitle">' + step.subtitle + '</p>' +
+    reviewHtml +
+    '<div class="wizard-nav"><button class="btn btn-back" onclick="goBack()">Back</button><div></div></div>' +
+    '<button class="btn btn-submit" id="submitBtn" onclick="submitOnboarding()">Submit Onboarding</button></div>';
+}
+
+// ============================
+// NAVIGATION
+// ============================
+function collectCurrentData() {
+  const c = document.getElementById('stepContainer');
+  c.querySelectorAll('input[data-key], textarea[data-key]').forEach(function(el) { customerData[el.dataset.key] = el.value.trim(); });
+  c.querySelectorAll('select[data-key]').forEach(function(el) {
+    const key = el.dataset.key;
+    if (el.value === 'Other') {
+      const otherInput = el.parentElement.querySelector('.select-other-input');
+      customerData[key] = otherInput && otherInput.value.trim() ? otherInput.value.trim() : 'Other';
+      customerData[key + '_other'] = otherInput ? otherInput.value.trim() : '';
+    } else {
+      customerData[key] = el.value;
+      customerData[key + '_other'] = '';
+    }
+  });
+  c.querySelectorAll('.pill.selected').forEach(function(el) {
+    if (el.dataset.key && el.dataset.value) customerData[el.dataset.key] = el.dataset.value;
+  });
+  // Collect audience step primary_geo_market from select
+  const geoSelect = c.querySelector('select[data-key="primary_geo_market"]');
+  if (geoSelect) customerData.primary_geo_market = geoSelect.value;
+  // Collect gen other inputs + ideal customer from custom textarea
+  ['sub','niche','blue'].forEach(function(type) {
+    if (genState[type].selected === '__other__') {
+      const inp = document.getElementById('other_' + type);
+      const key = type === 'sub' ? 'sub_market' : (type === 'blue' ? 'blue_ocean' : type);
+      if (inp && inp.value.trim()) customerData[key] = inp.value.trim();
+    }
+  });
+  // Collect ideal customer from custom textarea if visible
+  const icCustom = document.getElementById('ic_custom_textarea');
+  if (icCustom && icCustom.closest('#ic_custom_wrap') && icCustom.closest('#ic_custom_wrap').style.display !== 'none') {
+    if (icCustom.value.trim()) customerData.ideal_customer = icCustom.value.trim();
+  }
+}
+
+function validateCurrentStep() {
+  const step = steps[currentStep];
+  if (step.type === 'market') {
+    if (!customerData.market) return false;
+    if (!customerData.sub_market) return false;
+    if (!customerData.niche) return false;
+    if (!customerData.blue_ocean) return false;
+    if (!customerData.ideal_customer || !customerData.ideal_customer.trim()) return false;
+    return true;
+  }
+  if (step.type === 'audience') {
+    if (!customerData.primary_geo_market) return false;
+    if (!customerData.company_size) return false;
+    return true;
+  }
+  if (step.type === 'product') {
+    if (!customerData.product_type) return false;
+    if (customerData.product_type === 'Nothing yet') return true; // skip detail fields
+    if (!customerData.product_description || !customerData.product_description.trim()) return false;
+    if (!customerData.product_price || !customerData.product_price.trim()) return false;
+    if (!customerData.delivery_method) return false;
+    return true;
+  }
+  if (!step.fields) return true;
+  for (const f of step.fields) {
+    if (f.required) {
+      const val = customerData[f.key];
+      if (!val || (typeof val === 'string' && !val.trim())) return false;
+    }
+  }
+  return true;
+}
+
+function goNext() {
+  collectCurrentData();
+  if (!validateCurrentStep()) {
+    const c = document.getElementById('stepContainer');
+    const step = steps[currentStep];
+    if (step.type === 'market') {
+      if (!customerData.market) { const mp = c.querySelector('.market-pill-group'); if (mp) { mp.style.outline = '2px solid #E53E3E'; mp.style.borderRadius = '12px'; setTimeout(function() { mp.style.outline = 'none'; }, 2000); } }
+      return;
+    }
+    if (step.type === 'audience') {
+      if (!customerData.primary_geo_market) { const sel = c.querySelector('select[data-key="primary_geo_market"]'); if (sel) { sel.style.borderColor = '#E53E3E'; setTimeout(function() { sel.style.borderColor = ''; }, 2000); } }
+      if (!customerData.company_size) { const grp = document.getElementById('companySizeGroup'); if (grp) { grp.style.outline = '2px solid #E53E3E'; grp.style.borderRadius = '12px'; setTimeout(function() { grp.style.outline = 'none'; }, 2000); } }
+      return;
+    }
+    if (step.type === 'product') {
+      if (!customerData.product_type) { const pg = c.querySelector('#productTypePills'); if (pg) { pg.style.outline = '2px solid #E53E3E'; pg.style.borderRadius = '12px'; setTimeout(function() { pg.style.outline = 'none'; }, 2000); } }
+      return;
+    }
+    if (step.fields) {
+      for (const f of step.fields) {
+        if (f.required && (!customerData[f.key] || !customerData[f.key].trim())) {
+          const el = c.querySelector('[data-key="' + f.key + '"]');
+          if (el) {
+            if (el.classList.contains('pill')) { el.parentElement.style.outline = '2px solid #E53E3E'; el.parentElement.style.borderRadius = '12px'; setTimeout(function() { el.parentElement.style.outline = 'none'; }, 2000); }
+            else { el.style.borderColor = '#E53E3E'; setTimeout(function() { el.style.borderColor = ''; }, 2000); }
+          }
+        }
+      }
+    }
+    return;
+  }
+  currentStep++;
+  // Auto-skip steps fully covered by /apply application data
+  if (window._hasApplicationData) {
+    while (currentStep < steps.length && canAutoSkip(steps[currentStep])) {
+      currentStep++;
+    }
+  }
+  renderStep();
+}
+
+// Check if a step can be auto-skipped (all required fields already filled from /apply)
+function canAutoSkip(step) {
+  if (!step) return false;
+  // Only auto-skip the audience step — it's 100% duplicate with /apply
+  if (step.id === 'audience') {
+    return customerData.primary_geo_market && customerData.company_size;
+  }
+  return false;
+}
+
+function goBack() {
+  collectCurrentData();
+  if (currentStep > 1) {
+    currentStep--;
+    // Skip over auto-skipped steps when going back
+    if (window._hasApplicationData) {
+      while (currentStep > 1 && canAutoSkip(steps[currentStep])) {
+        currentStep--;
+      }
+    }
+    renderStep();
+  }
+}
+
+// ============================
+// SUBMIT
+// ============================
+async function submitOnboarding() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+  try {
+    const res = await fetch('/api/onboard', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data: customerData, completed_at: new Date().toISOString(), tier: window.verifiedTier || tier, offerKey: billingOfferKey, onboardingToken: onboardingToken })
+    });
+    if (res.ok) { sessionStorage.removeItem('ge_onboarding_token'); renderSuccess(); }
+    else { btn.disabled = false; btn.textContent = 'Retry'; alert('Something went wrong. Please try again.'); }
+  } catch (e) { btn.disabled = false; btn.textContent = 'Retry'; alert('Connection error. Please try again.'); }
+}
+
+function renderSuccess() {
+  const c = document.getElementById('stepContainer');
+  const finalTier = window.verifiedTier || tier;
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('stepPct').textContent = '100%';
+  document.getElementById('stepLabel').textContent = 'Complete';
+  document.getElementById('headerSubtitle').textContent = "You're all set";
+  let nextSteps = '';
+  if (finalTier === 'audit') {
+    nextSteps = '<div class="next-step-item"><div class="next-step-num">1</div><div class="next-step-text">Your GrowthEko AI Operator Audit onboarding is complete.</div></div><div class="next-step-item"><div class="next-step-num">2</div><div class="next-step-text">Your marketing/funnel workflows and AI readiness will be reviewed from your answers.</div></div><div class="next-step-item"><div class="next-step-num">3</div><div class="next-step-text">You will receive the prioritized opportunity map and practical implementation roadmap described in your order.</div></div>';
+  } else if (finalTier === 'membership') {
+    nextSteps = '<div class="next-step-item"><div class="next-step-num">1</div><div class="next-step-text">Your GrowthEko Operator Membership onboarding is complete.</div></div><div class="next-step-item"><div class="next-step-num">2</div><div class="next-step-text">Your first monthly marketing-focused operator priorities and resources are being prepared.</div></div><div class="next-step-item"><div class="next-step-num">3</div><div class="next-step-text">Billing documents, payment method and cancellation remain available through Stripe\'s secure billing portal.</div></div>';
+  } else if (finalTier === 'secret') {
+    nextSteps = '<div class="next-step-item"><div class="next-step-num">1</div><div class="next-step-text">Your AI Clarity Blueprint will arrive via email within 24 hours.</div></div><div class="next-step-item"><div class="next-step-num">2</div><div class="next-step-text">It includes your market positioning, niche strategy, and first action steps.</div></div><div class="next-step-item"><div class="next-step-num">3</div><div class="next-step-text">Follow the step-by-step instructions to start building.</div></div>';
+  } else if (finalTier === 'sprint') {
+    nextSteps = '<div class="next-step-item"><div class="next-step-num">1</div><div class="next-step-text">Your AI System Sprint plan arrives via email within 24 hours.</div></div><div class="next-step-item"><div class="next-step-num">2</div><div class="next-step-text">Includes your workflow blueprint, backend cleanup plan, and automation priorities.</div></div><div class="next-step-item"><div class="next-step-num">3</div><div class="next-step-text">You will get a focused implementation roadmap for the first 30 days.</div></div><div class="next-step-item"><div class="next-step-num">4</div><div class="next-step-text">Your chat portal is ready at growtheko.com/chat for direct support.</div></div>';
+  } else {
+    nextSteps = '<div class="next-step-item"><div class="next-step-num">1</div><div class="next-step-text">Your AI Operator Retainer setup will be activated within 24 hours.</div></div><div class="next-step-item"><div class="next-step-num">2</div><div class="next-step-text">We will establish your ongoing optimization cadence, reporting loop, and support structure.</div></div><div class="next-step-item"><div class="next-step-num">3</div><div class="next-step-text">Your dedicated chat portal will be set up within 24 hours at growtheko.com/chat.</div></div><div class="next-step-item"><div class="next-step-num">4</div><div class="next-step-text">Nora and the support layer will be configured around your existing systems.</div></div>';
+  }
+  const currentOfferSupport = finalTier === 'audit' || finalTier === 'membership'
+    ? '<div class="slack-cta"><strong>Need help?</strong><br>Email info@growtheko.com. Your Stripe invoice is sent separately by Stripe.</div>'
+    : '<a href="https://calendly.com/robinekren/free-clarity-call-30-min?name=' + encodeURIComponent(customerData.name || '') + '&email=' + encodeURIComponent(customerData.email || '') + '" target="_blank" style="display:block;text-align:center;padding:16px 24px;background:linear-gradient(135deg,#6B9EF7,#5A8AE6);color:#fff;border-radius:12px;font-size:16px;font-weight:600;text-decoration:none;margin:20px 0;box-shadow:0 4px 14px rgba(90,138,230,0.3);transition:all 0.15s">Book Your Free Clarity Call</a><div class="slack-cta"><strong>Legacy customer support</strong><br>Use the support details in your original agreement.</div>';
+  c.innerHTML = '<div class="step-card success-screen"><div class="success-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>' +
+    '<h2 class="step-title">Onboarding Complete</h2><p class="step-subtitle">Thanks, ' + escapeHtml(customerData.name || '') + '. We have everything we need.</p>' +
+    '<div class="next-steps">' + nextSteps + '</div>' + currentOfferSupport + '</div>';
+}
+
+// ============================
+// HELPERS
+// ============================
+function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function escapeAttr(s) { return (s || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+
+// ============================
+// START
+// ============================
+enableVisionStepMode();
+renderStep();
+</script>
+
+</body>
+</html>

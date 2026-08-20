@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Share your story · GrowthEko</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/og/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/og/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/og/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#09271b">
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --ink:#0a0a0a; --ink-mute:#6a6a6a; --line:#e9e9e9; --card:#fafafa; --gold:#b08a4a; }
+  body { font-family:'Inter',-apple-system,system-ui,sans-serif; color:var(--ink); background:#fff; line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .container { max-width: 640px; margin: 0 auto; padding: 60px 24px 80px; }
+  .pill { display:inline-block;padding:6px 14px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--ink-mute);margin-bottom:24px; }
+  h1 { font-family:'Instrument Serif',Georgia,serif;font-size:clamp(36px,5vw,52px);line-height:1.05;letter-spacing:-0.03em;margin-bottom:16px; }
+  h1 em { font-style:italic;color:var(--gold); }
+  .sub { color:var(--ink-mute);font-size:17px;margin-bottom:40px;line-height:1.55; }
+  label { display:block;font-size:13px;font-weight:600;color:var(--ink);margin:24px 0 8px;letter-spacing:0.02em; }
+  label .hint { font-weight:400;color:var(--ink-mute);font-size:12px;display:block;margin-top:2px; }
+  input, textarea, select {
+    width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;
+    font-size:15px;font-family:inherit;background:#fff;color:var(--ink);outline:none;
+    transition:border-color 0.2s;
+  }
+  input:focus, textarea:focus, select:focus { border-color:var(--ink); }
+  textarea { min-height:120px;resize:vertical;font-family:inherit;line-height:1.55; }
+  .field-row { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+  @media (max-width:600px) { .field-row { grid-template-columns:1fr; } }
+  .perm-grid { display:grid;grid-template-columns:1fr;gap:12px;margin-top:8px; }
+  .perm-grid label { display:flex;align-items:flex-start;gap:10px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;cursor:pointer;font-weight:400;font-size:14px;color:var(--ink); margin:0; }
+  .perm-grid label:hover { border-color:var(--ink); }
+  .perm-grid input[type="checkbox"] { width:18px;height:18px;margin-top:2px; }
+  button[type="submit"] {
+    width:100%;padding:16px 28px;background:var(--ink);color:#fff;border:none;border-radius:999px;
+    font-size:15px;font-weight:500;cursor:pointer;margin-top:32px;font-family:inherit;
+    transition:background 0.2s,opacity 0.2s;
+  }
+  button[type="submit"]:hover { background:#2a2a2a; }
+  button[type="submit"]:disabled { opacity:0.6;cursor:not-allowed; }
+  .form-msg { margin-top:16px;font-size:14px;min-height:18px;text-align:center; }
+  .form-msg.err { color:#b04040; }
+  .form-msg.ok { color:#2a8a4a; }
+  .rating { display:flex;gap:8px;margin-top:8px; }
+  .rating .star {
+    width:36px;height:36px;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:18px;color:var(--ink-mute);font-family:Georgia,serif;
+    transition:all 0.15s;
+  }
+  .rating .star.active, .rating .star:hover ~ .star.active { background:var(--gold);color:#fff;border-color:var(--gold); }
+  .rating .star.active { background:var(--gold);color:#fff;border-color:var(--gold); }
+  .thanks {
+    text-align:center;padding:60px 0;
+  }
+  .thanks h1 { margin-bottom:20px; }
+  .thanks p { color:var(--ink-mute);font-size:17px;margin-bottom:32px; }
+  footer { padding:32px 24px;border-top:1px solid var(--line);text-align:center;font-size:12px;color:var(--ink-mute); }
+</style>
+</head>
+<body>
+
+<main class="container" id="formContainer">
+  <span class="pill">For members · Audit clients · Playbook readers</span>
+  <h1>Share your <em>story</em>.</h1>
+  <p class="sub">2 minutes. Help me sharpen the next cohort + your words become social proof for the operators coming behind you.</p>
+
+  <form id="testimonialForm" novalidate>
+    <label for="firstName">Your name <span class="hint">First + last initial (e.g., "Robin E.") — shown publicly only if you allow below</span></label>
+    <input type="text" id="firstName" name="firstName" required autocomplete="name" placeholder="Robin E." />
+
+    <label for="email">Email <span class="hint">For follow-up only — never displayed</span></label>
+    <input type="email" id="email" name="email" required autocomplete="email" placeholder="you@business.com" />
+
+    <div class="field-row">
+      <div>
+        <label for="tier">Which program?</label>
+        <select id="tier" name="tier" required>
+          <option value="">Select…</option>
+          <option value="monthly_97">GrowthEko Operator Membership ($97 USD/month — net, plus applicable taxes)</option>
+          <option value="onetime_1997">GrowthEko AI Operator Audit ($1,997 USD one-time — net, plus applicable taxes)</option>
+          <option value="playbook">Just the Playbook (free)</option>
+        </select>
+      </div>
+      <div>
+        <label for="niche">Your niche / business <span class="hint">(One sentence)</span></label>
+        <input type="text" id="niche" name="niche" placeholder="e.g., fitness coaching for execs" />
+      </div>
+    </div>
+
+    <label>Rating <span class="hint">Out of 10 — gut answer, no second-guessing</span></label>
+    <div class="rating" id="rating">
+      <div class="star" data-val="1">1</div>
+      <div class="star" data-val="2">2</div>
+      <div class="star" data-val="3">3</div>
+      <div class="star" data-val="4">4</div>
+      <div class="star" data-val="5">5</div>
+      <div class="star" data-val="6">6</div>
+      <div class="star" data-val="7">7</div>
+      <div class="star" data-val="8">8</div>
+      <div class="star" data-val="9">9</div>
+      <div class="star" data-val="10">10</div>
+    </div>
+    <input type="hidden" id="ratingValue" name="rating" />
+
+    <label for="quickwin">What was your week-1 Quick-Win? <span class="hint">(The specific thing we shipped together that moved the needle)</span></label>
+    <textarea id="quickwin" name="quickwin" placeholder="e.g., We shipped a niche-clarity matrix that cut my ICP from 4 confused segments to 1 high-fit one. First DM I sent that week converted to a $500 client."></textarea>
+
+    <label for="testimonial">Your story <span class="hint">(2-3 sentences. What changed? What surprised you? What would you tell another operator at your stage?)</span></label>
+    <textarea id="testimonial" name="testimonial" required placeholder="Most coaches sold me theory. Robin built the system with me. By day 14 my offer was finally crisp, by day 30 I had a 3-tier ladder I actually wanted to sell. The Foundation Prompt alone is worth the price."></textarea>
+
+    <label>Permissions <span class="hint">Pick all that apply</span></label>
+    <div class="perm-grid">
+      <label>
+        <input type="checkbox" name="permName" value="1" checked />
+        <span>Display my name + niche publicly on growtheko.com (without permission, only the testimonial text is shown anonymously)</span>
+      </label>
+      <label>
+        <input type="checkbox" name="permPhoto" value="1" />
+        <span>I'll send a photo of myself for the testimonial display (Robin will email me a request)</span>
+      </label>
+      <label>
+        <input type="checkbox" name="permVideo" value="1" />
+        <span>Open to recording a 60-sec video testimonial — Robin will follow up with instructions</span>
+      </label>
+      <label>
+        <input type="checkbox" name="permCaseStudy" value="1" />
+        <span>Use my story in a longer case-study (with my review of the final draft before publish)</span>
+      </label>
+    </div>
+
+    <!-- Honeypot -->
+    <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;height:0;width:0;opacity:0;" />
+
+    <button type="submit" id="submitBtn">Send my story →</button>
+    <div class="form-msg" id="formMsg" aria-live="polite"></div>
+  </form>
+</main>
+
+<main class="container thanks" id="thanksContainer" style="display:none;">
+  <span class="pill">Received — thank you</span>
+  <h1>Thank you, <em><span id="thanksName">friend</span></em>.</h1>
+  <p>Your story is in. I'll review personally within 48h and follow up if I have a quick question, otherwise it'll be live on growtheko.com when the next cohort opens.</p>
+  <p style="font-size:14px;">Your testimonial helps the next operator. That's the loop.</p>
+  <a href="/" style="display:inline-block;padding:14px 28px;background:#0a0a0a;color:#fff;text-decoration:none;border-radius:999px;font-weight:500;margin-top:20px;">← Back to growtheko.com</a>
+</main>
+
+<footer>
+  <div><strong>GrowthEko</strong> · A brand operated by Robin Ekren · Bogengasse 2, 2630 Ternitz, Austria · VAT ID ATU83303738 · © 2026</div>
+  <div style="margin-top:8px;"><a href="/imprint">Imprint</a> · <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a></div>
+</footer>
+
+<script>
+(function() {
+  const form = document.getElementById('testimonialForm');
+  const msgEl = document.getElementById('formMsg');
+  const btn = document.getElementById('submitBtn');
+  const ratingEl = document.getElementById('rating');
+  const ratingValueEl = document.getElementById('ratingValue');
+  let ratingValue = 0;
+
+  // Rating selector
+  Array.from(ratingEl.children).forEach(star => {
+    star.addEventListener('click', () => {
+      ratingValue = Number(star.dataset.val);
+      ratingValueEl.value = ratingValue;
+      Array.from(ratingEl.children).forEach((s, i) => {
+        if (i < ratingValue) s.classList.add('active');
+        else s.classList.remove('active');
+      });
+    });
+  });
+
+  function setMsg(text, type) {
+    msgEl.textContent = text;
+    msgEl.className = 'form-msg ' + (type || '');
+  }
+
+  function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    setMsg('', '');
+
+    const data = {
+      firstName:     document.getElementById('firstName').value.trim(),
+      email:         document.getElementById('email').value.trim().toLowerCase(),
+      tier:          document.getElementById('tier').value,
+      niche:         document.getElementById('niche').value.trim(),
+      rating:        ratingValue,
+      quickwin:      document.getElementById('quickwin').value.trim(),
+      testimonial:   document.getElementById('testimonial').value.trim(),
+      permName:      document.querySelector('[name="permName"]').checked,
+      permPhoto:     document.querySelector('[name="permPhoto"]').checked,
+      permVideo:     document.querySelector('[name="permVideo"]').checked,
+      permCaseStudy: document.querySelector('[name="permCaseStudy"]').checked,
+      website:       form.website.value, // honeypot
+    };
+
+    if (!data.firstName) { setMsg('Name?', 'err'); return; }
+    if (!validateEmail(data.email)) { setMsg('Real email please.', 'err'); return; }
+    if (!data.tier) { setMsg('Which program?', 'err'); return; }
+    if (!data.rating) { setMsg('Rate it — gut answer.', 'err'); return; }
+    if (!data.testimonial || data.testimonial.length < 30) { setMsg('A few more words on your story?', 'err'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    try {
+      const res = await fetch('/api/testimonial-submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || 'Server error, try again.');
+      }
+
+      // Show thanks page
+      document.getElementById('thanksName').textContent = data.firstName.split(' ')[0];
+      document.getElementById('formContainer').style.display = 'none';
+      document.getElementById('thanksContainer').style.display = 'block';
+      window.scrollTo(0, 0);
+
+      if (window.plausible) window.plausible('testimonial_submit', { props: { tier: data.tier, rating: data.rating } });
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Send my story →';
+      setMsg(err.message || 'Something broke. Try again?', 'err');
+    }
+  });
+
+  // Pre-fill from query params (so links can come pre-personalized)
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('fn'))    document.getElementById('firstName').value = p.get('fn');
+  if (p.get('email')) document.getElementById('email').value = p.get('email');
+  if (p.get('tier'))  document.getElementById('tier').value = p.get('tier');
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The AI Growth Playbook — 40-page framework for solo operators building AI-native businesses. Free. No opt-in tricks.">
+<meta property="og:title" content="The AI Growth Playbook — Free">
+<meta property="og:description" content="40-page framework for solo operators building AI-native businesses. Free, no opt-in tricks.">
+<meta property="og:url" content="https://growtheko.com/playbook">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://growtheko.com/og/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/og/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/og/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/og/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#09271b">
+<title>The AI Growth Playbook — Free · GrowthEko</title>
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #0a0a0a;
+    --ink-soft: #2a2a2a;
+    --ink-mute: #6a6a6a;
+    --line: #e9e9e9;
+    --bg: #ffffff;
+    --card: #fafafa;
+    --gold: #b08a4a;
+    --error: #b04040;
+    --success: #2a8a4a;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.5;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; letter-spacing: -0.02em; }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  /* NAV */
+  nav.top {
+    border-bottom: 1px solid var(--line);
+    background: #fff;
+  }
+  nav.top .row { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; max-width: 1080px; margin: 0 auto; }
+  nav.top .logo { display: inline-flex; align-items: center; font-weight: 700; letter-spacing: -0.02em; font-size: 18px; }
+  nav.top .logo .by { font-weight: 400; color: var(--ink-mute); font-size: 13px; margin-left: 6px; }
+  .brand-logo { width: 32px; height: 32px; object-fit: contain; margin-right: 8px; }
+  nav.top .back { color: var(--ink-mute); text-decoration: none; font-size: 14px; }
+  nav.top .back:hover { color: var(--ink); }
+
+  /* HERO */
+  .hero { padding: 80px 0 40px; text-align: center; }
+  .hero .pill {
+    display: inline-block; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px;
+    font-size: 13px; color: var(--ink-mute); margin-bottom: 28px; letter-spacing: 0.02em;
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: clamp(40px, 6vw, 64px); line-height: 1.05; font-weight: 400;
+    letter-spacing: -0.03em; margin-bottom: 20px;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold); }
+  .hero .sub {
+    font-size: clamp(17px, 2vw, 19px); color: var(--ink-mute); max-width: 540px; margin: 0 auto;
+    line-height: 1.55;
+  }
+
+  /* PREVIEW */
+  .preview {
+    background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+    padding: 32px; margin: 48px 0; display: grid; grid-template-columns: 100px 1fr; gap: 28px; align-items: center;
+  }
+  @media (max-width: 600px) { .preview { grid-template-columns: 1fr; gap: 16px; text-align: center; justify-items: center; } }
+  .pdf-icon {
+    width: 100px; height: 130px; background: #fff; border: 1px solid var(--line); border-radius: 8px;
+    position: relative; display: flex; align-items: center; justify-content: center;
+    font-family: 'Instrument Serif', serif; font-size: 28px; color: var(--gold); font-style: italic;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  }
+  .pdf-icon::before { content: ''; position: absolute; top: 0; right: 0; width: 24px; height: 24px; background: var(--card); border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); border-radius: 0 0 0 8px; }
+  .pdf-icon span { z-index: 1; }
+  .preview-content h3 { font-family: 'Instrument Serif', serif; font-size: 28px; line-height: 1.1; margin-bottom: 8px; }
+  .preview-content p { color: var(--ink-mute); font-size: 14px; line-height: 1.5; }
+  .preview-content .meta { margin-top: 10px; font-size: 12px; color: var(--ink-mute); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* INSIDE list */
+  .inside { margin: 56px 0 32px; }
+  .inside h2 {
+    font-family: 'Instrument Serif', serif; font-size: 28px; margin-bottom: 24px; letter-spacing: -0.02em;
+  }
+  .inside ul { list-style: none; }
+  .inside li { padding: 14px 0 14px 36px; border-bottom: 1px solid var(--line); position: relative; font-size: 15px; line-height: 1.55; color: var(--ink-soft); }
+  .inside li::before {
+    content: ''; position: absolute; left: 0; top: 22px; width: 18px; height: 1.5px; background: var(--gold);
+  }
+  .inside li strong { color: var(--ink); font-weight: 600; }
+
+  /* FORM */
+  .capture {
+    background: var(--ink); color: #fff; padding: 48px 32px;
+    border-radius: 20px; margin: 32px 0; text-align: center;
+  }
+  .capture h2 { font-family: 'Instrument Serif', serif; font-size: 32px; line-height: 1.1; margin-bottom: 12px; font-weight: 400; }
+  .capture p { color: rgba(255,255,255,0.7); font-size: 15px; max-width: 420px; margin: 0 auto 28px; line-height: 1.55; }
+  form { display: flex; flex-direction: column; gap: 12px; max-width: 380px; margin: 0 auto; }
+  form .row { display: flex; gap: 12px; }
+  form .row > * { flex: 1; }
+  @media (max-width: 600px) { form .row { flex-direction: column; } }
+  input[type="text"], input[type="email"] {
+    width: 100%; padding: 14px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05); color: #fff; font-size: 15px; font-family: inherit;
+    outline: none; transition: border-color 0.2s, background 0.2s;
+  }
+  input[type="text"]:focus, input[type="email"]:focus { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.08); }
+  input::placeholder { color: rgba(255,255,255,0.4); }
+  button[type="submit"] {
+    padding: 14px 32px; background: #fff; color: var(--ink); border: none; border-radius: 999px;
+    font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, opacity 0.2s; font-family: inherit;
+  }
+  button[type="submit"]:hover { background: var(--card); }
+  button[type="submit"]:disabled { opacity: 0.6; cursor: not-allowed; }
+  .form-msg { margin-top: 16px; font-size: 13px; min-height: 18px; }
+  .form-msg.err { color: #ff9999; }
+  .form-msg.ok { color: #9fe5b3; }
+  .capture .meta { margin-top: 24px; font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* SOCIAL PROOF / AUTHOR */
+  .author {
+    border: 1px solid var(--line); border-radius: 20px; padding: 32px; margin: 32px 0;
+    display: grid; grid-template-columns: 80px 1fr; gap: 20px; align-items: center;
+  }
+  @media (max-width: 600px) { .author { grid-template-columns: 1fr; text-align: center; justify-items: center; } }
+  .author-photo {
+    width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #1a1a1a, #3a3a3a);
+    display: flex; align-items: center; justify-content: center; color: #fff;
+    font-family: 'Instrument Serif', serif; font-size: 36px;
+  }
+  .author-content .name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+  .author-content .role { color: var(--ink-mute); font-size: 14px; line-height: 1.5; }
+
+  /* FOOTER */
+  footer { padding: 48px 24px 64px; border-top: 1px solid var(--line); text-align: center; }
+  footer .brand { display: inline-flex; align-items: center; justify-content: center; font-weight: 600; }
+  footer .brand .by { font-weight: 400; color: var(--ink-mute); font-size: 13px; margin-left: 6px; }
+  footer .links { display: flex; gap: 24px; font-size: 14px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+  footer .links a { color: var(--ink-mute); text-decoration: none; }
+  footer .links a:hover { color: var(--ink); }
+  footer .copy { font-size: 12px; color: var(--ink-mute); margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="row">
+    <div class="logo"><img class="brand-logo" src="/og/growtheko-mark-gold-512.png" width="32" height="32" alt=""> <span>GrowthEko<span class="by">by Robin Ekren</span></span></div>
+    <a href="/" class="back">← Back to growtheko.com</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <span class="pill">Free · 40 pages · No opt-in tricks</span>
+    <h1>The <em>AI Growth</em> Playbook.</h1>
+    <p class="sub">The exact framework I use to architect AI-native businesses. 40 pages, every system, every prompt, every decision tree. Read once, build for years.</p>
+  </div>
+</section>
+
+<!-- PREVIEW -->
+<div class="container">
+  <div class="preview">
+    <div class="pdf-icon"><span>AI</span></div>
+    <div class="preview-content">
+      <h3>AI Growth Playbook</h3>
+      <p>The same framework behind the GrowthEko Operator Membership and GrowthEko AI Operator Audit — distilled into a self-contained 40-page reading.</p>
+      <div class="meta">PDF · 40 pages · 12 min read</div>
+    </div>
+  </div>
+
+  <!-- INSIDE -->
+  <div class="inside">
+    <h2>What's inside</h2>
+    <ul>
+      <li><strong>The CARP Framework</strong> — Customer Autonomous Revenue Package. Five layers, one operating system.</li>
+      <li><strong>Niche-to-Customer Mapping</strong> — 24 sub-markets · 139 niches · 373 blue oceans · 744 ideal customers.</li>
+      <li><strong>The Foundation Prompt</strong> — the master prompt that runs every client's strategy stack.</li>
+      <li><strong>AI-Native Ops Architecture</strong> — how to build a business that thinks alongside you, not one that drowns you in tools.</li>
+      <li><strong>Funnel + Offer + Ascension</strong> — the path from $0 to $10K MRR, documented step-by-step.</li>
+      <li><strong>Receipts</strong> — real client examples, real deliverables, no theory.</li>
+    </ul>
+  </div>
+
+  <!-- CAPTURE FORM -->
+  <div class="capture" id="get">
+    <h2>Send me the Playbook.</h2>
+    <p>Free, instant, no spam funnel. One email, then you decide if you want more.</p>
+    <form id="playbookForm" novalidate>
+      <div class="row">
+        <input type="text" name="firstName" id="firstName" placeholder="First name" required autocomplete="given-name">
+      </div>
+      <div class="row">
+        <input type="email" name="email" id="email" placeholder="your@email.com" required autocomplete="email">
+      </div>
+      <button type="submit" id="submitBtn">Get the Playbook →</button>
+      <div class="form-msg" id="formMsg" aria-live="polite"></div>
+    </form>
+    <div class="meta">Reviewed personally · Robin Ekren · 2026</div>
+  </div>
+
+  <!-- AUTHOR -->
+  <div class="author">
+    <div class="author-photo">R</div>
+    <div class="author-content">
+      <div class="name">Robin Ekren</div>
+      <div class="role">AI Researcher & Founder, EKO Empire. Solo-building the operating layer for the next generation of operators. 2M+ audience, 40M+ network reach. Every framework in this Playbook is one I personally run.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="brand"><img class="brand-logo" src="/og/growtheko-mark-gold-512.png" width="32" height="32" alt=""> <span>GrowthEko<span class="by">by Robin Ekren</span></span></div>
+  <div class="links">
+    <a href="/">growtheko.com</a>
+    <a href="/start#offers">Offers</a>
+    <a href="/apply">Apply</a>
+    <a href="mailto:info@growtheko.com">Contact</a>
+    <a href="/imprint">Imprint</a>
+    <a href="/terms">Terms</a>
+    <a href="/privacy">Privacy</a>
+  </div>
+  <div class="copy">© 2026 GrowthEko · A brand operated by Robin Ekren · Bogengasse 2, 2630 Ternitz, Austria · VAT ID ATU83303738</div>
+</footer>
+
+<script>
+(function() {
+  const form = document.getElementById('playbookForm');
+  const msgEl = document.getElementById('formMsg');
+  const btn = document.getElementById('submitBtn');
+  const emailEl = document.getElementById('email');
+  const firstEl = document.getElementById('firstName');
+
+  function setMsg(text, type) {
+    msgEl.textContent = text;
+    msgEl.className = 'form-msg ' + (type || '');
+  }
+
+  function validateEmail(e) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);
+  }
+
+  // UTM + referrer capture
+  function getUtm() {
+    const p = new URLSearchParams(window.location.search);
+    return {
+      utm_source:   p.get('utm_source') || '',
+      utm_medium:   p.get('utm_medium') || '',
+      utm_campaign: p.get('utm_campaign') || '',
+      utm_content:  p.get('utm_content') || '',
+      utm_term:     p.get('utm_term') || '',
+      referrer:     document.referrer || ''
+    };
+  }
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    setMsg('', '');
+
+    const firstName = firstEl.value.trim();
+    const email = emailEl.value.trim().toLowerCase();
+
+    if (!firstName) { setMsg('First name?', 'err'); firstEl.focus(); return; }
+    if (!validateEmail(email)) { setMsg('Real email please.', 'err'); emailEl.focus(); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    try {
+      const res = await fetch('/api/playbook-signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, email, ...getUtm() })
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.ok !== true || data.stored !== true) {
+        throw new Error(data.error || 'Server error, try again in a moment.');
+      }
+
+      // Track + redirect to thank-you (with download)
+      if (window.plausible) window.plausible('playbook_signup', { props: { email_domain: email.split('@')[1] } });
+      if (window.gtag) window.gtag('event', 'generate_lead', { value: 0, currency: 'USD', email_domain: email.split('@')[1] });
+      if (window.posthog && window.posthog.capture) window.posthog.capture('playbook_signup', { email_domain: email.split('@')[1] });
+
+      setMsg('Sent. Redirecting...', 'ok');
+      setTimeout(function() {
+        window.location.href = '/playbook/thank-you?fn=' + encodeURIComponent(firstName);
+      }, 600);
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Get the Playbook →';
+      setMsg(err.message || 'Something broke. Try again?', 'err');
+    }
+  });
+
+  // Pre-fill from query params (e.g., share links)
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('email')) emailEl.value = p.get('email');
+  if (p.get('fn'))    firstEl.value = p.get('fn');
+})();
+</script>
+
+</body>
+</html>

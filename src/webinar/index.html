@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Live webinar — Build your AI Empire. 60 minutes with Robin Ekren. Mon + Wed evenings.">
+<meta property="og:title" content="Live Webinar — Build your AI Empire">
+<meta property="og:description" content="60 minutes. Live. Robin Ekren walks through the AI Empire framework + Q&A.">
+<meta property="og:url" content="https://growtheko.com/webinar">
+<meta property="og:image" content="https://growtheko.com/og/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/og/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/og/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/og/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#09271b">
+<title>Live Webinar — Build your AI Empire · GrowthEko</title>
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --ink:#0a0a0a; --ink-mute:#6a6a6a; --line:#e9e9e9; --card:#fafafa; --gold:#b08a4a; }
+  body { font-family:'Inter',-apple-system,system-ui,sans-serif; color:var(--ink); background:#fff; line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+  .container-narrow { max-width: 560px; margin: 0 auto; padding: 0 24px; }
+
+  nav.top { border-bottom: 1px solid var(--line); background: #fff; }
+  nav.top .row { display:flex;align-items:center;justify-content:space-between;padding:16px 24px;max-width:1080px;margin:0 auto; }
+  nav.top .logo { display:inline-flex;align-items:center;font-weight:700;letter-spacing:-0.02em;font-size:18px; }
+  nav.top .logo .by { font-weight:400;color:var(--ink-mute);font-size:13px;margin-left:6px; }
+  .brand-logo { width:32px;height:32px;object-fit:contain;margin-right:8px; }
+  nav.top .back { color: var(--ink-mute); text-decoration: none; font-size: 14px; }
+  nav.top .back:hover { color: var(--ink); }
+
+  .hero { padding: 72px 0 32px; text-align: center; }
+  .hero .pill { display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:var(--ink-mute);margin-bottom:24px; }
+  .hero .pill .dot { width:8px;height:8px;border-radius:50%;background:#b04040;animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1;transform:scale(1); } 50% { opacity:0.5;transform:scale(1.3); } }
+  .hero h1 { font-family:'Instrument Serif',Georgia,serif;font-size:clamp(40px,6vw,68px);line-height:1.05;font-weight:400;letter-spacing:-0.03em;margin-bottom:20px; }
+  .hero h1 em { font-style:italic;color:var(--gold); }
+  .hero .sub { font-size:18px;color:var(--ink-mute);max-width:520px;margin:0 auto 28px;line-height:1.55; }
+
+  .next-session {
+    background:#0a0a0a;color:#fff;padding:32px;border-radius:16px;margin:32px 0;text-align:center;
+  }
+  .next-session .label { font-size:11px;letter-spacing:1.5px;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-bottom:8px; }
+  .next-session .date { font-family:'Instrument Serif',Georgia,serif;font-size:32px;line-height:1.1;margin-bottom:6px;font-style:italic; }
+  .next-session .time { font-size:15px;color:rgba(255,255,255,0.7);margin-bottom:24px; }
+  .next-session form { display:flex;flex-direction:column;gap:12px;max-width:380px;margin:0 auto; }
+  .next-session input { width:100%;padding:14px 16px;border-radius:999px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);color:#fff;font-size:15px;font-family:inherit;outline:none; }
+  .next-session input::placeholder { color:rgba(255,255,255,0.4); }
+  .next-session input:focus { border-color:rgba(255,255,255,0.5); }
+  .next-session button { padding:14px 32px;background:#fff;color:#0a0a0a;border:none;border-radius:999px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:background 0.2s; }
+  .next-session button:hover { background:var(--card); }
+  .next-session button:disabled { opacity:0.6;cursor:not-allowed; }
+  .next-session .form-msg { margin-top:14px;font-size:13px;min-height:16px; }
+  .next-session .form-msg.err { color:#ff9999; }
+  .next-session .form-msg.ok { color:#9fe5b3; }
+  .next-session .seats { margin-top:18px;font-size:12px;color:rgba(255,255,255,0.5);letter-spacing:0.5px; }
+
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  .section-pill { display:inline-block;padding:4px 12px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--ink-mute);margin-bottom:18px;letter-spacing:0.06em;text-transform:uppercase; }
+  .section-title { font-family:'Instrument Serif',Georgia,serif;font-size:clamp(32px,4vw,44px);font-weight:400;line-height:1.1;letter-spacing:-0.02em;margin-bottom:16px; }
+  .section-sub { color:var(--ink-mute);font-size:17px;line-height:1.55;max-width:560px; }
+
+  .agenda { margin-top: 36px; display: grid; gap: 12px; }
+  .agenda-item { background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px; }
+  .agenda-item .num { font-family:'Instrument Serif',Georgia,serif;font-size:22px;color:var(--ink-mute);margin-bottom:4px;font-style:italic; }
+  .agenda-item h4 { font-size:16px;font-weight:600;margin-bottom:4px; }
+  .agenda-item p { font-size:14px;color:var(--ink-mute);line-height:1.5; }
+
+  .creator { background:var(--card);padding:40px;border-radius:16px;margin-top:40px;display:grid;grid-template-columns:80px 1fr;gap:20px;align-items:center; }
+  @media (max-width:600px) { .creator { grid-template-columns:1fr;text-align:center;justify-items:center; } }
+  .creator-photo { width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#1a1a1a,#3a3a3a);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Instrument Serif',Georgia,serif;font-size:36px; }
+  .creator-content .name { font-weight:600;font-size:16px;margin-bottom:4px; }
+  .creator-content .role { color:var(--ink-mute);font-size:14px;line-height:1.5; }
+
+  footer { padding:32px 24px;border-top:1px solid var(--line);text-align:center;font-size:13px;color:var(--ink-mute); }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="row">
+    <div class="logo"><img class="brand-logo" src="/og/growtheko-mark-gold-512.png" width="32" height="32" alt=""> <span>GrowthEko<span class="by">by Robin Ekren</span></span></div>
+    <a href="/" class="back">← growtheko.com</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container-narrow">
+    <span class="pill"><span class="dot"></span> Live · This Monday + Wednesday</span>
+    <h1>Build your <em>AI Empire</em>.<br/>Live. 60 minutes.</h1>
+    <p class="sub">No replay-funnel tricks. Live cohort, real Q&A, the full framework walked end-to-end. Mon + Wed evenings.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="next-session" id="liveSession">
+    <div class="label">NEXT LIVE SESSION</div>
+    <div class="date" id="sessionDate">Monday, May 18</div>
+    <div class="time" id="sessionTime">18:00 CEST · 12:00 EST · 09:00 PT · Zoom</div>
+
+    <form id="registerForm" novalidate>
+      <input type="text" id="firstName" name="firstName" required placeholder="First name" autocomplete="given-name" />
+      <input type="email" id="email" name="email" required placeholder="your@email.com" autocomplete="email" />
+      <button type="submit" id="submitBtn">Save my seat →</button>
+      <div class="form-msg" id="formMsg" aria-live="polite"></div>
+    </form>
+
+    <div class="seats">Free · Calendar invite + Zoom link in your inbox within 5 min</div>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <span class="section-pill">Agenda</span>
+    <h2 class="section-title">60 minutes. Built for builders.</h2>
+    <p class="section-sub">No motivational fluff. No 30-minute backstory. You walk away with framework you can implement Monday morning.</p>
+
+    <div class="agenda">
+      <div class="agenda-item">
+        <div class="num">00:00 – 00:08</div>
+        <h4>The Fork — system vs. job</h4>
+        <p>The single decision that determines whether you cap at $30K/mo or compound to $1M+.</p>
+      </div>
+      <div class="agenda-item">
+        <div class="num">00:08 – 00:25</div>
+        <h4>CARP Framework — the 5 layers</h4>
+        <p>Foundation, Offer, Funnel, Operations, Ascension. Each layer with live examples from real clients.</p>
+      </div>
+      <div class="agenda-item">
+        <div class="num">00:25 – 00:38</div>
+        <h4>The Stack Demo — Foundation Prompt</h4>
+        <p>Live walkthrough of the master prompt that runs my entire business strategy. You'll see the output.</p>
+      </div>
+      <div class="agenda-item">
+        <div class="num">00:38 – 00:48</div>
+        <h4>The Ladder — $0 → $10K MRR path</h4>
+        <p>Where to start, what to build first, what NOT to build, and how the ascension actually works.</p>
+      </div>
+      <div class="agenda-item">
+        <div class="num">00:48 – 01:00</div>
+        <h4>Live Q&A</h4>
+        <p>Your specific situation, your specific question. Real answers, not generic.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container-narrow">
+    <span class="section-pill">Who shows up</span>
+    <h2 class="section-title">Operators who are tired of theory.</h2>
+    <p class="section-sub" style="margin-bottom:20px;">
+      Most attendees are doing $2-30K/mo. Some are pre-revenue but serious. A few are $50K+/mo founders who came to pressure-test their existing system.
+    </p>
+    <p class="section-sub">
+      Common patterns: solo, technically capable, built something that works but is now the bottleneck. Want the next floor.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="creator">
+      <div class="creator-photo">R</div>
+      <div class="creator-content">
+        <div class="name">Robin Ekren</div>
+        <div class="role">Founder, EKO Empire. 2M+ audience, 40M+ network reach. Every framework in this webinar is one I personally run. No paid actors, no rented Lambo, no theatrics. Just the systems.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>GrowthEko</strong> · by Robin Ekren · © 2026 · <a href="https://growtheko.com" style="color:var(--ink-mute);">growtheko.com</a> · <a href="/imprint" style="color:var(--ink-mute);">Imprint</a> · <a href="/terms" style="color:var(--ink-mute);">Terms</a> · <a href="/privacy" style="color:var(--ink-mute);">Privacy</a>
+</footer>
+
+<script>
+(function() {
+  // ===== Compute next Mon or Wed =====
+  function nextSession() {
+    const now = new Date();
+    const day = now.getDay(); // 0=Sun..6=Sat
+    const hour = now.getHours();
+
+    // Mon=1, Wed=3, sessions at 18:00 local
+    let target = new Date(now);
+
+    if (day === 1 && hour < 18) {
+      // Today is Mon, before 18:00 — today
+    } else if (day < 3 || (day === 1 && hour >= 18) || day === 2) {
+      // Sun/Mon-after-18/Tue → next Wed
+      const daysUntilWed = (3 - day + 7) % 7 || 7;
+      if (day === 1 && hour >= 18) target.setDate(target.getDate() + 2); // Mon→Wed
+      else target.setDate(target.getDate() + daysUntilWed);
+    } else if (day === 3 && hour < 18) {
+      // Today is Wed, before 18:00 — today
+    } else {
+      // Wed-after-18, Thu, Fri, Sat → next Mon
+      const daysUntilMon = (1 - day + 7) % 7 || 7;
+      target.setDate(target.getDate() + daysUntilMon);
+    }
+
+    target.setHours(18, 0, 0, 0);
+    return target;
+  }
+
+  const session = nextSession();
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('sessionDate').textContent = days[session.getDay()] + ', ' + months[session.getMonth()] + ' ' + session.getDate();
+
+  // ===== Form submit =====
+  const form = document.getElementById('registerForm');
+  const msg = document.getElementById('formMsg');
+  const btn = document.getElementById('submitBtn');
+
+  function setMsg(t, type) { msg.textContent = t; msg.className = 'form-msg ' + (type || ''); }
+  function validEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    setMsg('', '');
+
+    const firstName = document.getElementById('firstName').value.trim();
+    const email = document.getElementById('email').value.trim().toLowerCase();
+
+    if (!firstName) { setMsg('First name?', 'err'); return; }
+    if (!validEmail(email)) { setMsg('Real email please.', 'err'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    try {
+      const res = await fetch('/api/webinar-register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName,
+          email,
+          sessionDate: session.toISOString(),
+        }),
+      });
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || 'Server error, try again.');
+      }
+      setMsg('Saved. Calendar invite incoming.', 'ok');
+      btn.textContent = 'Saved ✓';
+      if (window.plausible) window.plausible('webinar_register');
+      setTimeout(function() { window.location.href = '/webinar/confirmed?fn=' + encodeURIComponent(firstName); }, 800);
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Save my seat →';
+      setMsg(err.message || 'Try again?', 'err');
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/og/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/og/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/og/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#09271b">
+  <title>Welcome - GrowthEko</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #F7F8FC;
+      background-image:
+        radial-gradient(ellipse 120% 80% at 50% 40%, #FCFDFF 0%, transparent 70%),
+        radial-gradient(ellipse 100% 70% at 30% 20%, #EDF4FF 0%, transparent 60%),
+        radial-gradient(ellipse 90% 80% at 75% 30%, #F1EEFF 0%, transparent 55%),
+        radial-gradient(ellipse 130% 90% at 60% 70%, #EEF3FF 0%, transparent 65%),
+        radial-gradient(ellipse 80% 60% at 20% 80%, #EDEBFA 0%, transparent 50%),
+        radial-gradient(ellipse 100% 80% at 80% 75%, #E7F0FF 0%, transparent 55%),
+        radial-gradient(ellipse 140% 100% at 50% 50%, #E9EDF5 0%, transparent 80%),
+        linear-gradient(160deg, #F7F8FC 0%, #EEF3FF 30%, #E7F0FF 50%, #EDEBFA 70%, #F7F8FC 100%);
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.3;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+    body > * { position: relative; z-index: 2; }
+
+    .success-container {
+      max-width: 640px;
+      width: 100%;
+      text-align: center;
+    }
+    .brand-mark { width: 72px; height: 72px; object-fit: contain; margin: 0 auto 18px; }
+
+    .checkmark-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6B9EF7 0%, #5A8AE6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+      box-shadow: 0 8px 24px rgba(90,138,230,0.35);
+    }
+    .checkmark-circle svg {
+      width: 40px;
+      height: 40px;
+      fill: #fff;
+    }
+
+    h1 {
+      color: #000;
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      color: #666;
+      font-size: 18px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+    }
+
+    .steps-card {
+      background: linear-gradient(135deg, rgba(225,230,245,0.55) 0%, rgba(215,225,245,0.45) 40%, rgba(230,225,240,0.4) 100%);
+      border: 1px solid rgba(200,210,235,0.5);
+      border-radius: 20px;
+      padding: 36px 40px;
+      text-align: left;
+      backdrop-filter: blur(12px);
+      margin-bottom: 36px;
+    }
+    .steps-card h2 {
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 24px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .step-item:last-child { margin-bottom: 0; }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6B9EF7 0%, #5A8AE6 100%);
+      color: #fff;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(90,138,230,0.3);
+    }
+
+    .step-content h3 {
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+    .step-content p {
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    .cta-button {
+      height: 52px;
+      border-radius: 12px;
+      border: 1px solid rgba(100,150,230,0.35);
+      background: linear-gradient(180deg, #8AB4F3 0%, #79A9EA 45%, #6F9EE6 100%);
+      color: rgba(255,255,255,0.95);
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 36px;
+      box-shadow:
+        0 8px 18px rgba(84,137,230,0.30),
+        0 2px 6px rgba(67,102,173,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .cta-button:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 10px 22px rgba(84,137,230,0.35),
+        0 3px 8px rgba(67,102,173,0.20),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+    }
+    .cta-button svg {
+      width: 18px;
+      height: 18px;
+      fill: rgba(255,255,255,0.95);
+    }
+    .cta-button.secondary {
+      margin-top: 12px;
+      border-color: rgba(90,138,230,0.22);
+      background: rgba(255,255,255,0.72);
+      color: #355f9f;
+      box-shadow: 0 8px 18px rgba(84,137,230,0.10);
+    }
+    .cta-button[hidden] { display: none; }
+    .cta-button.secondary:disabled { opacity: 0.62; cursor: wait; }
+    .email-next-step {
+      min-height: 52px;
+      height: auto;
+      cursor: default;
+      text-align: center;
+      line-height: 1.4;
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+    .email-next-step:hover { transform: none; }
+
+    .micro-note {
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      color: #999;
+      font-size: 13px;
+      margin-top: 20px;
+    }
+
+    .footer-link {
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      color: #999;
+      font-size: 13px;
+      margin-top: 48px;
+      text-decoration: none;
+    }
+    .footer-link a {
+      color: #5A8AE6;
+      text-decoration: none;
+    }
+    .footer-link a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 28px; }
+      .steps-card { padding: 24px 20px; }
+      .cta-button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="success-container">
+    <img class="brand-mark" src="/og/growtheko-mark-gold-512.png" width="72" height="72" alt="GrowthEko">
+    <!-- Checkmark -->
+    <div class="checkmark-circle">
+      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    </div>
+
+    <h1>You're In</h1>
+    <p class="subtitle">
+      Your order was received.<br>
+      Stripe will email your payment confirmation and electronic invoice to the billing email used at checkout.
+    </p>
+
+    <!-- What happens next -->
+    <div class="steps-card">
+      <h2>What happens next</h2>
+
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Check Your Billing Email</h3>
+          <p>Your Stripe confirmation and electronic invoice are sent automatically. Keep them with your business records.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Use Your Secure Customer Portal</h3>
+          <p>Use the secure portal button below to manage payment details, view available invoices, or cancel a Membership before the next renewal.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Open Your Secure Onboarding Email</h3>
+          <p>After payment verification, GrowthEko sends a private onboarding link to your billing email. That signed link is required to continue.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-button email-next-step" role="status">Check Your Email For The Secure Onboarding Link</div>
+    <button id="billingPortalButton" type="button" class="cta-button secondary">Open Billing Portal</button>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const checkoutSessionId = params.get('session_id');
+      const billingPortalButton = document.getElementById('billingPortalButton');
+      if (!checkoutSessionId) billingPortalButton.hidden = true;
+
+      billingPortalButton.addEventListener('click', async function() {
+        billingPortalButton.disabled = true;
+        billingPortalButton.textContent = 'Opening Billing Portal...';
+        try {
+          const response = await fetch('/api/create-billing-portal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ checkoutSessionId: checkoutSessionId })
+          });
+          const payload = await response.json().catch(function() { return {}; });
+          if (!response.ok || !payload.portalUrl) throw new Error('Portal unavailable');
+          window.location.assign(payload.portalUrl);
+        } catch (error) {
+          billingPortalButton.disabled = false;
+          billingPortalButton.textContent = 'Open Billing Portal';
+          document.getElementById('billingPortalStatus').textContent = 'The billing portal could not be opened yet. Please contact us for a fresh secure portal link.';
+        }
+      });
+    </script>
+
+    <p class="micro-note">If no billing email arrives within 15 minutes, check spam and contact us with your checkout email.</p>
+    <p class="micro-note" id="billingPortalStatus" role="status" aria-live="polite"></p>
+
+    <p class="footer-link">
+      Questions? <a href="mailto:info@growtheko.com">info@growtheko.com</a><br>
+      GrowthEko is a brand operated by Robin Ekren · Bogengasse 2, 2630 Ternitz, Austria · VAT ID ATU83303738<br>
+      <a href="/imprint">Imprint</a> · <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a>
+    </p>
+  </div>
+
+</body>
+</html>

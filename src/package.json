@@ -1,0 +1,18 @@
+{
+  "name": "growtheko-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check api/*.js api/cron/*.js scripts/*.mjs",
+    "gate-a:stripe:dry-run": "node scripts/gate-a-stripe-test-catalog.mjs",
+    "gate-a:stripe:apply-test": "node scripts/gate-a-stripe-test-catalog.mjs --apply"
+  },
+  "dependencies": {
+    "stripe": "22.3.1"
+  }
+}

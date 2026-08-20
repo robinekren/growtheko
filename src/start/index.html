@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Start with GrowthEko</title>
+  <meta name="description" content="Choose the bounded GrowthEko guidance or audit offer that fits your next step.">
+  <style>
+    :root { color-scheme: dark; --ink:#f7f4ea; --muted:#a9a69d; --line:#302f2b; --gold:#e6c56a; --panel:#151513; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#090908; color:var(--ink); font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,sans-serif; }
+    a { color:inherit; }
+    .wrap { width:min(1080px,calc(100% - 32px)); margin:auto; }
+    header { display:flex; justify-content:space-between; align-items:center; padding:24px 0; border-bottom:1px solid var(--line); }
+    .brand { font-weight:800; letter-spacing:.08em; text-decoration:none; }
+    .eyebrow { color:var(--gold); font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+    main { padding:76px 0 56px; }
+    h1 { max-width:760px; margin:14px 0 18px; font-size:clamp(42px,7vw,78px); line-height:1; letter-spacing:-.05em; }
+    .lead { max-width:700px; color:var(--muted); font-size:19px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; margin:48px 0 28px; }
+    .card { display:flex; flex-direction:column; min-height:440px; padding:30px; border:1px solid var(--line); border-radius:20px; background:linear-gradient(145deg,#181816,#10100f); }
+    .card h2 { margin:10px 0 4px; font-size:30px; line-height:1.15; }
+    .price { margin:18px 0; font-size:25px; font-weight:800; }
+    .price small { color:var(--muted); font-size:13px; font-weight:500; }
+    ul { padding-left:20px; color:#d3d0c8; }
+    .boundary { margin-top:auto; padding:14px; border:1px solid #49432f; border-radius:10px; color:#d9ca9c; font-size:13px; }
+    button { margin-top:20px; padding:15px 18px; border:0; border-radius:10px; background:var(--gold); color:#111; font:inherit; font-weight:800; cursor:pointer; }
+    button:disabled { cursor:wait; opacity:.65; }
+    .scope { padding:22px; border:1px solid var(--line); border-radius:14px; color:var(--muted); }
+    footer { padding:32px 0 48px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
+    footer nav { display:flex; flex-wrap:wrap; gap:18px; margin-bottom:16px; }
+    dialog { width:min(590px,calc(100% - 28px)); padding:0; border:1px solid #454238; border-radius:18px; background:#121210; color:var(--ink); }
+    dialog::backdrop { background:rgba(0,0,0,.78); }
+    .modal { padding:28px; }
+    .modal-head { display:flex; justify-content:space-between; gap:20px; align-items:start; }
+    .close { margin:0; padding:5px 10px; background:#262522; color:var(--ink); }
+    label { display:block; margin:16px 0 6px; font-size:13px; font-weight:700; }
+    input,select { width:100%; padding:13px; border:1px solid #3b3934; border-radius:9px; background:#0b0b0a; color:var(--ink); font:inherit; }
+    .check { display:grid; grid-template-columns:20px 1fr; gap:10px; align-items:start; font-weight:500; }
+    .check input { margin-top:5px; }
+    .status { min-height:24px; margin-top:14px; color:#e9ca70; }
+    @media (max-width:760px) { .grid { grid-template-columns:1fr; } main { padding-top:48px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header><a class="brand" href="/">GROWTHEKO</a><a href="/contact">Questions?</a></header>
+    <main>
+      <div class="eyebrow">Two clear ways to start</div>
+      <h1>Get the next decision right.</h1>
+      <p class="lead">Choose ongoing operator guidance or a one-time AI systems audit. Both offers are designed for businesses that will own and execute their implementation.</p>
+
+      <section class="grid" aria-label="GrowthEko offers">
+        <article class="card">
+          <div class="eyebrow">Ongoing</div>
+          <h2>Operator Membership</h2>
+          <div class="price">$97 USD <small>/ month, net plus applicable taxes</small></div>
+          <p>Membership provides ongoing guidance, playbooks, and templates.</p>
+          <ul><li>Decision support and operating frameworks</li><li>Practical templates and implementation guidance</li><li>Recurring access while the membership is active</li></ul>
+          <div class="boundary">Guidance only; implementation remains with your team.</div>
+          <button type="button" data-checkout-offer="monthly_97">Choose Membership</button>
+        </article>
+
+        <article class="card">
+          <div class="eyebrow">One time</div>
+          <h2>AI Operator Audit</h2>
+          <div class="price">$1,997 USD <small>one time, net plus applicable taxes</small></div>
+          <p>Audit provides a one-time diagnosis and roadmap.</p>
+          <ul><li>Structured intake and current-state review</li><li>Prioritized findings and recommendations</li><li>Delivery of the defined audit roadmap</li></ul>
+          <div class="boundary">Audit and recommendations only; no done-for-you build.</div>
+          <button type="button" data-checkout-offer="onetime_1997">Choose Audit</button>
+        </article>
+      </section>
+
+      <p class="scope"><strong>Scope boundary:</strong> Neither offer includes done-for-you implementation, custom development, managed advertising, guaranteed outcomes, or professional legal, tax, or accounting advice. Exact terms shown before checkout control.</p>
+    </main>
+
+    <footer>
+      <nav><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/imprint">Imprint</a><a href="/contact">Contact</a></nav>
+      <div>GrowthEko is operated by Robin Ekren, sole proprietor, Austria. Business purchases only.</div>
+    </footer>
+  </div>
+
+  <dialog id="checkoutModal">
+    <form class="modal" id="checkoutForm" method="dialog">
+      <div class="modal-head"><div><div class="eyebrow">Business checkout</div><h2 id="checkoutSummary">Your selection</h2></div><button class="close" type="button" data-checkout-close aria-label="Close">×</button></div>
+      <label for="checkoutEmail">Business email</label><input id="checkoutEmail" name="email" type="email" autocomplete="email" required>
+      <label for="checkoutCompany">Legal business or professional name</label><input id="checkoutCompany" name="company" autocomplete="organization" required>
+      <label for="checkoutCountry">Billing country</label>
+      <select id="checkoutCountry" name="country" required><option value="">Select country</option><option value="AT">Austria</option><option value="DE">Germany</option><option value="OTHER">Another country</option></select>
+      <label class="check"><input id="checkoutBusiness" type="checkbox" required><span>I confirm that I am purchasing for business or professional purposes.</span></label>
+      <label class="check"><input id="checkoutTerms" type="checkbox" required><span>I accept the <a href="/terms" target="_blank" rel="noopener">Terms</a> and acknowledge the scope boundaries.</span></label>
+      <label class="check"><input id="checkoutInvoices" type="checkbox" required><span>I consent to electronic invoices and business communications for this purchase.</span></label>
+      <div class="status" id="checkoutStatus" role="status" aria-live="polite"></div>
+      <button id="checkoutSubmit" type="submit">Continue to secure checkout</button>
+    </form>
+  </dialog>
+
+  <script>
+    (function () {
+      var offers = {
+        monthly_97: { label: 'GrowthEko Operator Membership · $97 USD/month' },
+        onetime_1997: { label: 'GrowthEko AI Operator Audit · $1,997 USD one time' }
+      };
+      var activeOfferKey = '';
+      var modal = document.getElementById('checkoutModal');
+      var form = document.getElementById('checkoutForm');
+      var status = document.getElementById('checkoutStatus');
+      var submit = document.getElementById('checkoutSubmit');
+      var country = document.getElementById('checkoutCountry');
+
+      function requestId() {
+        if (window.crypto && typeof window.crypto.randomUUID === 'function') return window.crypto.randomUUID();
+        return 'ge-' + Date.now() + '-' + Math.random().toString(16).slice(2);
+      }
+      function openCheckout(offerKey) {
+        if (!offers[offerKey]) return;
+        activeOfferKey = offerKey;
+        document.getElementById('checkoutSummary').textContent = offers[offerKey].label;
+        status.textContent = '';
+        modal.showModal();
+      }
+      function closeCheckout() { if (!submit.disabled) modal.close(); }
+      document.querySelectorAll('[data-checkout-offer]').forEach(function (button) { button.addEventListener('click', function () { openCheckout(button.dataset.checkoutOffer); }); });
+      document.querySelector('[data-checkout-close]').addEventListener('click', closeCheckout);
+      country.addEventListener('change', function () {
+        status.textContent = country.value === 'AT' ? '' : 'International orders require manual tax review before purchase.';
+      });
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        if (country.value !== 'AT') { status.textContent = 'Automated checkout is currently limited to Austrian business customers. Contact info@growtheko.com for manual tax review.'; return; }
+        submit.disabled = true;
+        submit.textContent = 'Opening secure checkout…';
+        status.textContent = '';
+        try {
+          var response = await fetch('/api/create-checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              offer: activeOfferKey,
+              requestId: requestId(),
+              email: document.getElementById('checkoutEmail').value.trim(),
+              companyName: document.getElementById('checkoutCompany').value.trim(),
+              buyerCountry: country.value,
+              acceptsB2B: document.getElementById('checkoutBusiness').checked,
+              acceptsTerms: document.getElementById('checkoutTerms').checked,
+              acceptsElectronicInvoices: document.getElementById('checkoutInvoices').checked,
+              termsVersion: '2026-07-10',
+              acceptedAt: new Date().toISOString()
+            })
+          });
+          var payload = await response.json().catch(function () { return {}; });
+          if (!response.ok) throw new Error(payload?.error?.message || 'Checkout is not enabled yet.');
+          var checkoutUrl = payload.checkoutUrl || payload.url;
+          if (!checkoutUrl) throw new Error('Secure checkout link unavailable.');
+          window.location.assign(checkoutUrl);
+        } catch (error) {
+          status.textContent = error.message;
+        } finally {
+          submit.disabled = false;
+          submit.textContent = 'Continue to secure checkout';
+        }
+      });
+    }());
+  </script>
+</body>
+</html>

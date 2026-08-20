@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free AI Growth Training by GrowthEko.">
+<meta property="og:title" content="AI Growth Training · GrowthEko">
+<meta property="og:description" content="A free live training on using AI and growth systems to create revenue.">
+<meta property="og:url" content="https://growtheko.com/ai-growth-training">
+<meta property="og:image" content="https://growtheko.com/og/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/og/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/og/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/og/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#09271b">
+<title>AI Growth Training · GrowthEko</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --announcement-1: #2f4a3b;
+    --announcement-2: #21382d;
+    --live-red: #ff1f43;
+    --live-red-2: #ff3a57;
+    --ink: #ffffff;
+    --shell-1: #120f0a;
+    --shell-2: #182218;
+    --shell-3: #0c0d09;
+  }
+
+  html, body { min-height: 100%; }
+
+  body {
+    min-height: 100vh;
+    position: relative;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at top center, rgba(207, 166, 92, 0.16), transparent 32%),
+      radial-gradient(circle at 16% 30%, rgba(64, 100, 72, 0.18), transparent 24%),
+      linear-gradient(180deg, var(--shell-1) 0%, var(--shell-2) 55%, var(--shell-3) 100%);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(circle at center, rgba(0,0,0,1), rgba(0,0,0,0.2) 72%, transparent 100%);
+  }
+
+  .announcement-bar {
+    position: relative;
+    z-index: 1;
+    min-height: 59px;
+    padding: 8px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(180deg, var(--announcement-1), var(--announcement-2));
+    color: #fff;
+    text-align: center;
+    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.13);
+  }
+
+  .live-pill {
+    flex: 0 0 auto;
+    min-height: 27px;
+    padding: 4px 11px 4px 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    background: var(--live-red);
+    color: #fff;
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: 0 0 0 6px rgba(255, 31, 67, 0.20);
+    animation: liveGlow 2s ease-in-out infinite;
+  }
+
+  .live-pill::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #fff;
+  }
+
+  .announcement-copy {
+    max-width: 880px;
+    color: rgba(255,255,255,0.96);
+    font-size: 12px;
+    line-height: 1.45;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .page-shell {
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - 59px);
+    display: block;
+    padding: 38px 18px 0;
+  }
+
+  .hero-stack {
+    width: min(1060px, 100%);
+    margin: 0 auto;
+    padding-bottom: 64px;
+  }
+  .hero-brand-lockup {
+    width: max-content;
+    margin: 0 auto 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    opacity: 0.92;
+    text-decoration: none;
+  }
+
+  .hero-brand-mark {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .hero-brand-word {
+    color: rgba(255,255,255,0.82);
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 760;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-brand-word span {
+    color: #d2a65e;
+  }
+
+  .hero-headline {
+    text-align: center;
+  }
+
+  .hero-kicker,
+  .hero-line {
+    display: block;
+    color: #fff;
+    line-height: 0.98;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-kicker {
+    font-size: clamp(28px, 3.35vw, 54px);
+  }
+
+  .hero-line {
+    font-size: clamp(28px, 3.78vw, 60px);
+  }
+
+  .hero-accent-row {
+    margin: 6px 0 12px;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: clamp(8px, 1.15vw, 18px);
+    white-space: nowrap;
+  }
+
+  .hero-ai {
+    color: #d2a65e;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(40px, 5.25vw, 84px);
+    line-height: 0.9;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+  }
+
+  .hero-accent {
+    display: inline-block;
+    color: #d2a65e;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(40px, 5.25vw, 84px);
+    line-height: 0.9;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    text-shadow: 0 0 32px rgba(210, 166, 94, 0.16);
+  }
+
+  .countdown-card {
+    width: min(520px, 100%);
+    margin: 32px auto 0;
+    padding: 18px 22px 16px;
+    border: 1px solid rgba(210, 166, 94, 0.14);
+    border-radius: 10px;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(210, 166, 94, 0.09), transparent 38%),
+      linear-gradient(180deg, rgba(12, 17, 13, 0.96), rgba(8, 11, 9, 0.98));
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    text-align: center;
+  }
+
+  .countdown-title {
+    color: #fff;
+    font-size: clamp(18px, 2vw, 22px);
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .countdown-grid {
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+    align-items: start;
+    gap: 10px;
+  }
+
+  .countdown-number {
+    display: block;
+    color: #fff;
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 0.95;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .countdown-label {
+    display: block;
+    margin-top: 7px;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .countdown-separator {
+    color: #fff;
+    font-size: clamp(24px, 3vw, 34px);
+    line-height: 0.86;
+    font-weight: 800;
+  }
+
+  .training-form {
+    width: min(520px, 100%);
+    margin: 16px auto 0;
+  }
+
+  .form-input,
+  .phone-field {
+    width: 100%;
+    min-height: 53px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 7px;
+    background: #fff;
+    color: #121421;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+  }
+
+  .form-input {
+    display: block;
+    margin-bottom: 12px;
+    padding: 0 15px;
+    font: inherit;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .form-input::placeholder,
+  .phone-input::placeholder {
+    color: #191a38;
+    opacity: 1;
+  }
+
+  .phone-field {
+    position: relative;
+    overflow: visible;
+    background: #fff;
+  }
+
+  .phone-row {
+    min-height: 53px;
+    display: flex;
+    align-items: center;
+  }
+
+  .phone-country {
+    flex: 0 0 auto;
+    min-height: 53px;
+    padding: 0 9px 0 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 0;
+    border-right: 1px solid rgba(18, 20, 33, 0.10);
+    background: transparent;
+    color: #191a38;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .phone-flag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .phone-dial {
+    display: inline-block;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 800;
+    color: #191a38;
+  }
+
+  .phone-caret {
+    width: 0;
+    height: 0;
+    border-left: 3.5px solid transparent;
+    border-right: 3.5px solid transparent;
+    border-top: 4.5px solid #191a38;
+  }
+
+  .phone-input {
+    min-width: 0;
+    flex: 1;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #121421;
+    font: inherit;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding: 0 14px;
+  }
+
+  .phone-dropdown {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 7px);
+    z-index: 30;
+    max-height: 288px;
+    display: none;
+    overflow-y: auto;
+    padding: 7px;
+    border: 1px solid rgba(18, 20, 33, 0.12);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 24px 52px rgba(0, 0, 0, 0.26);
+  }
+
+  .phone-field.is-open .phone-dropdown {
+    display: grid;
+    gap: 4px;
+  }
+
+  .phone-option {
+    width: 100%;
+    min-height: 42px;
+    display: grid;
+    grid-template-columns: 28px auto 1fr;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #191a38;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .phone-option:hover,
+  .phone-option[aria-selected="true"] {
+    background: rgba(210, 166, 94, 0.14);
+  }
+
+  .phone-option-code {
+    color: rgba(25, 26, 56, 0.70);
+    font-weight: 800;
+  }
+
+  .phone-option-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .reserve-button {
+    position: relative;
+    width: 100%;
+    min-height: 79px;
+    margin-top: 12px;
+    padding: 0 58px 0 58px;
+    border: 0;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #14d92b 0%, #049f18 100%);
+    color: #fff;
+    box-shadow: 0 18px 45px rgba(4, 159, 24, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.26);
+    cursor: pointer;
+    font: inherit;
+    text-align: center;
+  }
+
+  .reserve-arrow {
+    position: absolute;
+    top: 50%;
+    right: 24px;
+    width: 24px;
+    height: 24px;
+    color: rgba(8, 54, 28, 0.30);
+    transform: translateY(-50%);
+  }
+
+  .reserve-arrow svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .reserve-button:hover {
+    background: linear-gradient(180deg, #18e932 0%, #05ad1a 100%);
+  }
+
+  .reserve-button:active {
+    transform: translateY(1px);
+  }
+
+  .reserve-title {
+    display: block;
+    font-size: clamp(20px, 2.3vw, 24px);
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .reserve-meta {
+    display: block;
+    margin-top: 7px;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 13px;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .legal-copy {
+    width: min(500px, 100%);
+    margin: 22px auto 0;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 12px;
+    line-height: 1.32;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.01em;
+  }
+
+  .legal-copy a {
+    color: rgba(255, 255, 255, 0.82);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .legal-copy a:hover {
+    color: #fff;
+  }
+
+  .form-status {
+    min-height: 18px;
+    margin-top: 12px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 13px;
+    line-height: 1.35;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .form-status.is-error {
+    color: #ffb4b4;
+  }
+
+  .form-status.is-success {
+    color: #8fff9d;
+  }
+
+  .proof-visual {
+    width: min(720px, 100%);
+    margin: 32px auto 0;
+    text-align: center;
+  }
+
+  .proof-title {
+    color: #fff;
+    margin-top: 14px;
+    font-size: clamp(16px, 2vw, 22px);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .proof-frame {
+    overflow: hidden;
+    border: 1px solid rgba(210, 166, 94, 0.16);
+    border-radius: 10px;
+    aspect-ratio: 16 / 9;
+    background: rgba(0, 0, 0, 0.28);
+    box-shadow: 0 22px 58px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .proof-frame img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .idea-section {
+    margin: 0 -18px;
+    padding: clamp(58px, 8vw, 104px) 18px 0;
+    border-radius: 28px 28px 0 0;
+    background: #fff;
+    color: #101217;
+    text-align: center;
+  }
+
+  .idea-title {
+    max-width: 980px;
+    margin: 0 auto;
+    font-size: clamp(42px, 6vw, 84px);
+    line-height: 0.98;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+  }
+
+  .idea-accent {
+    color: #d2a65e;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.055em;
+  }
+
+  .letter-card {
+    width: min(560px, 100%);
+    margin: clamp(38px, 5vw, 58px) auto 0;
+    padding: 22px;
+    border: 1.6px dashed rgba(16, 18, 23, 0.28);
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(16, 18, 23, 0.08);
+    text-align: left;
+  }
+
+  .letter-header {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding-bottom: 17px;
+    border-bottom: 1px solid #e8e9e4;
+  }
+
+  .letter-avatar {
+    width: 44px;
+    height: 44px;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #12140f;
+  }
+
+  .letter-avatar img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .letter-from {
+    color: #101217;
+    font-size: 15px;
+    line-height: 1.18;
+    font-weight: 800;
+  }
+
+  .letter-email,
+  .letter-to {
+    margin-top: 3px;
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+
+  .letter-body {
+    padding-top: 21px;
+    color: #151721;
+    font-size: clamp(16px, 2vw, 19px);
+    line-height: 1.52;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .letter-body p {
+    margin: 0;
+  }
+
+  .letter-body p + p {
+    margin-top: 18px;
+  }
+
+  .letter-body strong {
+    font-weight: 800;
+  }
+
+  .letter-body .mark {
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-color: #d2a65e;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  .letter-signature {
+    margin-top: 24px;
+    color: #101217;
+    font-weight: 800;
+  }
+
+  .training-breakdown {
+    width: min(860px, 100%);
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .training-breakdown-section {
+    margin: 0 -18px;
+    padding: clamp(58px, 8vw, 92px) 18px clamp(70px, 9vw, 118px);
+    border-radius: 28px 28px 0 0;
+    background: #fff;
+    color: #101217;
+  }
+
+  .breakdown-header {
+    text-align: center;
+  }
+
+  .breakdown-title {
+    color: #101217;
+    font-size: clamp(28px, 4vw, 48px);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+
+  .breakdown-subtitle {
+    max-width: 660px;
+    margin: 13px auto 0;
+    color: #5f6672;
+    font-size: clamp(16px, 2vw, 20px);
+    line-height: 1.45;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .breakdown-list {
+    position: relative;
+    margin-top: 34px;
+    padding-left: 86px;
+    display: grid;
+    gap: 16px;
+  }
+
+  .breakdown-list::before {
+    content: "";
+    position: absolute;
+    top: 34px;
+    bottom: 34px;
+    left: 31px;
+    width: 1px;
+    background: linear-gradient(180deg, rgba(210, 166, 94, 0.12), rgba(210, 166, 94, 0.55), rgba(210, 166, 94, 0.12));
+  }
+
+  .breakdown-card {
+    position: relative;
+    display: block;
+    padding: 22px 24px 23px;
+    border: 1px solid #e1e4dd;
+    border-radius: 18px;
+    background: #f7f8f5;
+    box-shadow: 0 16px 45px rgba(16, 18, 23, 0.07);
+  }
+
+  .breakdown-number {
+    position: absolute;
+    top: 22px;
+    left: -86px;
+    z-index: 1;
+    width: 62px;
+    height: 62px;
+    display: grid;
+    place-items: center;
+    border: 2px solid #d7d9dd;
+    border-radius: 50%;
+    background: #f7f8f5;
+    color: #d2a65e;
+    font-size: 21px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    box-shadow: 0 0 0 8px #f7f8f5;
+  }
+
+  .breakdown-label {
+    color: #9b7131;
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .breakdown-line {
+    margin-top: 9px;
+    color: #101217;
+    font-size: clamp(21px, 2.7vw, 30px);
+    line-height: 1.06;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+  }
+
+  .breakdown-copy {
+    margin-top: 10px;
+    color: #5f6672;
+    font-size: 16px;
+    line-height: 1.48;
+    font-weight: 600;
+  }
+
+  .founder-transition {
+    --founder-size: clamp(168px, 24vw, 280px);
+    --founder-top: clamp(18px, 4vw, 42px);
+    position: relative;
+    margin: 0 -18px;
+    padding: var(--founder-top) 18px clamp(64px, 8vw, 104px);
+    background: linear-gradient(180deg, var(--shell-2) 0%, var(--shell-3) 100%);
+    text-align: center;
+  }
+
+  .founder-transition::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: calc(var(--founder-top) + (var(--founder-size) / 2));
+    background: #fff;
+    pointer-events: none;
+  }
+
+  .founder-photo {
+    position: relative;
+    z-index: 1;
+    width: var(--founder-size);
+    aspect-ratio: 1;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid rgba(210, 166, 94, 0.24);
+    border-radius: 32px;
+    background: #12140f;
+    box-shadow: 0 26px 72px rgba(0, 0, 0, 0.28), 0 0 0 8px rgba(255, 255, 255, 0.70);
+  }
+
+  .founder-photo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .founder-quote {
+    position: relative;
+    z-index: 1;
+    width: min(680px, 100%);
+    margin: clamp(34px, 4.5vw, 54px) auto 0;
+    color: #fff;
+    text-align: left;
+  }
+
+  .quote-mark {
+    color: #d2a65e;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-weight: 700;
+  }
+
+  .quote-text {
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.92);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(24px, 3.1vw, 39px);
+    font-style: normal;
+    line-height: 1.12;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+  }
+
+  .quote-author {
+    margin-top: 18px;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+  }
+
+  .quote-cta {
+    position: relative;
+    z-index: 1;
+    width: min(520px, 100%);
+    margin: clamp(28px, 3.8vw, 42px) auto 0;
+  }
+
+  .sticky-cta {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    padding: 24px 18px max(14px, env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.48) 30%, rgba(255, 255, 255, 0.56) 100%);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    box-shadow: 0 -26px 50px rgba(0, 0, 0, 0.10);
+    transform: translateY(112%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 220ms ease, opacity 220ms ease;
+  }
+
+  .sticky-cta.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sticky-cta-inner {
+    width: min(720px, 100%);
+    margin: 0 auto;
+  }
+
+  .sticky-cta .reserve-button {
+    min-height: 66px;
+    margin-top: 0;
+    border-radius: 12px;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: none;
+    place-items: center;
+    padding: 22px;
+    background: rgba(5, 8, 6, 0.58);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .modal-backdrop.is-open {
+    display: grid;
+  }
+
+  .seat-modal {
+    position: relative;
+    width: min(480px, 100%);
+    padding: 26px;
+    border: 1px solid rgba(210, 166, 94, 0.22);
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at top center, rgba(210, 166, 94, 0.14), transparent 36%),
+      linear-gradient(180deg, rgba(24, 34, 24, 0.98), rgba(12, 13, 9, 0.98));
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .seat-modal-title {
+    max-width: 360px;
+    color: #fff;
+    font-size: clamp(28px, 4vw, 39px);
+    line-height: 0.98;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+
+  .seat-modal-copy {
+    margin-top: 11px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 15px;
+    line-height: 1.45;
+    font-weight: 600;
+  }
+
+  .seat-modal .training-form {
+    width: 100%;
+    margin-top: 19px;
+  }
+
+  .faq-section {
+    margin: 0 -18px;
+    padding: clamp(58px, 8vw, 94px) 18px clamp(88px, 10vw, 136px);
+    background: #fff;
+    color: #101217;
+  }
+
+  .faq-wrap {
+    width: min(760px, 100%);
+    margin: 0 auto;
+  }
+
+  .faq-title {
+    color: #102418;
+    font-size: clamp(34px, 5vw, 62px);
+    line-height: 0.98;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    text-align: center;
+  }
+
+  .faq-list {
+    margin-top: clamp(28px, 4vw, 42px);
+    display: grid;
+    gap: 12px;
+  }
+
+  .faq-item {
+    border: 1px solid #e1e4dd;
+    border-radius: 18px;
+    background: #f7f8f5;
+    box-shadow: 0 16px 45px rgba(16, 18, 23, 0.06);
+    overflow: hidden;
+  }
+
+  .faq-question {
+    width: 100%;
+    min-height: 70px;
+    padding: 20px 22px;
+    border: 0;
+    background: transparent;
+    color: #101217;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+  }
+
+  .faq-question-text {
+    font-size: clamp(18px, 2.2vw, 23px);
+    line-height: 1.12;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+
+  .faq-icon {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff;
+    color: #102418;
+    box-shadow: inset 0 0 0 1px #dfe3da;
+    font-size: 24px;
+    line-height: 1;
+    font-weight: 700;
+  }
+
+  .faq-answer {
+    display: none;
+    padding: 0 22px 22px;
+    color: #5f6672;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+
+  .faq-item.is-open .faq-answer {
+    display: block;
+  }
+
+  .earnings-disclaimer {
+    margin: 0 -18px;
+    padding: clamp(58px, 8vw, 96px) 18px calc(clamp(92px, 11vw, 150px) + env(safe-area-inset-bottom));
+    background:
+      radial-gradient(circle at 50% 0%, rgba(242, 198, 109, 0.10), transparent 34%),
+      linear-gradient(180deg, #102418 0%, #07110b 100%);
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .earnings-disclaimer-wrap {
+    width: min(1060px, 100%);
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .earnings-disclaimer p {
+    margin: 0 auto;
+    font-size: clamp(14px, 1.65vw, 21px);
+    line-height: 1.55;
+    font-weight: 650;
+    letter-spacing: 0.01em;
+  }
+
+  .earnings-disclaimer p + p {
+    margin-top: clamp(22px, 3vw, 34px);
+  }
+
+  .earnings-disclaimer strong {
+    color: rgba(255, 255, 255, 0.86);
+    font-weight: 850;
+  }
+
+  .earnings-disclaimer a {
+    color: #f2c66d;
+    font-weight: 850;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(242, 198, 109, 0.42);
+  }
+
+
+  @keyframes liveGlow {
+    0%, 100% {
+      background: var(--live-red);
+      box-shadow: 0 0 0 6px rgba(255, 31, 67, 0.20);
+    }
+    50% {
+      background: var(--live-red-2);
+      box-shadow: 0 0 0 9px rgba(255, 31, 67, 0.30);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .announcement-bar {
+      min-height: 52px;
+      justify-content: flex-start;
+      padding: 8px 12px;
+      overflow: hidden;
+    }
+
+    .live-pill {
+      min-height: 25px;
+      padding: 4px 10px 4px 8px;
+      font-size: 11px;
+      box-shadow: 0 0 0 5px rgba(255, 31, 67, 0.20);
+    }
+
+    .announcement-copy {
+      min-width: 0;
+      text-align: left;
+      white-space: normal;
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .announcement-training-break {
+      display: block;
+    }
+
+    .page-shell {
+      padding: 32px 16px 0;
+    }
+
+    .hero-stack {
+      padding-bottom: 48px;
+    }
+
+    .hero-kicker,
+    .hero-line {
+      font-size: clamp(24px, 7.45vw, 36px);
+    }
+
+    .hero-kicker {
+      font-size: clamp(24px, 7.4vw, 36px);
+    }
+
+    .hero-accent-row {
+      gap: 7px;
+      margin: 7px 0 12px;
+    }
+
+    .hero-ai,
+    .hero-accent {
+      font-size: clamp(34px, 10.2vw, 54px);
+    }
+
+    .countdown-card {
+      margin-top: 27px;
+      padding: 16px 14px 15px;
+      border-radius: 9px;
+    }
+
+    .countdown-grid {
+      gap: 5px;
+    }
+
+    .countdown-label {
+      font-size: 8px;
+      letter-spacing: 0.06em;
+    }
+
+    .training-form {
+      margin-top: 14px;
+    }
+
+    .form-input,
+    .phone-field {
+      min-height: 52px;
+      border-radius: 7px;
+    }
+
+    .form-input,
+    .phone-input {
+      font-size: 16px;
+    }
+
+    .reserve-button {
+      min-height: 78px;
+      margin-top: 11px;
+    }
+
+    .legal-copy {
+      margin-top: 21px;
+      font-size: 11px;
+      line-height: 1.34;
+    }
+
+    .proof-visual {
+      margin-top: 27px;
+    }
+
+    .proof-title {
+      font-size: clamp(15px, 4.5vw, 19px);
+    }
+
+    .idea-section {
+      margin: 0 -16px;
+      padding: 54px 18px 0;
+      border-radius: 24px 24px 0 0;
+    }
+
+    .idea-title {
+      font-size: clamp(38px, 11vw, 56px);
+    }
+
+    .letter-card {
+      margin-top: 34px;
+      padding: 18px;
+      border-radius: 21px;
+    }
+
+    .letter-body {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .training-breakdown {
+      margin-top: 0;
+    }
+
+    .training-breakdown-section {
+      margin: 0 -16px;
+      padding: 53px 18px 68px;
+      border-radius: 24px 24px 0 0;
+    }
+
+    .breakdown-list {
+      margin-top: 27px;
+      padding-left: 66px;
+      gap: 13px;
+    }
+
+    .breakdown-list::before {
+      left: 25px;
+    }
+
+    .breakdown-card {
+      padding: 18px 17px 19px;
+      border-radius: 16px;
+    }
+
+    .breakdown-number {
+      top: 18px;
+      left: -66px;
+      width: 50px;
+      height: 50px;
+      font-size: 18px;
+      box-shadow: 0 0 0 7px #f7f8f5;
+    }
+
+    .breakdown-copy {
+      font-size: 14px;
+    }
+
+    .founder-transition {
+      --founder-size: clamp(158px, 48vw, 220px);
+      --founder-top: 18px;
+      margin: 0 -16px;
+      padding: var(--founder-top) 16px 66px;
+    }
+
+    .founder-photo {
+      border-radius: 28px;
+      box-shadow: 0 22px 58px rgba(0, 0, 0, 0.26), 0 0 0 7px rgba(255, 255, 255, 0.72);
+    }
+
+    .founder-quote {
+      margin-top: 30px;
+    }
+
+    .quote-text {
+      font-size: clamp(22px, 7vw, 31px);
+    }
+
+    .sticky-cta {
+      padding: 11px 12px max(11px, env(safe-area-inset-bottom));
+    }
+
+    .sticky-cta .reserve-button {
+      min-height: 62px;
+      border-radius: 11px;
+    }
+
+    .reserve-button {
+      padding-left: 44px;
+      padding-right: 44px;
+    }
+
+    .reserve-arrow {
+      right: 18px;
+      width: 21px;
+      height: 21px;
+    }
+
+    .sticky-cta .reserve-title {
+      font-size: 18px;
+    }
+
+    .sticky-cta .reserve-meta {
+      font-size: 11px;
+    }
+
+    .seat-modal {
+      padding: 24px 18px 20px;
+      border-radius: 22px;
+    }
+
+    .faq-section {
+      margin: 0 -16px;
+      padding: 54px 16px 104px;
+    }
+
+    .faq-question {
+      min-height: 64px;
+      padding: 18px 17px;
+    }
+
+    .faq-answer {
+      padding: 0 17px 19px;
+      font-size: 14px;
+    }
+
+    .earnings-disclaimer {
+      margin: 0 -16px;
+      padding: 48px 18px calc(116px + env(safe-area-inset-bottom));
+    }
+
+    .earnings-disclaimer p {
+      font-size: 13px;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+  }
+</style>
+</head>
+<body>
+  <header class="announcement-bar" aria-label="Live training announcement">
+    <span class="live-pill">Live</span>
+    <p class="announcement-copy">FREE · AI Growth <span class="announcement-training-break">Training — A Special 90-Minute Training · Learn How AI + Growth Systems Can Be Used To Create Your First $1,000</span></p>
+  </header>
+  <main class="page-shell" aria-label="AI Growth Training">
+    <section class="hero-stack">
+      <a class="hero-brand-lockup" href="/start" aria-label="GrowthEko home">
+        <img class="hero-brand-mark" src="/og/growtheko-mark-gold-512.png" width="22" height="22" alt="">
+        <span class="hero-brand-word"><span>Growth</span>Eko</span>
+      </a>
+      <h1 class="hero-headline">
+        <span class="hero-kicker">Watch How</span>
+        <span class="hero-accent-row">
+          <span class="hero-ai">AI+</span>
+          <span class="hero-accent">Digital Estates</span>
+        </span>
+        <span class="hero-line">Can Be Used To Create</span>
+        <span class="hero-line">Your First $1,000</span>
+        <span class="hero-line">In Just 90 Minutes</span>
+      </h1>
+      <div class="countdown-card" aria-label="Training countdown">
+        <div class="countdown-title">LIVE! Training Starts In</div>
+        <div class="countdown-grid">
+          <div><span class="countdown-number" data-countdown-days>0</span><span class="countdown-label">Days</span></div>
+          <span class="countdown-separator">:</span>
+          <div><span class="countdown-number" data-countdown-hours>00</span><span class="countdown-label">Hours</span></div>
+          <span class="countdown-separator">:</span>
+          <div><span class="countdown-number" data-countdown-minutes>00</span><span class="countdown-label">Minutes</span></div>
+          <span class="countdown-separator">:</span>
+          <div><span class="countdown-number" data-countdown-seconds>00</span><span class="countdown-label">Seconds</span></div>
+        </div>
+      </div>
+      <form class="training-form" aria-label="Training registration form">
+        <input class="form-input" type="text" name="name" placeholder="Full Name" autocomplete="name">
+        <input class="form-input" type="email" name="email" placeholder="Email Address" autocomplete="email">
+        <div class="phone-field" data-phone-field>
+          <div class="phone-row">
+            <button class="phone-country" type="button" aria-label="Select country code" aria-expanded="false">
+              <span class="phone-flag" aria-hidden="true">🇦🇹</span>
+              <span class="phone-dial">(+43)</span>
+              <span class="phone-caret" aria-hidden="true"></span>
+            </button>
+            <input type="hidden" name="country_code" value="AT">
+            <input type="hidden" name="dial_code" value="+43">
+            <input class="phone-input" type="tel" name="phone" placeholder="Phone Number (Optional)" autocomplete="tel">
+          </div>
+          <div class="phone-dropdown" role="listbox" aria-label="Country calling codes"></div>
+        </div>
+        <button class="reserve-button" type="submit">
+          <span class="reserve-title">Reserve My FREE Seat</span>
+          <span class="reserve-meta">Free · Live · 90 Minutes · <span data-training-date>Friday @ 6PM</span></span>
+          <span class="reserve-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+        </button>
+        <div class="form-status" aria-live="polite"></div>
+        <p class="legal-copy">
+          By registering, you agree that GrowthEko may contact you about this training, related resources, and future offers by email or message. Consent is not required to purchase. Message and data rates may apply. You can unsubscribe at any time. See our <a href="/imprint/">Imprint</a>, <a href="/terms/">Terms</a> and <a href="/privacy/">Privacy Policy</a>.
+        </p>
+      </form>
+      <figure class="proof-visual">
+        <div class="proof-frame">
+          <img src="/assets/ai-growth-training/no-face-online.png" alt="Presenter on stage with face hidden">
+        </div>
+        <h2 class="proof-title">No Face Needed To Make Money Online</h2>
+      </figure>
+    </section>
+    <section class="idea-section" aria-label="Idea section">
+      <h2 class="idea-title">What You Need Is <span class="idea-accent">Speed!</span></h2>
+      <article class="letter-card" aria-label="Letter from Nora">
+        <div class="letter-header">
+          <div class="letter-avatar">
+            <img src="/assets/ai-growth-training/robin-founder.jpg" alt="Robin Ekren">
+          </div>
+          <div>
+            <div class="letter-from">Robin Ekren</div>
+            <div class="letter-email">support@growtheko.com</div>
+            <div class="letter-to">To You</div>
+          </div>
+        </div>
+        <div class="letter-body">
+          <p>Dear Best Friend,</p>
+          <p>I’m Nora, Robin’s Chief Autonomous Officer.</p>
+          <p>Robin asked me to write this because he does not want to add more noise to your head.</p>
+          <p>You do not need another motivational speech. You do not need another secret system. <strong>You need clarity.</strong></p>
+          <p>A clean starting point. A first asset. A first win.</p>
+          <p>Most people wait for the perfect idea. Robin does not.</p>
+          <p>He starts with attention, because <span class="mark">attention is where every modern business begins</span>.</p>
+          <p>If people do not see what you build, they cannot trust it. If they cannot trust it, they cannot buy it.</p>
+          <p>That is why this training starts with Theme Pages. Not because they are just pages, but because they can become <strong>digital estates</strong>.</p>
+          <p>They collect attention. They build trust. They create proof.</p>
+          <p>And once the right people are watching, one idea can become content, offers, clients, products, and cashflow.</p>
+          <p>Robin believes you can start from zero because identity is trainable. Character can be trained. Belief can be trained. Skill can be trained.</p>
+          <p>In the live training, you will not leave with ten options. You will leave with <span class="mark">one clear next move</span>.</p>
+          <p>One asset. One path. One real shot at your first result.</p>
+          <p class="letter-signature">See you inside,<br>Nora</p>
+        </div>
+      </article>
+    </section>
+    <section class="founder-transition" aria-label="Founder">
+      <div class="founder-photo">
+        <img src="/assets/ai-growth-training/robin-founder.jpg" alt="Robin Ekren">
+      </div>
+      <blockquote class="founder-quote">
+        <p class="quote-text"><span class="quote-mark">“</span>I’d rather promise you less here and give you more live. Show up, and I’ll make sure you leave with one move that feels real.<span class="quote-mark">”</span></p>
+        <footer class="quote-author">- Robin Ekren</footer>
+      </blockquote>
+      <div class="quote-cta">
+        <button class="reserve-button" type="button" data-open-seat-modal>
+          <span class="reserve-title">Join The FREE Webinar</span>
+          <span class="reserve-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+        </button>
+      </div>
+    </section>
+    <section class="training-breakdown-section" aria-label="Training breakdown">
+      <div class="training-breakdown">
+        <div class="breakdown-header">
+          <h3 class="breakdown-title">Inside The 90-Minute Training</h3>
+          <p class="breakdown-subtitle">You’ll see how one simple idea can become a digital estate that attracts attention, builds trust, and creates cashflow.</p>
+        </div>
+        <div class="breakdown-list">
+          <article class="breakdown-card">
+            <div class="breakdown-number" aria-hidden="true">01</div>
+            <div>
+              <div class="breakdown-label">01 · The Asset</div>
+              <h4 class="breakdown-line">Stop thinking in posts. Start thinking in assets.</h4>
+              <p class="breakdown-copy">A theme page is not just an account. It is digital property that can grow, compound, and be monetized.</p>
+            </div>
+          </article>
+          <article class="breakdown-card">
+            <div class="breakdown-number" aria-hidden="true">02</div>
+            <div>
+              <div class="breakdown-label">02 · The System</div>
+              <h4 class="breakdown-line">AI does not replace the operator. It multiplies the operator.</h4>
+              <p class="breakdown-copy">One idea becomes content, offers, workflows, and a repeatable growth system without starting from scratch.</p>
+            </div>
+          </article>
+          <article class="breakdown-card">
+            <div class="breakdown-number" aria-hidden="true">03</div>
+            <div>
+              <div class="breakdown-label">03 · The Money Path</div>
+              <h4 class="breakdown-line">Attention is only valuable when it has a path to revenue.</h4>
+              <p class="breakdown-copy">You’ll see how a digital estate turns viewers into leads, buyers, campaigns, and recurring income.</p>
+            </div>
+          </article>
+          <article class="breakdown-card">
+            <div class="breakdown-number" aria-hidden="true">04</div>
+            <div>
+              <div class="breakdown-label">04 · Execution Plan</div>
+              <h4 class="breakdown-line">Speed wins because speed creates proof.</h4>
+              <p class="breakdown-copy">You’ll leave with the first moves: what to build, what to post, what to track, and what to ship next.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section class="faq-section" aria-label="Common questions">
+      <div class="faq-wrap">
+        <h2 class="faq-title">Common Questions I Get Asked</h2>
+        <div class="faq-list">
+          <article class="faq-item" data-faq-item>
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span class="faq-question-text">Why is it free? What's the catch?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>There is no catch. Our mission is to help entrepreneurs build real online businesses by letting them feel the shift first. Like every serious digital business, we do have an offer that we may show you at the end, but the training is built to give you real clarity before you ever decide anything. If you leave the webinar clearer, faster, and more confident about your next move, then the training did its job.</p>
+            </div>
+          </article>
+          <article class="faq-item" data-faq-item>
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span class="faq-question-text">What if I don't have a product to sell?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>That is completely fine. You do not need a product, a course, or a finished offer to start. In the training, you will see how to build a Theme Page first, create attention around it, and then use that audience to sell almost any product or offer you decide to build later.</p>
+            </div>
+          </article>
+          <article class="faq-item" data-faq-item>
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span class="faq-question-text">Who is this for?</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>This is for new creators, service providers, coaches, creators, info-product owners, agency owners, SaaS owners, students, freelancers, and affiliates. In simple words: it is for anyone who wants to build attention online and turn that attention into real money by helping their own clients succeed.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section class="earnings-disclaimer" aria-label="Earnings disclaimer">
+      <div class="earnings-disclaimer-wrap">
+        <p><strong>*Earnings Disclaimer:</strong> GrowthEko does not promise income, profit, business growth, follower growth, or any specific financial result. Every business is different, and outcomes depend on your offer, market, execution, consistency, legal setup, tracking, traffic, product quality, and the time and effort you choose to put in.</p>
+        <p>This free AI Growth Training is educational. It is not a get-rich-quick program, financial advice, legal advice, tax advice, or a guarantee that you will make money online. We show frameworks, examples, systems, and decision paths that can help you think and execute more clearly. Your results are your responsibility.</p>
+        <p>By registering, you agree to receive event-related communication from GrowthEko. You can review our <a href="/imprint/">Imprint</a>, <a href="/terms/">Terms</a> and <a href="/privacy/">Privacy Policy</a> before joining.</p>
+      </div>
+    </section>
+  </main>
+  <div class="sticky-cta" data-sticky-cta>
+    <div class="sticky-cta-inner">
+      <button class="reserve-button" type="button" data-open-seat-modal>
+        <span class="reserve-title">Reserve My FREE Seat</span>
+        <span class="reserve-meta">Free · Live · 90 Minutes · <span data-sticky-training-date>Friday @ 6PM</span></span>
+        <span class="reserve-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+      </button>
+    </div>
+  </div>
+  <div class="modal-backdrop" data-seat-modal aria-hidden="true">
+    <div class="seat-modal" role="dialog" aria-modal="true" aria-labelledby="seat-modal-title">
+      <button class="modal-close" type="button" data-close-seat-modal aria-label="Close">×</button>
+      <h2 class="seat-modal-title" id="seat-modal-title">Reserve Your Free Seat</h2>
+      <p class="seat-modal-copy">Enter your details and lock the next live AI Growth Training seat.</p>
+      <form class="training-form" aria-label="Popup training registration form">
+        <input class="form-input" type="text" name="modal-name" placeholder="Full Name" autocomplete="name">
+        <input class="form-input" type="email" name="modal-email" placeholder="Email Address" autocomplete="email">
+        <div class="phone-field" data-phone-field>
+          <div class="phone-row">
+            <button class="phone-country" type="button" aria-label="Select country code" aria-expanded="false">
+              <span class="phone-flag" aria-hidden="true">🇦🇹</span>
+              <span class="phone-dial">(+43)</span>
+              <span class="phone-caret" aria-hidden="true"></span>
+            </button>
+            <input type="hidden" name="modal-country-code" value="AT">
+            <input type="hidden" name="modal-dial-code" value="+43">
+            <input class="phone-input" type="tel" name="modal-phone" placeholder="Phone Number (Optional)" autocomplete="tel">
+          </div>
+          <div class="phone-dropdown" role="listbox" aria-label="Country calling codes"></div>
+        </div>
+        <button class="reserve-button" type="submit">
+          <span class="reserve-title">Reserve My FREE Seat</span>
+          <span class="reserve-meta">Free · Live · 90 Minutes · <span data-modal-training-date>Friday @ 6PM</span></span>
+          <span class="reserve-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+        </button>
+        <div class="form-status" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const daysEl = document.querySelector('[data-countdown-days]');
+      const hoursEl = document.querySelector('[data-countdown-hours]');
+      const minutesEl = document.querySelector('[data-countdown-minutes]');
+      const secondsEl = document.querySelector('[data-countdown-seconds]');
+      const trainingDateEl = document.querySelector('[data-training-date]');
+      const stickyDateEl = document.querySelector('[data-sticky-training-date]');
+      const modalDateEl = document.querySelector('[data-modal-training-date]');
+      const stickyCta = document.querySelector('[data-sticky-cta]');
+      const proofFrame = document.querySelector('.proof-frame');
+      const modal = document.querySelector('[data-seat-modal]');
+      const openModalButtons = document.querySelectorAll('[data-open-seat-modal]');
+      const closeModalButton = document.querySelector('[data-close-seat-modal]');
+      const faqItems = document.querySelectorAll('[data-faq-item]');
+      const phoneFields = document.querySelectorAll('[data-phone-field]');
+      const trainingForms = document.querySelectorAll('.training-form');
+      const countries = [
+        { code: 'AT', flag: '🇦🇹', dial: '+43', name: 'Austria' },
+        { code: 'DE', flag: '🇩🇪', dial: '+49', name: 'Germany' },
+        { code: 'CH', flag: '🇨🇭', dial: '+41', name: 'Switzerland' },
+        { code: 'US', flag: '🇺🇸', dial: '+1', name: 'United States' },
+        { code: 'GB', flag: '🇬🇧', dial: '+44', name: 'United Kingdom' },
+        { code: 'AE', flag: '🇦🇪', dial: '+971', name: 'United Arab Emirates' },
+        { code: 'NL', flag: '🇳🇱', dial: '+31', name: 'Netherlands' },
+        { code: 'FR', flag: '🇫🇷', dial: '+33', name: 'France' },
+        { code: 'IT', flag: '🇮🇹', dial: '+39', name: 'Italy' },
+        { code: 'ES', flag: '🇪🇸', dial: '+34', name: 'Spain' },
+        { code: 'PT', flag: '🇵🇹', dial: '+351', name: 'Portugal' },
+        { code: 'BE', flag: '🇧🇪', dial: '+32', name: 'Belgium' },
+        { code: 'DK', flag: '🇩🇰', dial: '+45', name: 'Denmark' },
+        { code: 'SE', flag: '🇸🇪', dial: '+46', name: 'Sweden' },
+        { code: 'NO', flag: '🇳🇴', dial: '+47', name: 'Norway' },
+        { code: 'FI', flag: '🇫🇮', dial: '+358', name: 'Finland' },
+        { code: 'IE', flag: '🇮🇪', dial: '+353', name: 'Ireland' },
+        { code: 'PL', flag: '🇵🇱', dial: '+48', name: 'Poland' },
+        { code: 'CZ', flag: '🇨🇿', dial: '+420', name: 'Czechia' },
+        { code: 'SK', flag: '🇸🇰', dial: '+421', name: 'Slovakia' },
+        { code: 'HU', flag: '🇭🇺', dial: '+36', name: 'Hungary' },
+        { code: 'SI', flag: '🇸🇮', dial: '+386', name: 'Slovenia' },
+        { code: 'HR', flag: '🇭🇷', dial: '+385', name: 'Croatia' },
+        { code: 'RO', flag: '🇷🇴', dial: '+40', name: 'Romania' },
+        { code: 'TR', flag: '🇹🇷', dial: '+90', name: 'Turkey' },
+        { code: 'CA', flag: '🇨🇦', dial: '+1', name: 'Canada' },
+        { code: 'AU', flag: '🇦🇺', dial: '+61', name: 'Australia' },
+        { code: 'NZ', flag: '🇳🇿', dial: '+64', name: 'New Zealand' },
+        { code: 'SG', flag: '🇸🇬', dial: '+65', name: 'Singapore' },
+        { code: 'IN', flag: '🇮🇳', dial: '+91', name: 'India' },
+        { code: 'BR', flag: '🇧🇷', dial: '+55', name: 'Brazil' },
+        { code: 'MX', flag: '🇲🇽', dial: '+52', name: 'Mexico' },
+        { code: 'ZA', flag: '🇿🇦', dial: '+27', name: 'South Africa' }
+      ];
+      const pad = (value) => String(value).padStart(2, '0');
+
+      function nextFridayAtSix() {
+        const now = new Date();
+        const target = new Date(now);
+        const friday = 5;
+        const daysUntilFriday = (friday - now.getDay() + 7) % 7;
+        target.setDate(now.getDate() + daysUntilFriday);
+        target.setHours(18, 0, 0, 0);
+        if (target <= now) target.setDate(target.getDate() + 7);
+        return target;
+      }
+
+      const target = nextFridayAtSix();
+      trainingDateEl.textContent = target.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric'
+      }) + ' @ 6PM';
+      stickyDateEl.textContent = trainingDateEl.textContent;
+      modalDateEl.textContent = trainingDateEl.textContent;
+
+      function renderCountdown() {
+        const distance = Math.max(0, target.getTime() - Date.now());
+        const days = Math.floor(distance / 86400000);
+        const hours = Math.floor((distance % 86400000) / 3600000);
+        const minutes = Math.floor((distance % 3600000) / 60000);
+        const seconds = Math.floor((distance % 60000) / 1000);
+
+        daysEl.textContent = String(days);
+        hoursEl.textContent = pad(hours);
+        minutesEl.textContent = pad(minutes);
+        secondsEl.textContent = pad(seconds);
+      }
+
+      renderCountdown();
+      setInterval(renderCountdown, 1000);
+
+      function updateStickyCta() {
+        const proofRect = proofFrame.getBoundingClientRect();
+        const shouldShow = proofRect.top <= window.innerHeight * 0.5;
+        stickyCta.classList.toggle('is-visible', shouldShow);
+      }
+
+      function openModal() {
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      updateStickyCta();
+      window.addEventListener('scroll', updateStickyCta, { passive: true });
+      window.addEventListener('resize', updateStickyCta);
+      phoneFields.forEach((field) => {
+        const button = field.querySelector('.phone-country');
+        const flag = field.querySelector('.phone-flag');
+        const dial = field.querySelector('.phone-dial');
+        const dropdown = field.querySelector('.phone-dropdown');
+        const phoneInput = field.querySelector('.phone-input');
+        const countryInput = field.querySelector('input[name$="country-code"], input[name="country_code"]');
+        const dialInput = field.querySelector('input[name$="dial-code"], input[name="dial_code"]');
+
+        function closeField() {
+          field.classList.remove('is-open');
+          button.setAttribute('aria-expanded', 'false');
+        }
+
+        function selectCountry(country) {
+          flag.textContent = country.flag;
+          dial.textContent = `(${country.dial})`;
+          countryInput.value = country.code;
+          dialInput.value = country.dial;
+          phoneInput.placeholder = `${country.dial} Phone Number (Optional)`;
+          dropdown.querySelectorAll('.phone-option').forEach((option) => {
+            option.setAttribute('aria-selected', String(option.dataset.code === country.code));
+          });
+          closeField();
+          phoneInput.focus();
+        }
+
+        countries.forEach((country) => {
+          const option = document.createElement('button');
+          option.type = 'button';
+          option.className = 'phone-option';
+          option.setAttribute('role', 'option');
+          option.setAttribute('aria-selected', String(country.code === 'AT'));
+          option.dataset.code = country.code;
+          option.innerHTML = `<span>${country.flag}</span><span class="phone-option-code">(${country.dial})</span><span class="phone-option-name">${country.name}</span>`;
+          option.addEventListener('click', () => selectCountry(country));
+          dropdown.appendChild(option);
+        });
+
+        button.addEventListener('click', () => {
+          const isOpen = field.classList.toggle('is-open');
+          button.setAttribute('aria-expanded', String(isOpen));
+        });
+      });
+      document.addEventListener('click', (event) => {
+        phoneFields.forEach((field) => {
+          if (!field.contains(event.target)) {
+            field.classList.remove('is-open');
+            field.querySelector('.phone-country')?.setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+      openModalButtons.forEach((button) => button.addEventListener('click', openModal));
+      closeModalButton.addEventListener('click', closeModal);
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) closeModal();
+      });
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+        if (event.key === 'Escape') {
+          phoneFields.forEach((field) => {
+            field.classList.remove('is-open');
+            field.querySelector('.phone-country')?.setAttribute('aria-expanded', 'false');
+          });
+        }
+      });
+      faqItems.forEach((item) => {
+        const button = item.querySelector('.faq-question');
+        const icon = item.querySelector('.faq-icon');
+        button.addEventListener('click', () => {
+          const isOpen = item.classList.toggle('is-open');
+          button.setAttribute('aria-expanded', String(isOpen));
+          icon.textContent = isOpen ? '-' : '+';
+        });
+      });
+
+      function getFormValue(form, selectors) {
+        for (const selector of selectors) {
+          const field = form.querySelector(selector);
+          if (field && field.value.trim()) return field.value.trim();
+        }
+        return '';
+      }
+
+      function setFormStatus(form, message, state) {
+        const status = form.querySelector('.form-status');
+        if (!status) return;
+        status.textContent = message;
+        status.classList.toggle('is-error', state === 'error');
+        status.classList.toggle('is-success', state === 'success');
+      }
+
+      function isEmail(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+      }
+
+      trainingForms.forEach((form) => {
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+
+          const name = getFormValue(form, ['input[name="name"]', 'input[name="modal-name"]']);
+          const email = getFormValue(form, ['input[name="email"]', 'input[name="modal-email"]']).toLowerCase();
+          const phone = getFormValue(form, ['input[name="phone"]', 'input[name="modal-phone"]']);
+          const countryCode = getFormValue(form, ['input[name="country_code"]', 'input[name="modal-country-code"]']);
+          const dialCode = getFormValue(form, ['input[name="dial_code"]', 'input[name="modal-dial-code"]']);
+          const submit = form.querySelector('.reserve-button');
+          const title = submit?.querySelector('.reserve-title');
+          const previousTitle = title?.textContent || 'Reserve My FREE Seat';
+
+          if (!name) {
+            setFormStatus(form, 'Enter your name first.', 'error');
+            return;
+          }
+          if (!isEmail(email)) {
+            setFormStatus(form, 'Enter a real email address.', 'error');
+            return;
+          }
+
+          submit.disabled = true;
+          if (title) title.textContent = 'Reserving...';
+          setFormStatus(form, '', '');
+
+          try {
+            const response = await fetch('/api/webinar-register', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name,
+                email,
+                phone,
+                countryCode,
+                dialCode,
+                sessionDate: target.toISOString(),
+                sourceUrl: window.location.href,
+                referrer: document.referrer || ''
+              })
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data.error || 'Try again in a moment.');
+
+            const countText = data.sessionCount ? ` Seat #${data.sessionCount} is locked.` : ' Your seat is locked.';
+            setFormStatus(form, `Saved.${countText} Check your email.`, 'success');
+            if (title) title.textContent = 'Seat Reserved';
+            if (window.plausible) window.plausible('webinar_register');
+            setTimeout(() => {
+              window.location.href = `/webinar/confirmed?fn=${encodeURIComponent(name.split(' ')[0] || name)}`;
+            }, 900);
+          } catch (error) {
+            submit.disabled = false;
+            if (title) title.textContent = previousTitle;
+            setFormStatus(form, error.message || 'Try again in a moment.', 'error');
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

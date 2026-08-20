@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Seat saved · Live Webinar</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/og/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/og/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/og/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#09271b">
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family:'Inter',-apple-system,system-ui,sans-serif; color:#0a0a0a; background:#fff; line-height:1.55; -webkit-font-smoothing:antialiased; min-height:100vh; display:flex;align-items:center;justify-content:center;padding:24px; }
+  .container { max-width: 480px; text-align: center; }
+  .badge { display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;background:#fafafa;border:1px solid #e9e9e9;font-size:13px;color:#6a6a6a;margin-bottom:24px; }
+  .dot { width:8px;height:8px;border-radius:50%;background:#2a8a4a; }
+  h1 { font-family:'Instrument Serif',Georgia,serif;font-size:clamp(36px,5vw,52px);line-height:1.05;letter-spacing:-0.03em;margin-bottom:16px; }
+  h1 em { font-style:italic;color:#b08a4a; }
+  p { color:#6a6a6a;font-size:17px;margin-bottom:24px;line-height:1.55; }
+  .steps { background:#fafafa;border:1px solid #e9e9e9;border-radius:16px;padding:24px;margin-top:24px;text-align:left; }
+  .steps h3 { font-family:'Instrument Serif',Georgia,serif;font-size:20px;margin-bottom:14px; }
+  .steps ol { padding-left:20px;color:#2a2a2a;font-size:15px; }
+  .steps ol li { padding:6px 0; }
+  .cta { display:inline-block;margin-top:24px;padding:14px 28px;background:#0a0a0a;color:#fff;text-decoration:none;border-radius:999px;font-weight:500; }
+</style>
+</head>
+<body>
+<div class="container">
+  <span class="badge"><span class="dot"></span> Seat saved · Calendar invite sent</span>
+  <h1>You're <em>in</em>, <span id="firstName">friend</span>.</h1>
+  <p>Calendar invite + Zoom link are in your inbox. Show up 2 minutes early — we start sharp.</p>
+
+  <div class="steps">
+    <h3>While you wait</h3>
+    <ol>
+      <li>Grab the free <a href="/playbook" style="color:#0a0a0a;">AI Growth Playbook</a> (12 min read)</li>
+      <li>Block 60 minutes uninterrupted — webinar is dense</li>
+      <li>Bring 1 specific business question for live Q&A</li>
+      <li>Coffee / matcha / water — set up like it's a real meeting</li>
+    </ol>
+  </div>
+
+  <a href="/" class="cta">← Back to growtheko.com</a>
+</div>
+<script>
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('fn')) document.getElementById('firstName').textContent = p.get('fn');
+  if (window.plausible) window.plausible('webinar_register_confirmed');
+</script>
+</body>
+</html>

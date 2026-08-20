@@ -1,0 +1,32 @@
+.vercel
+.env*
+node_modules
+test
+tmp
+supabase
+api/tests
+api/send-message.js
+api/calendly-webhook.js
+_TRASH-review
+
+# Historical/internal browser surfaces retained locally for evidence only.
+live
+crm
+closer
+pre-read
+secret
+growth
+empire
+chat
+routine
+learning
+rewards
+onboarding
+
+# Internal documentation/data; not part of the public deployment artifact.
+[!]RULES.yml
+LEGACY_SURFACE_SECURITY_2026-07-10.md
+README.md
+api/SETUP.md
+market-data.json
+vision/youtube

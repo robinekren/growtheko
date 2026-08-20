@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="goldGrad32" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b08a4a"/>
+      <stop offset="100%" stop-color="#d4af6c"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="6" fill="#0a0a0a"/>
+  <text x="16" y="23" font-family="Instrument Serif, Georgia, serif" font-size="22" font-weight="400" fill="url(#goldGrad32)" text-anchor="middle" font-style="italic">G</text>
+</svg>

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Complete the GrowthEko business intake and then book a Free Clarity Call. Booking is not offer acceptance or a purchase.">
+  <meta property="og:title" content="Apply — GrowthEko">
+  <meta property="og:description" content="Apply to work with GrowthEko and make AI work inside your business.">
+  <meta property="og:url" content="https://growtheko.com/apply">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://growtheko.com/og/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Apply — GrowthEko">
+  <meta name="twitter:description" content="Apply to work with GrowthEko and make AI work inside your business.">
+  <meta name="twitter:image" content="https://growtheko.com/og/og-image.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/og/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/og/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/og/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#09271b">
+  <title>Apply — GrowthEko</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy-950: #09081d;
+      --navy-900: #121033;
+      --navy-850: #191742;
+      --paper: #f3f6f0;
+      --card: rgba(255, 255, 255, 0.94);
+      --ink: #151725;
+      --ink-soft: #44495d;
+      --muted: #72778e;
+      --line: rgba(18, 20, 31, 0.08);
+      --line-strong: rgba(18, 20, 31, 0.14);
+      --gold: #d6b46a;
+      --gold-strong: #e5c276;
+      --gold-deep: #b58f44;
+      --blue: #668cf3;
+      --blue-strong: #4e74dc;
+      --error: #d62f45;
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --shadow: 0 30px 90px rgba(11, 10, 28, 0.18);
+      --container: 760px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        repeating-linear-gradient(135deg, rgba(13, 53, 30, 0.028) 0 1px, transparent 1px 7px),
+        linear-gradient(180deg, #f3f6f0 0%, #f3f6f0 100%);
+      min-height: 100vh;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: clamp(380px, 42vw, 470px);
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 82% 6%, rgba(222, 191, 116, 0.16), transparent 24%),
+        radial-gradient(circle at 16% 14%, rgba(58, 114, 72, 0.32), transparent 25%),
+        radial-gradient(circle at 50% 0%, rgba(15, 66, 38, 0.78), transparent 42%),
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.022) 0 1px, transparent 1px 8px),
+        repeating-linear-gradient(45deg, rgba(0,0,0,0.15) 0 1px, transparent 1px 10px),
+        linear-gradient(180deg, #06180f 0%, #0a2a18 100%);
+    }
+    a { color: inherit; }
+    .container { width: min(var(--container), calc(100% - 32px)); margin: 0 auto; }
+    .nav {
+      position: relative;
+      z-index: 1;
+      padding: 24px 0 0;
+    }
+    .nav-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: rgba(255,255,255,0.96);
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .brand-logo { width: 34px; height: 34px; object-fit: contain; }
+    .hero {
+      position: relative;
+      z-index: 1;
+      padding: 30px 0 30px;
+      text-align: center;
+    }
+    .hero .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.74);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      color: #fff;
+      font-size: clamp(38px, 6vw, 62px);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+      font-weight: 800;
+      max-width: 900px;
+      margin: 0 auto 16px;
+    }
+    .hero h1 .accent { color: var(--gold); }
+    .hero p {
+      max-width: 640px;
+      margin: 0 auto;
+      color: rgba(255,255,255,0.74);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+    .surface {
+      position: relative;
+      z-index: 1;
+      border-top-left-radius: 34px;
+      border-top-right-radius: 34px;
+      background:
+        linear-gradient(180deg, #f8faf6 0%, #f3f6f0 112px),
+        repeating-linear-gradient(135deg, rgba(13, 53, 30, 0.03) 0 1px, transparent 1px 7px);
+      margin-top: -14px;
+      padding: clamp(42px, 5vw, 58px) 0 90px;
+      box-shadow:
+        0 -1px 0 rgba(255,255,255,0.46),
+        0 -18px 44px rgba(6, 24, 15, 0.10);
+      overflow: hidden;
+    }
+    .tier-banner {
+      display: none;
+      margin: 0 0 22px;
+      padding: 16px 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(78, 116, 220, 0.18);
+      background: linear-gradient(180deg, rgba(102, 140, 243, 0.08), rgba(102, 140, 243, 0.03));
+      text-align: center;
+      box-shadow: 0 18px 34px rgba(14, 16, 34, 0.05);
+    }
+    .tier-banner .label {
+      display: inline-block;
+      margin-bottom: 6px;
+      color: var(--blue-strong);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    .tier-banner .name {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+    .tier-banner .price {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .form-shell {
+      background: var(--card);
+      border: 1px solid rgba(18,20,31,0.08);
+      border-radius: 26px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .form-header {
+      margin-bottom: 26px;
+    }
+    .form-header h2 {
+      font-size: 34px;
+      line-height: 1.04;
+      letter-spacing: -0.05em;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .form-header p {
+      color: var(--ink-soft);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 560px;
+    }
+    .section-divider {
+      border: none;
+      border-top: 1px solid rgba(18,20,31,0.08);
+      margin: 28px 0;
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--blue-strong);
+      margin-bottom: 16px;
+    }
+    .field { margin-bottom: 20px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+    .field label .req { color: var(--error); margin-left: 2px; }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(18,20,31,0.10);
+      background: rgba(255,255,255,0.96);
+      color: var(--ink);
+      padding: 14px 16px;
+      font: inherit;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    }
+    .field input::placeholder,
+    .field textarea::placeholder { color: #9aa1b8; }
+    .field textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+    .field select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2372778e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 42px;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: rgba(78, 116, 220, 0.46);
+      box-shadow: 0 0 0 4px rgba(78, 116, 220, 0.10);
+    }
+    .name-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .name-row .field {
+      margin-bottom: 0;
+    }
+    @media (max-width: 640px) {
+      .name-row { grid-template-columns: 1fr; }
+      .form-shell { padding: 24px 20px; }
+      .surface { padding-bottom: 70px; }
+      .nav { padding-top: 16px; }
+      .brand { font-size: 16px; gap: 7px; }
+      .brand-logo { width: 30px; height: 30px; }
+      .hero { padding: 22px 0 20px; }
+      .hero .eyebrow { margin-bottom: 12px; }
+      .hero h1 { font-size: clamp(32px, 9vw, 46px); margin-bottom: 12px; }
+      .hero p { font-size: 16px; line-height: 1.55; }
+      .surface { margin-top: -10px; border-top-left-radius: 28px; border-top-right-radius: 28px; padding-top: 34px; }
+      .form-header h2 { font-size: 28px; }
+      .form-header p { font-size: 15px; line-height: 1.6; }
+    }
+    .field-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .pill-group {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      max-width: 460px;
+    }
+    .pill-group.revenue-options {
+      max-width: 360px;
+    }
+    .pill,
+    .check-pill,
+    .radio-pill {
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,20,31,0.10);
+      background: rgba(255,255,255,0.98);
+      color: var(--ink-soft);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      user-select: none;
+      width: 100%;
+      text-align: left;
+    }
+    .revenue-options .pill {
+      padding: 10px 14px;
+      border-radius: 13px;
+      font-size: 13px;
+    }
+    .pill:hover,
+    .check-pill:hover,
+    .radio-pill:hover {
+      border-color: rgba(78, 116, 220, 0.38);
+      color: var(--blue-strong);
+      transform: translateY(-1px);
+    }
+    .pill.selected,
+    .check-pill.selected,
+    .radio-pill.selected {
+      border-color: transparent;
+      color: #231500;
+      background: linear-gradient(180deg, #f9c26c 0%, #f1af48 100%);
+      box-shadow: 0 10px 24px rgba(241, 163, 52, 0.18);
+    }
+    .conditional-section { display: none; }
+    .conditional-section.visible {
+      display: block;
+      margin-top: 8px;
+    }
+    .char-count {
+      text-align: right;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .error-msg {
+      display: none;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(214, 47, 69, 0.08);
+      border: 1px solid rgba(214, 47, 69, 0.18);
+      color: #8f2030;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .submit-wrap { margin-top: 30px; }
+    .btn-submit {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 18px 22px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      color: #2d1c00;
+      background: linear-gradient(180deg, #f9c26c 0%, #f1af48 100%);
+      box-shadow: 0 14px 34px rgba(241, 163, 52, 0.24);
+      transition: transform 0.16s ease, filter 0.16s ease;
+    }
+    .btn-submit:hover { transform: translateY(-1px); filter: brightness(1.03); }
+    .btn-submit:disabled { opacity: 0.56; cursor: not-allowed; transform: none; }
+    .disclaimer {
+      margin-top: 14px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .footer a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container nav">
+    <div class="nav-row">
+      <a class="brand" href="/start"><img class="brand-logo" src="/og/growtheko-mark-gold-512.png" width="34" height="34" alt=""> <span>GrowthEko</span></a>
+    </div>
+  </div>
+
+  <div class="container hero">
+    <div class="eyebrow">GrowthEko application</div>
+    <h1>Tell us where your <span class="accent">AI operator layer</span> breaks.</h1>
+    <p>This takes about 2 minutes.</p>
+  </div>
+
+  <div class="surface">
+    <div class="container">
+      <div id="tierBanner" class="tier-banner">
+        <div class="label">Applying for</div>
+        <div id="tierLabel" class="name"></div>
+        <div id="tierPrice" class="price"></div>
+      </div>
+
+      <div class="form-shell" id="applicationForm">
+        <div class="form-header">
+          <h2>Apply To Work With Robin Ekren</h2>
+          <p>
+            Keep it direct. We are looking for your current reality, your leverage point, and whether you are actually ready to move.
+          </p>
+        </div>
+
+        <div class="section-label">Contact</div>
+
+        <div class="field">
+          <label>Email<span class="req">*</span></label>
+          <input type="email" id="f_email" placeholder="you@company.com">
+        </div>
+
+        <div class="name-row">
+          <div class="field">
+            <label>First Name<span class="req">*</span></label>
+            <input type="text" id="f_first_name" placeholder="First Name">
+          </div>
+          <div class="field">
+            <label>Last Name<span class="req">*</span></label>
+            <input type="text" id="f_last_name" placeholder="Last Name">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Website</label>
+          <input type="text" id="f_website" placeholder="https://yourcompany.com">
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="section-label">About You</div>
+
+        <div class="field">
+          <label>Why are you really here?<span class="req">*</span></label>
+          <div class="pill-group" data-field="motivation">
+            <div class="pill" data-value="Save time with AI">Save time with AI</div>
+            <div class="pill" data-value="Make more money with AI">Make more money with AI</div>
+            <div class="pill" data-value="Build systems instead of chaos">Build systems instead of chaos</div>
+            <div class="pill" data-value="Need a faster implementation path">Need a faster implementation path</div>
+            <div class="pill" data-value="Have traction but I am leaving leverage on the table">Have traction but I am leaving leverage on the table</div>
+            <div class="pill" data-value="Other">Other</div>
+          </div>
+          <div class="conditional-section" id="otherMotivationField">
+            <textarea id="f_motivation_other" placeholder="Tell us what actually brought you here..."></textarea>
+            <div class="char-count"><span id="otherWordCount">0</span>/150 words</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>What describes you best?<span class="req">*</span></label>
+          <div class="pill-group" data-field="profile_type">
+            <div class="pill" data-value="Agency">Agency</div>
+            <div class="pill" data-value="Creator">Creator</div>
+            <div class="pill" data-value="Consultant">Consultant</div>
+            <div class="pill" data-value="SaaS / Software">SaaS / Software</div>
+          </div>
+        </div>
+
+        <div class="conditional-section" id="creatorFields">
+          <div class="field">
+            <label>Your brand or creator name</label>
+            <input type="text" id="f_creator_name" placeholder="e.g. @yourhandle or brand name">
+          </div>
+
+          <div class="field">
+            <label>Primary content niche</label>
+            <select id="f_content_niche">
+              <option value="">Select niche...</option>
+              <option value="Business & Money">Business & Money</option>
+              <option value="AI & Tech">AI & Tech</option>
+              <option value="Lifestyle & Fashion">Lifestyle & Fashion</option>
+              <option value="Fitness & Health">Fitness & Health</option>
+              <option value="Beauty & Skincare">Beauty & Skincare</option>
+              <option value="Education & Learning">Education & Learning</option>
+              <option value="Entertainment & Comedy">Entertainment & Comedy</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Which platforms do you use?</label>
+            <p class="field-hint">Select all that apply</p>
+            <div class="pill-group" id="platformsGroup">
+              <div class="check-pill" data-platform="Instagram">Instagram</div>
+              <div class="check-pill" data-platform="YouTube">YouTube</div>
+              <div class="check-pill" data-platform="TikTok">TikTok</div>
+              <div class="check-pill" data-platform="LinkedIn">LinkedIn</div>
+              <div class="check-pill" data-platform="X / Twitter">X / Twitter</div>
+              <div class="check-pill" data-platform="Newsletter">Newsletter</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="section-label">Your Business</div>
+
+        <div class="field">
+          <label>What do you sell?<span class="req">*</span></label>
+          <select id="f_product_type">
+            <option value="">Select...</option>
+            <option value="Digital Product">Digital Product</option>
+            <option value="Service / Consulting">Service / Consulting</option>
+            <option value="SaaS / Software">SaaS / Software</option>
+            <option value="E-Commerce">E-Commerce</option>
+            <option value="Nothing yet">Nothing yet</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Where are you right now?<span class="req">*</span></label>
+          <div class="pill-group revenue-options" data-field="revenue_stage">
+            <div class="pill" data-value="Complete zero">Complete zero</div>
+            <div class="pill" data-value="Stuck under $10K/mo">Stuck under $10K/mo</div>
+            <div class="pill" data-value="$10K-$50K">$10K–$50K</div>
+            <div class="pill" data-value="$50K-$100K">$50K–$100K</div>
+            <div class="pill" data-value="$100K-$250K">$100K–$250K</div>
+            <div class="pill" data-value="$250K-$500K">$250K–$500K</div>
+            <div class="pill" data-value="$500K-$1M">$500K–$1M</div>
+            <div class="pill" data-value="$1M+">$1M+</div>
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="section-label">Your Market</div>
+
+        <div class="field">
+          <label>Primary Geographic Market Served<span class="req">*</span></label>
+          <select id="f_primary_geo_market">
+            <option value="">Select primary market...</option>
+            <option value="North America">North America</option>
+            <option value="Europe">Europe</option>
+            <option value="Asia-Pacific">Asia-Pacific</option>
+            <option value="Latin America">Latin America</option>
+            <option value="Middle East and Africa">Middle East and Africa</option>
+            <option value="India">India</option>
+            <option value="Japan">Japan</option>
+            <option value="Korea">Korea</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Additional Markets</label>
+          <p class="field-hint">Select all that apply</p>
+          <div class="pill-group" id="additionalMarketsGroup">
+            <div class="check-pill" data-market="North America">North America</div>
+            <div class="check-pill" data-market="Europe">Europe</div>
+            <div class="check-pill" data-market="Asia-Pacific">Asia-Pacific</div>
+            <div class="check-pill" data-market="Latin America">Latin America</div>
+            <div class="check-pill" data-market="Middle East and Africa">Middle East and Africa</div>
+            <div class="check-pill" data-market="India">India</div>
+            <div class="check-pill" data-market="Japan">Japan</div>
+            <div class="check-pill" data-market="Korea">Korea</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Company Size<span class="req">*</span></label>
+          <p class="field-hint">Your typical customer's company size</p>
+          <div class="pill-group" id="companySizeGroup">
+            <div class="radio-pill" data-size="1-50">1-50</div>
+            <div class="radio-pill" data-size="51-200">51-200</div>
+            <div class="radio-pill" data-size="201-1,000">201-1,000</div>
+            <div class="radio-pill" data-size="1,001-5,000">1,001-5,000</div>
+            <div class="radio-pill" data-size="5,000+">5,000+</div>
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="section-label">Your Goals</div>
+
+        <div class="field">
+          <label>What's the one thing holding you back?<span class="req">*</span></label>
+          <div class="pill-group" data-field="holding_back">
+            <div class="pill" data-value="Don't know where to start">Don't know where to start</div>
+            <div class="pill" data-value="No system but I am just guessing">No system but I am just guessing</div>
+            <div class="pill" data-value="No time but I feel overwhelmed">No time but I feel overwhelmed</div>
+            <div class="pill" data-value="Too much AI noise">Too much AI noise</div>
+            <div class="pill" data-value="Have knowledge but I cannot monetize">Have knowledge but I cannot monetize</div>
+            <div class="pill" data-value="Tried before but it did not work">Tried before but it did not work</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>What would you like to achieve in the next 90 days?</label>
+          <textarea id="f_goal" placeholder="e.g. map a cleaner lead follow up process, prioritize a marketing automation, or create a customer led implementation plan..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>How soon do you want this?<span class="req">*</span></label>
+          <div class="pill-group" data-field="urgency">
+            <div class="pill" data-value="Right now">Right now</div>
+            <div class="pill" data-value="This month">This month</div>
+            <div class="pill" data-value="Next 3 months">Next 3 months</div>
+            <div class="pill" data-value="Just exploring">Just exploring</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Would you invest in yourself to make this happen?<span class="req">*</span></label>
+          <div class="pill-group" data-field="investment_readiness">
+            <div class="pill" data-value="Yes, I am all in">Yes, I am all in</div>
+            <div class="pill" data-value="Yes, if it works">Yes, if it works</div>
+            <div class="pill" data-value="Need to understand first">Need to understand first</div>
+            <div class="pill" data-value="Not sure yet">Not sure yet</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>If we decide there is a fit, what path would interest you most?<span class="req">*</span></label>
+          <select id="f_selected_tier" required>
+            <option value="">Choose the closest path...</option>
+            <option value="roadmap_1997">Clear diagnosis and roadmap: I want the exact plan first</option>
+            <option value="done_with_you_5000">Done with you implementation: I want guidance while I build with my team</option>
+            <option value="done_for_you_14997">Done for you buildout: I want the system created with deeper private support</option>
+            <option value="recommendation">I am not sure yet: I want your recommendation</option>
+          </select>
+          <p class="field-hint">This is not a purchase and no contract is created by submitting. It only helps us understand whether you want a roadmap, guided implementation, full implementation, or a recommendation after reviewing your answers.</p>
+        </div>
+
+        <div class="error-msg" id="formError">Please fill in all required fields before continuing.</div>
+
+        <div class="submit-wrap">
+          <button class="btn-submit" id="submitBtn" onclick="submitApplication()">Submit Application</button>
+          <p class="disclaimer">After a complete submission is stored and confirmed, you can book the Free Clarity Call. The Free Clarity Call is used to assess fit; submission and booking do not create a contract or purchase.</p>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div>GrowthEko · Make AI Work For Your Business</div>
+        <div style="margin-top:6px;">
+          <a href="/imprint">Imprint</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var tierMap = {
+        'roadmap_1997': { label: 'Diagnosis + Roadmap', price: 'Plan-first path' },
+        'done_with_you_5000': { label: 'Done-With-You Implementation', price: 'Guided implementation path' },
+        'done_for_you_14997': { label: 'Done-For-You Buildout', price: 'Deeper private implementation path' },
+        'recommendation': { label: 'Recommendation Needed', price: 'We will recommend the cleanest fit' },
+        'monthly_97': { label: 'Guidance Path', price: 'Legacy link detected' },
+        'onetime_1997': { label: 'Diagnosis + Roadmap', price: 'Legacy link detected' }
+      };
+      var tierSelect = document.getElementById('f_selected_tier');
+      var tierBanner = document.getElementById('tierBanner');
+
+      function renderTier(tier) {
+        if (!tierMap[tier]) {
+          tierBanner.style.display = 'none';
+          return;
+        }
+        document.getElementById('tierLabel').textContent = tierMap[tier].label;
+        document.getElementById('tierPrice').textContent = tierMap[tier].price;
+        tierBanner.style.display = 'block';
+      }
+
+      var params = new URLSearchParams(window.location.search);
+      var tier = (params.get('tier') || '').toLowerCase();
+      if (tierMap[tier]) {
+        tierSelect.value = tier;
+        renderTier(tier);
+      }
+      tierSelect.addEventListener('change', function() { renderTier(this.value); });
+    })();
+
+    document.querySelectorAll('.pill-group[data-field] .pill').forEach(function(pill) {
+      pill.addEventListener('click', function() {
+        this.parentElement.querySelectorAll('.pill').forEach(function(p) { p.classList.remove('selected'); });
+        this.classList.add('selected');
+
+        if (this.parentElement.dataset.field === 'motivation') {
+          var otherSection = document.getElementById('otherMotivationField');
+          if (this.dataset.value === 'Other') {
+            otherSection.classList.add('visible');
+            document.getElementById('f_motivation_other').focus();
+          } else {
+            otherSection.classList.remove('visible');
+            document.getElementById('f_motivation_other').value = '';
+            document.getElementById('otherWordCount').textContent = '0';
+          }
+        }
+
+        if (this.parentElement.dataset.field === 'profile_type') {
+          var creatorSection = document.getElementById('creatorFields');
+          if (this.dataset.value === 'Creator') {
+            creatorSection.classList.add('visible');
+          } else {
+            creatorSection.classList.remove('visible');
+          }
+        }
+      });
+    });
+
+    document.getElementById('f_motivation_other').addEventListener('input', function() {
+      var words = this.value.trim().split(/\s+/).filter(function(w) { return w.length > 0; });
+      document.getElementById('otherWordCount').textContent = words.length;
+      if (words.length > 150) {
+        this.value = this.value.trim().split(/\s+/).slice(0, 150).join(' ');
+        document.getElementById('otherWordCount').textContent = '150';
+      }
+    });
+
+    document.querySelectorAll('.check-pill').forEach(function(pill) {
+      pill.addEventListener('click', function() {
+        this.classList.toggle('selected');
+      });
+    });
+
+    document.querySelectorAll('#companySizeGroup .radio-pill').forEach(function(pill) {
+      pill.addEventListener('click', function() {
+        document.querySelectorAll('#companySizeGroup .radio-pill').forEach(function(p) { p.classList.remove('selected'); });
+        this.classList.add('selected');
+      });
+    });
+
+    function collectData() {
+      var data = {};
+      data.selected_tier = document.getElementById('f_selected_tier').value;
+      data.email = document.getElementById('f_email').value.trim();
+      data.first_name = document.getElementById('f_first_name').value.trim();
+      data.last_name = document.getElementById('f_last_name').value.trim();
+      data.website = document.getElementById('f_website').value.trim();
+
+      var motivPill = document.querySelector('.pill-group[data-field="motivation"] .pill.selected');
+      data.motivation = motivPill ? motivPill.dataset.value : '';
+      data.motivation_other = (data.motivation === 'Other') ? document.getElementById('f_motivation_other').value.trim() : '';
+
+      var typePill = document.querySelector('.pill-group[data-field="profile_type"] .pill.selected');
+      data.profile_type = typePill ? typePill.dataset.value : '';
+
+      data.creator_name = document.getElementById('f_creator_name').value.trim();
+      data.content_niche = document.getElementById('f_content_niche').value;
+
+      var platforms = [];
+      document.querySelectorAll('#platformsGroup .check-pill.selected').forEach(function(p) {
+        platforms.push(p.dataset.platform);
+      });
+      data.platforms = platforms;
+
+      data.product_type = document.getElementById('f_product_type').value;
+
+      var revPill = document.querySelector('.pill-group[data-field="revenue_stage"] .pill.selected');
+      data.revenue_stage = revPill ? revPill.dataset.value : '';
+
+      data.primary_geo_market = document.getElementById('f_primary_geo_market').value;
+
+      var additionalMarkets = [];
+      document.querySelectorAll('#additionalMarketsGroup .check-pill.selected').forEach(function(p) {
+        additionalMarkets.push(p.dataset.market);
+      });
+      data.additional_markets = additionalMarkets;
+
+      var sizePill = document.querySelector('#companySizeGroup .radio-pill.selected');
+      data.company_size = sizePill ? sizePill.dataset.size : '';
+
+      var holdPill = document.querySelector('.pill-group[data-field="holding_back"] .pill.selected');
+      data.holding_back = holdPill ? holdPill.dataset.value : '';
+
+      data.goal = document.getElementById('f_goal').value.trim();
+
+      var urgPill = document.querySelector('.pill-group[data-field="urgency"] .pill.selected');
+      data.urgency = urgPill ? urgPill.dataset.value : '';
+
+      var investPill = document.querySelector('.pill-group[data-field="investment_readiness"] .pill.selected');
+      data.investment_readiness = investPill ? investPill.dataset.value : '';
+
+      return data;
+    }
+
+    function validate(data) {
+      if (!['roadmap_1997', 'done_with_you_5000', 'done_for_you_14997', 'recommendation', 'monthly_97', 'onetime_1997'].includes(data.selected_tier)) return false;
+      if (!data.email || !data.email.includes('@')) return false;
+      if (!data.first_name) return false;
+      if (!data.last_name) return false;
+      if (!data.motivation) return false;
+      if (!data.profile_type) return false;
+      if (!data.product_type) return false;
+      if (!data.revenue_stage) return false;
+      if (!data.primary_geo_market) return false;
+      if (!data.company_size) return false;
+      if (!data.holding_back) return false;
+      if (!data.urgency) return false;
+      if (!data.investment_readiness) return false;
+      return true;
+    }
+
+    async function submitApplication() {
+      var btn = document.getElementById('submitBtn');
+      var err = document.getElementById('formError');
+      var data = collectData();
+
+      if (!validate(data)) {
+        err.textContent = 'Please complete all required fields before continuing.';
+        err.style.display = 'block';
+        if (!data.selected_tier) document.getElementById('f_selected_tier').style.borderColor = 'var(--error)';
+        if (!data.email || !data.email.includes('@')) document.getElementById('f_email').style.borderColor = 'var(--error)';
+        if (!data.first_name) document.getElementById('f_first_name').style.borderColor = 'var(--error)';
+        if (!data.last_name) document.getElementById('f_last_name').style.borderColor = 'var(--error)';
+        if (!data.product_type) document.getElementById('f_product_type').style.borderColor = 'var(--error)';
+        if (!data.primary_geo_market) document.getElementById('f_primary_geo_market').style.borderColor = 'var(--error)';
+        setTimeout(function() {
+          document.querySelectorAll('input, select').forEach(function(el) { el.style.borderColor = ''; });
+        }, 2500);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      err.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      try {
+        var response = await fetch('/api/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: data, submitted_at: new Date().toISOString() })
+        });
+        var payload = await response.json().catch(function() { return {}; });
+        if (!response.ok || payload.success !== true || payload.stored !== true || payload.emailSent !== true) {
+          throw new Error(payload.error || 'Application could not be submitted.');
+        }
+
+        window.location.assign('https://www.skool.com/themepages');
+      } catch (e) {
+        err.textContent = e.message || 'Application could not be submitted. Please retry.';
+        err.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Submit Application';
+      }
+    }
+  </script>
+</body>
+</html>

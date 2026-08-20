@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/og/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/og/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/og/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#09271b">
+  <title>Contact — GrowthEko</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #FDFAF3;
+      background-image:
+        radial-gradient(ellipse 120% 80% at 50% 40%, #FFFDF7 0%, transparent 70%),
+        radial-gradient(ellipse 100% 70% at 30% 20%, #FFF8E7 0%, transparent 60%),
+        radial-gradient(ellipse 90% 80% at 75% 30%, #FDF3DA 0%, transparent 55%),
+        radial-gradient(ellipse 130% 90% at 60% 70%, #FFF6E0 0%, transparent 65%),
+        radial-gradient(ellipse 80% 60% at 20% 80%, #FAF0D4 0%, transparent 50%),
+        radial-gradient(ellipse 100% 80% at 80% 75%, #FFF4D6 0%, transparent 55%),
+        radial-gradient(ellipse 140% 100% at 50% 50%, #F8F1E0 0%, transparent 80%),
+        linear-gradient(160deg, #FDFAF3 0%, #FFF6E0 30%, #FFF4D6 50%, #FAF0D4 70%, #FDFAF3 100%);
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 24px;
+      padding-top: 15vh;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+    }
+    .site-brand {
+      position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 90;
+      display: inline-flex; align-items: center; gap: 8px;
+      color: #2b281f; text-decoration: none; font-size: 17px; font-weight: 750;
+    }
+    .site-brand img { width: 34px; height: 34px; object-fit: contain; }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 1; opacity: 0.3;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+    body > * { position: relative; z-index: 2; }
+
+    .step-container { max-width: 640px; width: 100%; text-align: center; }
+    .step-title {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(24px, 5vw, 36px);
+      font-weight: 700;
+      color: #111;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .step-subtitle {
+      font-size: 15px;
+      color: rgba(0,0,0,0.5);
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .check-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 480px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border: 1.5px solid rgba(210,180,100,0.4);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-size: 15px;
+      font-weight: 500;
+      color: #333;
+    }
+    .check-item:hover {
+      border-color: rgba(210,180,100,0.7);
+      background: rgba(255,255,255,0.8);
+    }
+    .check-item.selected {
+      border-color: #C49A38;
+      background: rgba(210,180,100,0.12);
+      box-shadow: 0 0 0 1.5px #C49A38;
+    }
+    .check-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid rgba(210,180,100,0.4);
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+    .check-item.selected .check-dot {
+      border-color: #C49A38;
+      background: #C49A38;
+    }
+    .check-item.selected .check-dot::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      max-width: 480px;
+      width: 100%;
+      margin: 40px auto 0;
+      z-index: 10;
+    }
+    .btn-next {
+      height: 48px;
+      border-radius: 10px;
+      border: 1px solid rgba(210,180,100,0.5);
+      background: linear-gradient(180deg, #D4A843 0%, #C49A38 45%, #B8902F 100%);
+      color: rgba(255,255,255,0.95);
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 28px;
+      box-shadow: 0 8px 18px rgba(180,140,40,0.30), 0 2px 6px rgba(160,120,30,0.18), inset 0 1px 0 rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn-next:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(180,140,40,0.35), 0 3px 8px rgba(160,120,30,0.20), inset 0 1px 0 rgba(255,255,255,0.35);
+    }
+    .btn-next:active {
+      transform: translateY(0);
+      background: linear-gradient(180deg, #B8902F 0%, #A88028 45%, #987020 100%);
+    }
+    .btn-next:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-back {
+      height: 48px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(210,180,100,0.4);
+      background: transparent;
+      color: #555;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 24px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn-back:hover {
+      border-color: rgba(210,180,100,0.7);
+      background: rgba(255,255,255,0.5);
+    }
+    .btn-back.visible { display: inline-flex; }
+
+    .step { display: none; }
+    .step.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .text-input {
+      width: 100%;
+      max-width: 400px;
+      height: 48px;
+      border: 1.5px solid rgba(210,180,100,0.4);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.5);
+      padding: 0 20px;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      color: #333;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .text-input:focus {
+      border-color: #C49A38;
+      background: rgba(255,255,255,0.8);
+    }
+    .text-input::placeholder { color: #aaa; }
+
+    .textarea-input {
+      width: 100%;
+      max-width: 480px;
+      min-height: 120px;
+      border: 1.5px solid rgba(210,180,100,0.4);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.5);
+      padding: 16px 20px;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      color: #333;
+      outline: none;
+      transition: border-color 0.15s ease;
+      resize: vertical;
+      line-height: 1.6;
+    }
+    .textarea-input:focus {
+      border-color: #C49A38;
+      background: rgba(255,255,255,0.8);
+    }
+    .textarea-input::placeholder { color: #aaa; }
+
+
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #D4A843, #C49A38);
+      transition: width 0.4s ease;
+      z-index: 100;
+    }
+
+    .thank-you-container {
+      text-align: center;
+      max-width: 520px;
+    }
+    .thank-you-container .checkmark {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #D4A843 0%, #C49A38 100%);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 32px;
+      animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .thank-you-container .checkmark svg {
+      width: 36px; height: 36px;
+      stroke: white; stroke-width: 3; fill: none;
+      stroke-linecap: round; stroke-linejoin: round;
+      stroke-dasharray: 50;
+      stroke-dashoffset: 50;
+      animation: drawCheck 0.5s 0.3s ease forwards;
+    }
+    @keyframes scaleIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+    .countdown-btn {
+      height: 48px;
+      border-radius: 10px;
+      border: 1px solid rgba(210,180,100,0.5);
+      background: linear-gradient(180deg, #D4A843 0%, #C49A38 45%, #B8902F 100%);
+      color: rgba(255,255,255,0.95);
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 0 28px;
+      box-shadow: 0 8px 18px rgba(180,140,40,0.30), 0 2px 6px rgba(160,120,30,0.18), inset 0 1px 0 rgba(255,255,255,0.35);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 32px;
+    }
+    .countdown-btn:hover { transform: translateY(-1px); }
+
+  </style>
+</head>
+<body>
+
+  <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+  <a class="site-brand" href="/start" aria-label="GrowthEko home"><img src="/og/growtheko-mark-gold-512.png" width="34" height="34" alt=""> <span>GrowthEko</span></a>
+
+  <!-- Step 1: Reason -->
+  <div class="step active" id="step1">
+    <div class="step-container">
+      <h1 class="step-title">What brings you here?</h1>
+      <p class="step-subtitle">Select the option that best describes you.</p>
+      <div class="check-list">
+        <div class="check-item" onclick="selectReason(this, 'client')"><div class="check-dot"></div>I want to become a client</div>
+        <div class="check-item" onclick="selectReason(this, 'investor')"><div class="check-dot"></div>Investment opportunity</div>
+        <div class="check-item" onclick="selectReason(this, 'collab')"><div class="check-dot"></div>Business collaboration</div>
+        <div class="check-item" onclick="selectReason(this, 'media')"><div class="check-dot"></div>Media or press inquiry</div>
+        <div class="check-item" onclick="selectReason(this, 'other')"><div class="check-dot"></div>Something else</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Name -->
+  <div class="step" id="step2">
+    <div class="step-container">
+      <h1 class="step-title">What's your name?</h1>
+      <p class="step-subtitle">So we know who we're speaking with.</p>
+      <input type="text" class="text-input" id="nameInput" placeholder="Your full name" oninput="validateStep()">
+    </div>
+  </div>
+
+  <!-- Step 3: Message -->
+  <div class="step" id="step3">
+    <div class="step-container">
+      <h1 class="step-title">Tell us more</h1>
+      <p class="step-subtitle">Share your vision, idea, or request. The more detail, the better we can help.</p>
+      <textarea class="textarea-input" id="messageInput" placeholder="What would you like to discuss?" oninput="validateStep()"></textarea>
+    </div>
+  </div>
+
+  <!-- Step 4: Urgency -->
+  <div class="step" id="step4">
+    <div class="step-container">
+      <h1 class="step-title">How soon do you need a response?</h1>
+      <p class="step-subtitle">This helps us prioritize your request.</p>
+      <div class="check-list">
+        <div class="check-item" onclick="selectUrgency(this, 'asap')"><div class="check-dot"></div>As soon as possible</div>
+        <div class="check-item" onclick="selectUrgency(this, 'week')"><div class="check-dot"></div>Within a week</div>
+        <div class="check-item" onclick="selectUrgency(this, 'noRush')"><div class="check-dot"></div>No rush</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5: Email -->
+  <div class="step" id="step5">
+    <div class="step-container">
+      <h1 class="step-title">Where can we reach you?</h1>
+      <p class="step-subtitle">Enter your best email. We'll never share it with anyone.</p>
+      <input type="email" class="text-input" id="emailInput" placeholder="your@email.com" oninput="validateStep()">
+    </div>
+  </div>
+
+  <!-- Thank You -->
+  <div class="step" id="stepThankYou">
+    <div class="thank-you-container">
+      <div class="checkmark">
+        <svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
+      </div>
+      <h1 class="step-title" style="margin-bottom: 16px;">You're on the list.</h1>
+      <p style="font-size: 17px; color: rgba(0,0,0,0.55); line-height: 1.7; margin-bottom: 8px;">
+        Your message just landed with Robin's team.<br>
+        Expect a personal reply soon.
+      </p>
+      <p style="font-size: 15px; color: rgba(0,0,0,0.35); margin-top: 16px;">
+        Redirecting in <span id="countdown">5</span>s...
+      </p>
+      <a href="/" class="countdown-btn" id="goHomeBtn">Go to Homepage</a>
+    </div>
+  </div>
+
+  <p id="formStatus" role="status" aria-live="polite" style="min-height:22px;margin:0 auto 12px;max-width:560px;color:#b42318;text-align:center;font-size:14px;"></p>
+  <div class="nav-buttons" id="navButtons">
+    <button class="btn-back" id="backBtn" onclick="prevStep()">Back</button>
+    <button class="btn-next" id="nextBtn" onclick="nextStep()" disabled>Next</button>
+  </div>
+
+  <script>
+    var totalSteps = 5;
+    var currentStep = 1;
+    var data = { reason: '', name: '', message: '', urgency: '', email: '' };
+
+    function updateProgress() {
+      var pct = (currentStep / totalSteps) * 100;
+      document.getElementById('progressBar').style.width = pct + '%';
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('active'); });
+      document.getElementById('step' + n).classList.add('active');
+      document.getElementById('backBtn').classList.toggle('visible', n > 1);
+      if (n <= totalSteps) {
+        document.getElementById('navButtons').style.display = 'flex';
+      }
+      updateProgress();
+      validateStep();
+    }
+
+    function selectReason(el, val) {
+      document.querySelectorAll('#step1 .check-item').forEach(function(c) { c.classList.remove('selected'); });
+      el.classList.add('selected');
+      data.reason = val;
+      validateStep();
+    }
+
+    function selectUrgency(el, val) {
+      document.querySelectorAll('#step4 .check-item').forEach(function(c) { c.classList.remove('selected'); });
+      el.classList.add('selected');
+      data.urgency = val;
+      validateStep();
+    }
+
+    function validateStep() {
+      var btn = document.getElementById('nextBtn');
+      var valid = false;
+      if (currentStep === 1) valid = data.reason !== '';
+      if (currentStep === 2) valid = document.getElementById('nameInput').value.trim().length > 0;
+      if (currentStep === 3) valid = document.getElementById('messageInput').value.trim().length > 0;
+      if (currentStep === 4) valid = data.urgency !== '';
+      if (currentStep === 5) {
+        var email = document.getElementById('emailInput').value.trim();
+        valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        btn.textContent = 'Submit';
+      } else {
+        btn.textContent = 'Next';
+      }
+      btn.disabled = !valid;
+    }
+
+    function nextStep() {
+      if (currentStep === 2) data.name = document.getElementById('nameInput').value.trim();
+      if (currentStep === 3) data.message = document.getElementById('messageInput').value.trim();
+      if (currentStep === 5) {
+        data.email = document.getElementById('emailInput').value.trim();
+        submitForm();
+        return;
+      }
+      currentStep++;
+      showStep(currentStep);
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    }
+
+    async function submitForm() {
+      data.email = document.getElementById('emailInput').value.trim();
+      var submitBtn = document.getElementById('nextBtn');
+      var status = document.getElementById('formStatus');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      status.textContent = '';
+      try {
+        var response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason: data.reason, name: data.name, message: data.message, urgency: data.urgency, email: data.email })
+        });
+        var payload = await response.json().catch(function() { return {}; });
+        if (!response.ok || payload.success !== true || !payload.id) {
+          throw new Error(payload.error || 'Your message could not be stored. Please try again.');
+        }
+      } catch (e) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit';
+        status.textContent = e.message || 'Your message could not be stored. Please try again.';
+        return;
+      }
+      document.getElementById('navButtons').style.display = 'none';
+      status.textContent = '';
+      document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('active'); });
+      document.getElementById('stepThankYou').classList.add('active');
+      document.getElementById('progressBar').style.width = '100%';
+
+      var seconds = 5;
+      var countdownEl = document.getElementById('countdown');
+      var interval = setInterval(function() {
+        seconds--;
+        countdownEl.textContent = seconds;
+        if (seconds <= 0) {
+          clearInterval(interval);
+          window.location.href = '/';
+        }
+      }, 1000);
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !document.getElementById('nextBtn').disabled && currentStep <= totalSteps) {
+        nextStep();
+      }
+    });
+
+    updateProgress();
+    validateStep();
+  </script>
+</body>
+</html>
