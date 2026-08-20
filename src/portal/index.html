@@ -275,36 +275,74 @@
       padding: 0 24px;
     }
     .portal-tabs-shell {
+      width: 100%;
+      min-height: 58px;
       display: grid;
-      grid-template-columns: 42px minmax(0, 1fr) 42px;
+      grid-template-columns: 48px minmax(0, 1fr) 48px;
       align-items: center;
-      gap: 10px;
-    }
-    .portal-tab-arrow {
-      width: 42px;
-      height: 42px;
-      border: 1px solid rgba(180,200,240,0.52);
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.78);
-      color: #111827;
-      font: 700 24px/1 -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      cursor: pointer;
-      box-shadow: 0 10px 28px rgba(20,32,56,0.07);
+      padding: 0;
+      border: 1px solid rgba(180,200,240,0.55);
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.64);
+      box-shadow: 0 18px 40px rgba(84,137,230,0.08);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+    .portal-tab-arrow {
+      width: 48px;
+      height: 58px;
+      border: 0;
+      border-radius: 0;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      color: #111827;
+      font: 400 31px/1 -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      cursor: pointer;
+      transition: background 160ms ease;
+    }
+    .portal-tab-arrow:first-child {
+      border-right: 1px solid rgba(17,24,39,0.1);
+    }
+    .portal-tab-arrow:last-child {
+      border-left: 1px solid rgba(17,24,39,0.1);
     }
     .portal-tab-arrow:hover,
     .portal-tab-arrow:focus-visible {
-      transform: translateY(-1px);
-      border-color: rgba(111,158,230,0.58);
-      background: rgba(255,255,255,0.96);
+      background: rgba(84,137,230,0.07);
       outline: none;
     }
+    .portal-tab-current {
+      min-width: 0;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      padding: 0 16px;
+      background: transparent;
+      color: #111827;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      font-weight: 740;
+      letter-spacing: -0.01em;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .portal-tab-current:focus-visible {
+      outline: 2px solid rgba(84,137,230,0.45);
+      outline-offset: -3px;
+    }
+    .portal-tab-current span {
+      display: block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .portal-tabs {
-      display: flex;
+      display: none;
       align-items: center;
       gap: 0;
       width: fit-content;
@@ -3285,23 +3323,12 @@
     @media (max-width: 768px) {
       .portal-tabs-section { margin-top: 24px; }
       .portal-tabs-shell {
-        grid-template-columns: 36px minmax(0, 1fr) 36px;
-        gap: 7px;
+        grid-template-columns: 48px minmax(0, 1fr) 48px;
       }
       .portal-tab-arrow {
-        width: 36px;
-        height: 36px;
-        border-radius: 12px;
-        font-size: 21px;
-      }
-      .portal-tabs {
-        display: flex;
-        width: 100%;
-      }
-      .portal-tab {
-        flex: 0 0 auto;
-        min-width: max-content;
-        padding: 0 22px;
+        width: 48px;
+        height: 58px;
+        font-size: 31px;
       }
       .embedded-page-panel { padding: 0 16px 56px; }
       .embedded-page-content { padding: 22px; }
@@ -3470,145 +3497,10 @@
     <div class="portal-tabs-section" aria-label="Portal sections">
       <div class="portal-tabs-shell">
         <button class="portal-tab-arrow" type="button" aria-label="Previous portal section" onclick="cyclePortalTab(-1)">&#8249;</button>
-        <div class="portal-tabs" role="tablist" aria-label="Portal tabs">
-          <button class="portal-tab active" type="button" role="tab" aria-selected="true" data-portal-tab="home" onclick="setPortalTab('home')">Tasks</button>
-          <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="calendar" onclick="setPortalTab('calendar')">Calendar</button>
-          <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="community" onclick="setPortalTab('community')">Community</button>
-          <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="chat" onclick="setPortalTab('chat')">Support</button>
-          <button class="portal-tab" type="button" role="tab" aria-selected="false" data-portal-tab="listings" onclick="setPortalTab('listings')">Listings</button>
-        </div>
+        <button class="portal-tab-current" id="portalTabCurrent" type="button" aria-live="polite" aria-label="Current portal section"><span id="portalTabCurrentTitle">Tasks</span></button>
         <button class="portal-tab-arrow" type="button" aria-label="Next portal section" onclick="cyclePortalTab(1)">&#8250;</button>
       </div>
     </div>
-
-    <section class="portal-panel embedded-page-panel" id="portalPanelCommunity" data-portal-panel="community" hidden>
-      <button class="portal-community-next-event" id="portalCommunityNextEvent" type="button" onclick="openPortalCommunityNextEvent()" aria-live="polite">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M3 10h18"></path></svg>
-        <span id="portalCommunityNextEventText">Loading next class...</span>
-      </button>
-      <div class="portal-community-tags" aria-label="Community categories">
-        <button class="portal-community-tag is-active" type="button">All</button>
-        <button class="portal-community-tag" type="button">📢 General Discussion</button>
-        <button class="portal-community-tag" type="button">🚨 News</button>
-        <button class="portal-community-tag" type="button">⛑️ Growth Support</button>
-        <button class="portal-community-tag" type="button">📈 Business</button>
-        <button class="portal-community-tag" type="button">🎥 Content</button>
-        <button class="portal-community-tag" type="button">🏆 Wins</button>
-        <button class="portal-community-tag" type="button">🏋️‍♂️ Challenges</button>
-        <button class="portal-community-tag" type="button">📞 Calls</button>
-        <button class="portal-community-tag" type="button">🤝 C4C</button>
-        <button class="portal-community-tag" type="button">🥂 S4S</button>
-      </div>
-      <div class="embedded-page-shell">
-        <div class="embedded-page-bar">
-          <span class="embedded-page-label">Community</span>
-        </div>
-        <div class="embedded-page-content">
-          <div class="portal-community-layout" aria-label="Community layout placeholder">
-            <div class="portal-community-left-card" aria-label="Community status">
-              <div class="community-sidebar-account">
-                <div class="community-sidebar-profile" aria-label="Robin Ekren profile">RE</div>
-                <div class="community-sidebar-controls" aria-label="Voice controls">
-                  <button class="community-sidebar-control is-muted" id="communitySidebarMute" type="button" aria-label="Unmute microphone" aria-pressed="true">
-                    <svg class="icon-mic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><path d="M12 18v3"></path><path d="M8 21h8"></path></svg>
-                    <svg class="icon-mic-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 1 3 3v4"></path><path d="M9 9v2a3 3 0 0 0 5.12 2.12"></path><path d="M19 10v1a7 7 0 0 1-1.2 3.92"></path><path d="M5 10v1a7 7 0 0 0 7 7"></path><path d="M12 18v3"></path><path d="M8 21h8"></path><path d="m3 3 18 18"></path></svg>
-                  </button>
-                  <button class="community-sidebar-chevron" id="communityAudioMenuButton" type="button" aria-label="Open microphone settings" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
-                  <button class="community-sidebar-control" id="communitySidebarHeadset" type="button" aria-label="Deafen" aria-pressed="false">
-                    <svg class="icon-headphones" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 14v-2a9 9 0 0 1 18 0v2"></path><path d="M21 14v3a2 2 0 0 1-2 2h-1"></path><path d="M3 14v3a2 2 0 0 0 2 2h1"></path></svg>
-                    <svg class="icon-headphones-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 1.28-4.35"></path><path d="M9 4.58A8 8 0 0 1 20 12v2"></path><path d="M20 14v3a2 2 0 0 1-2 2h-1"></path><path d="M4 14v3a2 2 0 0 0 2 2h1"></path><path d="m3 3 18 18"></path></svg>
-                  </button>
-                  <button class="community-sidebar-chevron" id="communityOutputMenuButton" type="button" aria-label="Open output settings" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
-                  <button class="community-sidebar-control" type="button" aria-label="Voice settings">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"></path><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 .6 1.65 1.65 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 8.6 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.6-1 1.65 1.65 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 3.9l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-.6 1.65 1.65 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15.4 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.25.38.38.82.4 1.27H20a2 2 0 1 1 0 4h-.09A1.65 1.65 0 0 0 19.4 15Z"></path></svg>
-                  </button>
-                  <div class="community-audio-popover" id="communityAudioPopover" hidden>
-                    <div class="community-audio-section">
-                      <div class="community-audio-label">Input Device</div>
-                      <div class="community-audio-device-list" id="communityAudioDeviceList">
-                        <button class="community-audio-device is-active" type="button"><span>Loading devices...</span><span class="community-audio-radio"></span></button>
-                      </div>
-                    </div>
-                    <div class="community-audio-volume">
-                      <div class="community-audio-label">Input Volume</div>
-                      <input id="communityInputVolume" type="range" min="0" max="100" value="92" aria-label="Input volume">
-                    </div>
-                    <button class="community-audio-settings" id="communityVoiceSettingsOpen" type="button">
-                      <span>Voice Settings</span>
-                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"></path><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 .6 1.65 1.65 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 8.6 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.6-1 1.65 1.65 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 3.9l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-.6 1.65 1.65 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15.4 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.25.38.38.82.4 1.27H20a2 2 0 1 1 0 4h-.09A1.65 1.65 0 0 0 19.4 15Z"></path></svg>
-                    </button>
-                  </div>
-                  <div class="community-audio-popover" id="communityOutputPopover" hidden>
-                    <div class="community-audio-section">
-                      <div class="community-audio-label">Output Device</div>
-                      <div class="community-audio-device-list" id="communityOutputDeviceList">
-                        <button class="community-audio-device is-active" type="button"><span>Loading devices...</span><span class="community-audio-radio"></span></button>
-                      </div>
-                    </div>
-                    <div class="community-audio-volume">
-                      <div class="community-audio-label">Output Volume</div>
-                      <input id="communityOutputVolume" type="range" min="0" max="100" value="50" aria-label="Output volume">
-                    </div>
-                    <button class="community-audio-settings" id="communityOutputVoiceSettingsOpen" type="button">
-                      <span>Voice Settings</span>
-                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Z"></path><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4a1.65 1.65 0 0 0-1 .6 1.65 1.65 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 8.6 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.6-1 1.65 1.65 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 8.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 3.9l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-.6 1.65 1.65 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15.4 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.25.38.38.82.4 1.27H20a2 2 0 1 1 0 4h-.09A1.65 1.65 0 0 0 19.4 15Z"></path></svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="community-status-list">
-                <div class="community-status-item community-status-presence" aria-label="Active now">
-                  <span class="community-status-icon">🗣️</span><span>Active Now</span>
-                </div>
-                <button class="community-status-item" type="button" data-voice-room="Dev Chat Live!" data-voice-subtitle="Community try to fix 😎 🌅">
-                  <span class="community-status-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 5.5a9 9 0 0 1 0 13"></path></svg>
-                  </span>
-                  <span>AI Dev Chat</span>
-                </button>
-                <button class="community-status-item" type="button" data-voice-room="Marketing Chat" data-voice-subtitle="Campaigns, hooks and offers">
-                  <span class="community-status-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 5.5a9 9 0 0 1 0 13"></path></svg>
-                  </span>
-                  <span>Marketing Chat</span>
-                </button>
-                <button class="community-status-item" type="button" data-voice-room="AFK" data-voice-subtitle="Muted focus mode">
-                  <span class="community-status-icon">🔕</span><span>AFK</span>
-                </button>
-              </div>
-              <div class="community-voice-room-shell" id="communityVoiceRoomShell" aria-live="polite"></div>
-            </div>
-            <div class="portal-community-main">
-              <div class="portal-community-top-card" aria-label="Emergency read card">
-                <div class="community-emergency-read">
-                  <div class="community-emergency-icon" aria-hidden="true">🚨</div>
-                  <div class="community-emergency-copy">
-                    <div class="community-emergency-kicker">READ</div>
-                    <div class="community-emergency-text">Whenever you feel lost, click to this pinned message to win back clarity</div>
-                  </div>
-                </div>
-              </div>
-              <div class="portal-community-body-space">
-                <div class="community-chat-feed" id="communityChatFeed" aria-label="Community chat messages"></div>
-                <div class="community-composer" aria-label="Community message composer">
-                  <button class="community-media-button" id="communityMediaButton" type="button" aria-label="Add media" aria-expanded="false">+</button>
-                  <input class="community-input" id="communityMessageInput" type="text" placeholder="Write a message..." autocomplete="off">
-                  <button class="community-send-button" id="communitySendButton" type="button" aria-label="Send message" disabled>➤</button>
-                  <div class="community-media-menu" id="communityMediaMenu" hidden>
-                    <button type="button" data-community-upload="photo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"></path></svg>Photo Or Video</button>
-                    <button type="button" data-community-upload="file"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path></svg>File</button>
-                    <button type="button" data-community-upload="camera"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z"></path><circle cx="12" cy="13" r="3"></circle></svg>Camera</button>
-                  </div>
-                  <input id="communityPhotoInput" type="file" accept="image/*,video/*" hidden>
-                  <input id="communityFileInput" type="file" hidden>
-                  <input id="communityCameraInput" type="file" accept="image/*,video/*" capture="environment" hidden>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <section class="portal-panel" id="portalPanelHome" data-portal-panel="home">
       <div class="welcome-title" id="welcomeTitle">Welcome, Marcus.</div>
@@ -4815,7 +4707,14 @@
     }
 
     // ===== PORTAL TABS =====
-    const PORTAL_TABS = new Set(['home', 'calendar', 'community', 'chat', 'listings']);
+    const PORTAL_TAB_ORDER = ['home', 'calendar', 'chat', 'listings'];
+    const PORTAL_TABS = new Set(PORTAL_TAB_ORDER);
+    const PORTAL_TAB_LABELS = {
+      home: 'Tasks',
+      calendar: 'Calendar',
+      chat: 'Support',
+      listings: 'Listings'
+    };
     const PORTAL_CALENDAR_EVENT_RULES = [
       {
         id: 'accountability-group',
@@ -5788,12 +5687,10 @@
 
     function setPortalTab(tab, updateUrl = true) {
       const nextTab = PORTAL_TABS.has(tab) ? tab : 'home';
-
-      document.querySelectorAll('[data-portal-tab]').forEach(button => {
-        const isActive = button.dataset.portalTab === nextTab;
-        button.classList.toggle('active', isActive);
-        button.setAttribute('aria-selected', String(isActive));
-      });
+      const currentTitle = document.getElementById('portalTabCurrentTitle');
+      const currentControl = document.getElementById('portalTabCurrent');
+      if (currentTitle) currentTitle.textContent = PORTAL_TAB_LABELS[nextTab];
+      if (currentControl) currentControl.setAttribute('aria-label', `${PORTAL_TAB_LABELS[nextTab]} section`);
 
       document.querySelectorAll('[data-portal-panel]').forEach(panel => {
         panel.hidden = panel.dataset.portalPanel !== nextTab;
@@ -5811,10 +5708,6 @@
         window.history.replaceState({}, '', url.toString());
       }
 
-      if (nextTab === 'community') {
-        renderPortalCommunityNextEvent();
-      }
-
       if (nextTab === 'chat') {
         loadPortalChatMessages();
       }
@@ -5823,19 +5716,13 @@
         renderPortalCalendar();
       }
 
-      document.querySelector(`[data-portal-tab="${nextTab}"]`)?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center'
-      });
     }
 
     function cyclePortalTab(direction) {
-      const tabs = [...document.querySelectorAll('[data-portal-tab]')];
-      if (!tabs.length) return;
-      const activeIndex = Math.max(0, tabs.findIndex((tab) => tab.classList.contains('active')));
-      const nextIndex = (activeIndex + direction + tabs.length) % tabs.length;
-      setPortalTab(tabs[nextIndex].dataset.portalTab);
+      const currentTab = getPortalTabFromURL();
+      const activeIndex = Math.max(0, PORTAL_TAB_ORDER.indexOf(currentTab));
+      const nextIndex = (activeIndex + direction + PORTAL_TAB_ORDER.length) % PORTAL_TAB_ORDER.length;
+      setPortalTab(PORTAL_TAB_ORDER[nextIndex]);
     }
 
     document.addEventListener('click', (event) => {
@@ -5953,7 +5840,6 @@
       updateProgress();
       renderPortalCalendar();
       startPortalCalendarClock();
-      startPortalCommunityNextEventClock();
       setPortalTab(getPortalTabFromURL(), false);
     }
 
@@ -6939,10 +6825,7 @@
 
     // ===== GO =====
     init();
-    initCommunityComposer();
     initListingAnalyticsPreview();
-    initCommunityVoiceRooms();
-    initCommunitySidebarControls();
     initVoiceSettingsModal();
     initProfileMenu();
   </script>
