@@ -2920,30 +2920,25 @@
       margin-bottom: 20px;
     }
     .phases-scroll {
-      display: flex;
-      gap: 20px;
-      overflow-x: auto;
-      overflow-y: visible;
-      scroll-behavior: smooth;
-      padding: 8px 4px 12px;
-      margin: -8px -4px 0;
-      scroll-snap-type: x mandatory;
+      display: grid;
+      gap: 10px;
+      overflow: visible;
+      padding: 0;
+      margin: 0;
     }
-    .phases-scroll::-webkit-scrollbar { height: 4px; }
-    .phases-scroll::-webkit-scrollbar-track { background: transparent; }
-    .phases-scroll::-webkit-scrollbar-thumb { background: rgba(180,200,240,0.4); border-radius: 2px; }
 
     .phase-card {
-      flex: 0 0 260px;
-      scroll-snap-align: start;
-      padding: 28px 24px;
+      width: 100%;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr) 38px;
+      align-items: center;
+      padding: 0;
       background: linear-gradient(135deg, rgba(210,225,250,0.55) 0%, rgba(200,218,248,0.45) 40%, rgba(195,215,245,0.4) 100%);
       border: 1px solid rgba(180,200,240,0.5);
-      border-radius: 20px;
+      border-radius: 16px;
       cursor: pointer;
       transition: all 0.25s ease;
-      display: flex;
-      flex-direction: column;
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(12px);
@@ -2958,25 +2953,65 @@
     .phase-card > * { position: relative; z-index: 1; }
     .phase-card:hover:not(.locked) {
       border-color: rgba(100,150,230,0.6);
-      transform: translateY(-4px);
+      transform: translateY(-1px);
     }
-    .phase-card.active { border-color: rgba(100,150,230,0.7); }
+    .phase-card.active {
+      border-color: rgba(100,150,230,0.7);
+      box-shadow: 0 16px 38px rgba(84,137,230,0.11);
+    }
     .phase-card.locked { opacity: 0.45; cursor: not-allowed; }
     .phase-card.complete { opacity: 0.7; }
+    .phase-block-index {
+      align-self: stretch;
+      display: grid;
+      place-items: center;
+      border-right: 1px solid rgba(17,24,39,0.08);
+      color: rgba(0,0,0,0.38);
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .phase-block-main {
+      min-width: 0;
+      display: grid;
+      gap: 5px;
+      padding: 18px 20px;
+    }
+    .phase-block-state {
+      align-self: stretch;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 4px;
+      border-left: 1px solid rgba(17,24,39,0.08);
+    }
+    .phase-block-chevron {
+      width: 10px;
+      height: 10px;
+      border-right: 1.5px solid #6F9EE6;
+      border-bottom: 1.5px solid #6F9EE6;
+      transform: rotate(45deg) translate(-2px, -2px);
+      transition: transform 180ms ease;
+    }
+    .phase-card.active .phase-block-chevron {
+      transform: rotate(225deg) translate(-2px, -2px);
+    }
     .phase-number {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-      color: rgba(0,0,0,0.35); font-weight: 600; margin-bottom: 12px;
+      color: rgba(0,0,0,0.35); font-weight: 600; margin: 0;
     }
     .phase-title {
       font-family: 'Times New Roman', Times, serif;
-      font-size: 20px; font-weight: 700; color: #111; margin-bottom: 10px;
+      font-size: 20px; font-weight: 700; color: #111; margin: 0;
     }
     .phase-desc {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      font-size: 13px; line-height: 1.6; color: rgba(0,0,0,0.5); margin-bottom: 16px; flex: 1;
+      font-size: 13px; line-height: 1.5; color: rgba(0,0,0,0.5); margin: 0;
     }
-    .phase-progress { display: flex; align-items: center; gap: 10px; }
+    .phase-progress { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
     .phase-progress-bar { flex: 1; height: 4px; background: rgba(180,200,240,0.3); border-radius: 2px; overflow: hidden; }
     .phase-progress-fill { height: 100%; background: linear-gradient(90deg, #8AB4F3, #6F9EE6); border-radius: 2px; transition: width 0.6s ease; }
     .phase-progress-text {
@@ -2984,7 +3019,7 @@
       font-size: 11px; color: rgba(0,0,0,0.4); font-weight: 600; white-space: nowrap;
     }
     .phase-status-icon {
-      position: absolute; top: 16px; right: 16px; width: 28px; height: 28px;
+      width: 28px; height: 28px;
       border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;
     }
     .phase-status-icon.done { background: rgba(16,185,129,0.15); color: #10b981; }
@@ -2993,16 +3028,22 @@
 
     /* ===== PHASE DETAIL ===== */
     .phase-detail {
-      max-width: 1100px; margin: 40px auto 0; padding: 0 24px 80px;
+      grid-column: 1 / -1;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid rgba(17,24,39,0.08);
       display: none; animation: detailFadeIn 0.4s ease;
     }
     .phase-detail.open { display: block; }
     @keyframes detailFadeIn { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
 
     .detail-card {
-      padding: 48px;
-      background: linear-gradient(135deg, rgba(210,225,250,0.55) 0%, rgba(200,218,248,0.45) 40%, rgba(195,215,245,0.4) 100%);
-      border: 1px solid rgba(180,200,240,0.5); border-radius: 24px;
+      padding: 22px 20px 24px;
+      background: rgba(255,255,255,0.34);
+      border: 0;
+      border-radius: 0 0 16px 16px;
       position: relative; overflow: hidden; backdrop-filter: blur(12px);
     }
     .detail-card::before {
@@ -3013,6 +3054,7 @@
     }
     .detail-card > * { position: relative; z-index: 1; }
     .detail-header { margin-bottom: 36px; }
+    .phase-card .detail-header { display: none; }
     .detail-phase-label {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
@@ -3440,7 +3482,11 @@
       .task-detail-card { padding: 32px 24px; }
       .task-item { padding: 20px; flex-direction: column; align-items: flex-start; }
       .task-action { align-self: flex-start; }
-      .phase-card { flex: 0 0 220px; padding: 24px 20px; }
+      .phase-card { grid-template-columns: 58px minmax(0, 1fr) 34px; }
+      .phase-block-main { padding: 16px 14px; }
+      .phase-block-index { font-size: 10px; }
+      .phase-title { font-size: 18px; }
+      .phase-desc { font-size: 12px; }
       .task-detail-actions { flex-direction: column; }
       .btn { width: 100%; }
     }
@@ -3517,16 +3563,17 @@
       <div class="phases-section">
         <div class="section-label">Your Phases</div>
         <div class="phases-scroll" id="phasesScroll"></div>
-      </div>
-
-      <div class="phase-detail" id="phaseDetail">
-        <div class="detail-card">
-          <div class="detail-header">
-            <div class="detail-phase-label" id="detailPhaseLabel">Phase 1</div>
-            <div class="detail-title" id="detailTitle">Foundation</div>
-            <div class="detail-desc" id="detailDesc">Build the core elements of your digital business infrastructure.</div>
+        <div id="phaseDetailDock" hidden>
+          <div class="phase-detail" id="phaseDetail" onclick="event.stopPropagation()">
+            <div class="detail-card">
+              <div class="detail-header">
+                <div class="detail-phase-label" id="detailPhaseLabel">Phase 1</div>
+                <div class="detail-title" id="detailTitle">Foundation</div>
+                <div class="detail-desc" id="detailDesc">Build the core elements of your digital business infrastructure.</div>
+              </div>
+              <div class="tasks-list" id="tasksList"></div>
+            </div>
           </div>
-          <div class="tasks-list" id="tasksList"></div>
         </div>
       </div>
     </section>
@@ -5846,6 +5893,9 @@
     // ===== RENDER PHASES =====
     function renderPhases() {
       const scroll = document.getElementById('phasesScroll');
+      const detail = document.getElementById('phaseDetail');
+      const detailDock = document.getElementById('phaseDetailDock');
+      if (detail && detailDock && !detailDock.contains(detail)) detailDock.appendChild(detail);
       scroll.innerHTML = '';
       const visible = getVisiblePhases();
       visible.forEach((phase, vi) => {
@@ -5860,18 +5910,48 @@
         const card = document.createElement('div');
         card.className = `phase-card${isComplete ? ' complete' : ''}${isLocked ? ' locked' : ''}${isCurrent ? ' active' : ''}`;
         card.dataset.origIndex = origIdx;
-        card.onclick = () => { if (!isLocked) selectPhase(origIdx); };
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', isLocked ? '-1' : '0');
+        card.setAttribute('aria-expanded', 'false');
+        card.setAttribute('aria-disabled', String(isLocked));
+        card.onclick = () => { if (!isLocked) togglePhaseBlock(origIdx); };
+        card.onkeydown = (event) => {
+          if (!isLocked && (event.key === 'Enter' || event.key === ' ')) {
+            event.preventDefault();
+            togglePhaseBlock(origIdx);
+          }
+        };
         card.innerHTML = `
-          <span class="phase-status-icon ${isComplete ? 'done' : isLocked ? 'lock' : 'current'}">${isComplete ? '\u2713' : isLocked ? '\uD83D\uDD12' : '\u2192'}</span>
-          <span class="phase-number">${phase.number}</span>
-          <span class="phase-title">${phase.title}</span>
-          <span class="phase-desc">${phase.description}</span>
-          <div class="phase-progress">
-            <div class="phase-progress-bar"><div class="phase-progress-fill" style="width:${total>0?(done/total)*100:0}%"></div></div>
-            <span class="phase-progress-text">${done}/${total}</span>
+          <div class="phase-block-index">${phase.number}</div>
+          <div class="phase-block-main">
+            <span class="phase-number">${phase.number}</span>
+            <span class="phase-title">${phase.title}</span>
+            <span class="phase-desc">${phase.description}</span>
+            <div class="phase-progress">
+              <div class="phase-progress-bar"><div class="phase-progress-fill" style="width:${total>0?(done/total)*100:0}%"></div></div>
+              <span class="phase-progress-text">${done}/${total}</span>
+            </div>
+          </div>
+          <div class="phase-block-state">
+            <span class="phase-status-icon ${isComplete ? 'done' : isLocked ? 'lock' : 'current'}">${isComplete ? '\u2713' : isLocked ? '\uD83D\uDD12' : '\u2192'}</span>
+            <span class="phase-block-chevron" aria-hidden="true"></span>
           </div>`;
         scroll.appendChild(card);
       });
+    }
+
+    function togglePhaseBlock(index) {
+      const detail = document.getElementById('phaseDetail');
+      const card = document.querySelector(`.phase-card[data-orig-index="${index}"]`);
+      const isOpen = card?.classList.contains('active') && detail?.parentElement === card && detail.classList.contains('open');
+      if (isOpen) {
+        detail.classList.remove('open');
+        card.classList.remove('active');
+        card.setAttribute('aria-expanded', 'false');
+        document.getElementById('phaseDetailDock')?.appendChild(detail);
+        return;
+      }
+      selectPhase(index);
     }
 
     function selectPhase(index) {
@@ -5880,9 +5960,16 @@
       document.getElementById('detailPhaseLabel').textContent = phase.number;
       document.getElementById('detailTitle').textContent = phase.title;
       document.getElementById('detailDesc').textContent = phase.description;
-      document.getElementById('phaseDetail').classList.add('open');
+      const detail = document.getElementById('phaseDetail');
+      const card = document.querySelector(`.phase-card[data-orig-index="${index}"]`);
+      if (card && detail) card.appendChild(detail);
+      detail?.classList.add('open');
       renderTasks(phase);
-      document.querySelectorAll('.phase-card').forEach(c => c.classList.toggle('active', parseInt(c.dataset.origIndex) === index));
+      document.querySelectorAll('.phase-card').forEach(c => {
+        const isActive = parseInt(c.dataset.origIndex) === index;
+        c.classList.toggle('active', isActive);
+        c.setAttribute('aria-expanded', String(isActive));
+      });
     }
 
     // ===== RENDER TASKS =====
