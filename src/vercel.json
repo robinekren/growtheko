@@ -28,11 +28,14 @@
     { "source": "/", "destination": "/ai-growth-training", "permanent": false },
     { "source": "/routine", "destination": "https://www.robinekren.com/routine", "permanent": false },
     { "source": "/routine/:path*", "destination": "https://www.robinekren.com/routine", "permanent": false },
-    { "source": "/connect", "destination": "/contact", "permanent": false }
+    { "source": "/connect", "destination": "/contact", "permanent": false },
+    { "source": "/ops", "destination": "/crm", "permanent": true },
+    { "source": "/ops/:path*", "destination": "/crm", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/ops", "destination": "/api/ops-page" },
-    { "source": "/ops/:path*", "destination": "/api/ops-page" },
+    { "source": "/offers/:slug", "destination": "/offer" },
+    { "source": "/crm", "destination": "/api/ops-page" },
+    { "source": "/crm/:path*", "destination": "/api/ops-page" },
     { "source": "/onboarding", "destination": "/onboard" },
     { "source": "/onboarding/:path*", "destination": "/onboard/:path*" },
     { "source": "/onboard/:path*", "destination": "/onboard" }

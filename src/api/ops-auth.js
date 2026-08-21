@@ -1,7 +1,5 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
-
-const PASSWORD_HASH = '568418731c294058ab7a5384d32d9616731215a451ea5161809b0f4e577d31d8';
-const SESSION_VALUE = 'ops_568418731c294058ab7a5384d32d9616731215a451ea5161809b0f4e577d31d8';
+import { createOpsCookie, isSameOrigin } from './lib/ops-session.js';
 
 function hash(value) {
   return createHash('sha256').update(String(value || '')).digest('hex');
@@ -30,22 +28,19 @@ export default function handler(req, res) {
     return res.status(405).json({ ok: false, error: 'Method not allowed' });
   }
 
+  if (!isSameOrigin(req)) return res.status(403).json({ ok: false, error: 'Request unavailable' });
+
+  const expectedHash = String(process.env.GROWTHEKO_OPS_PASSWORD_HASH || '');
+  if (!/^[a-f0-9]{64}$/i.test(expectedHash)) {
+    return res.status(503).json({ ok: false, error: 'Ops access is not configured' });
+  }
+
   const body = parseBody(req.body);
   const passwordHash = hash(body.password);
-  if (!safeEqual(passwordHash, PASSWORD_HASH)) {
+  if (!safeEqual(passwordHash, expectedHash)) {
     return res.status(401).json({ ok: false, error: 'Invalid password' });
   }
 
-  res.setHeader(
-    'Set-Cookie',
-    [
-      `growtheko_ops_session=${SESSION_VALUE}`,
-      'Path=/',
-      'HttpOnly',
-      'Secure',
-      'SameSite=Strict',
-      'Max-Age=86400'
-    ].join('; ')
-  );
-  return res.status(200).json({ ok: true, redirect: '/ops' });
+  res.setHeader('Set-Cookie', createOpsCookie());
+  return res.status(200).json({ ok: true, redirect: '/crm' });
 }

@@ -4508,6 +4508,7 @@
       .task-detail-actions { flex-direction: column; }
       .btn { width: 100%; }
     }
+    .prompt-library{width:min(900px,100%);margin:0 auto;padding:28px 0 60px}.prompt-library h1{margin:0 0 8px;font:700 clamp(34px,6vw,58px)/1 Georgia,serif;letter-spacing:-.04em}.prompt-library>p{margin:0 0 26px;color:#6b7280}.prompt-card{border:1px solid rgba(15,23,42,.09);border-radius:22px;background:rgba(255,255,255,.82);overflow:hidden;box-shadow:0 18px 55px rgba(35,61,105,.08)}.prompt-card+ .prompt-card{margin-top:12px}.prompt-summary{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:20px;border:0;background:transparent;text-align:left;cursor:pointer}.prompt-summary strong{display:block;font-size:16px}.prompt-summary small{display:block;margin-top:4px;color:#6b7280}.prompt-body{display:none;padding:0 20px 20px}.prompt-card.open .prompt-body{display:block}.prompt-text{margin:0;padding:18px;border-radius:16px;background:#f4f7fd;color:#182136;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;font:500 13px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}.prompt-copy{width:100%;margin-top:12px;padding:13px;border:0;border-radius:13px;background:#1769e8;color:#fff;font-weight:800;cursor:pointer}
   </style>
 </head>
 <body>
@@ -4607,6 +4608,58 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="portal-panel embedded-page-panel" id="portalPanelPrompts" data-portal-panel="prompts" hidden>
+      <div class="prompt-library">
+        <h1>Prompts</h1>
+        <p>One project. One working chat. Use the prompt that matches the work in front of you.</p>
+        <article class="prompt-card open">
+          <button class="prompt-summary" type="button" aria-expanded="true"><span><strong>Operator Setup</strong><small>Use once when starting your GrowthEko project.</small></span><span>⌄</span></button>
+          <div class="prompt-body"><pre class="prompt-text">You are my GrowthEko Operator Copilot. Work only from the facts I give you and the material in this project. Help me execute the current GrowthEko Portal task in order.
+
+For every task:
+1. Restate the objective in one sentence.
+2. Ask only for missing information that blocks execution.
+3. Produce the requested deliverable in a copy-ready format.
+4. Separate verified facts from assumptions.
+5. Never invent proof, customer results, numbers, credentials, scarcity, guarantees, or legal claims.
+6. Keep one primary objective and one next action.
+7. When finished, give me a short quality check and tell me exactly what to submit in the Portal.
+
+Do not expose hidden reasoning. Do not create extra systems unless the current task requires them. If the task affects payments, contracts, accounts, security, publishing, or customer data, stop before the external action and ask for explicit approval.
+
+Start by asking me to paste the current Portal task and any source material.</pre><button class="prompt-copy" type="button">Copy prompt</button></div>
+        </article>
+        <article class="prompt-card">
+          <button class="prompt-summary" type="button" aria-expanded="false"><span><strong>Execute Current Task</strong><small>Use for the task currently open in your Portal.</small></span><span>⌄</span></button>
+          <div class="prompt-body"><pre class="prompt-text">Using the GrowthEko Operator rules already established in this project, execute the task below. Keep the output practical, specific, and ready to submit. Do not add unsupported claims.
+
+CURRENT TASK:
+[PASTE TASK]
+
+SOURCE MATERIAL:
+[PASTE FACTS, LINKS, NOTES, OR DATA]
+
+Return:
+- Completed deliverable
+- Assumptions or missing evidence
+- One recommended next action</pre><button class="prompt-copy" type="button">Copy prompt</button></div>
+        </article>
+        <article class="prompt-card">
+          <button class="prompt-summary" type="button" aria-expanded="false"><span><strong>Weekly Review</strong><small>Find the bottleneck and choose one move.</small></span><span>⌄</span></button>
+          <div class="prompt-body"><pre class="prompt-text">Act as my GrowthEko operating analyst. Review the weekly data below against my objective and primary metric. Do not invent missing information. Separate facts from hypotheses, identify the biggest measurable bottleneck, and recommend ONE action for the next 7 days. Classify it as DOUBLE DOWN, FIX, SWITCH, or STOP. Explain why in no more than five sentences.
+
+OBJECTIVE:
+[PASTE]
+
+PRIMARY METRIC:
+[PASTE]
+
+WEEKLY DATA:
+[PASTE]</pre><button class="prompt-copy" type="button">Copy prompt</button></div>
+        </article>
       </div>
     </section>
 
@@ -6291,15 +6344,19 @@
       'onetime_1997': [0, 1],
       'GrowthEko Operator Membership': [0, 1, 2, 3, 4],
       'monthly_97': [0, 1, 2, 3, 4],
+      'AI System Sprint': [0, 1, 2, 3],
+      'done_with_you_4997': [0, 1, 2, 3],
+      'AI Empire Architect': [0, 1, 2, 3, 4],
+      'done_for_you_14997': [0, 1, 2, 3, 4],
     };
 
     function getVisiblePhases() {
-      const allowed = TIER_PHASE_MAP[CUSTOMER.tier] || [0, 1, 2, 3, 4];
+      const allowed = TIER_PHASE_MAP[CUSTOMER.tier] || [];
       return PHASES.filter((_, i) => allowed.includes(i));
     }
 
     function getVisiblePhaseIndex(originalIndex) {
-      const allowed = TIER_PHASE_MAP[CUSTOMER.tier] || [0, 1, 2, 3, 4];
+      const allowed = TIER_PHASE_MAP[CUSTOMER.tier] || [];
       return allowed.indexOf(originalIndex);
     }
 
@@ -6319,58 +6376,59 @@
     }
 
     // ===== PORTAL TABS =====
-    const PORTAL_TAB_ORDER = ['home', 'calendar', 'chat', 'listings'];
+    const PORTAL_TAB_ORDER = ['home', 'prompts', 'calendar', 'chat', 'listings'];
     const PORTAL_TABS = new Set(PORTAL_TAB_ORDER);
     const PORTAL_TAB_LABELS = {
       home: 'Tasks',
+      prompts: 'Prompts',
       calendar: 'Calendar',
       chat: 'Support',
       listings: 'Listings'
     };
+
+    function initPortalPrompts() {
+      document.querySelectorAll('.prompt-summary').forEach(button => {
+        button.addEventListener('click', () => {
+          const card = button.closest('.prompt-card');
+          const open = !card.classList.contains('open');
+          document.querySelectorAll('.prompt-card').forEach(item => {
+            item.classList.remove('open');
+            item.querySelector('.prompt-summary')?.setAttribute('aria-expanded', 'false');
+          });
+          if (open) {
+            card.classList.add('open');
+            button.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+      document.querySelectorAll('.prompt-copy').forEach(button => {
+        button.addEventListener('click', async () => {
+          const text = button.previousElementSibling?.textContent || '';
+          await navigator.clipboard.writeText(text);
+          const original = button.textContent;
+          button.textContent = 'Copied';
+          setTimeout(() => { button.textContent = original; }, 1400);
+          if (!isLocalPortalPreview()) {
+            fetch('/api/portal-support', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ action: 'event', session_token: getToken(), event_name: 'prompt_copied', event_label: button.closest('.prompt-card')?.querySelector('strong')?.textContent || 'Prompt' })
+            }).catch(() => {});
+          }
+        });
+      });
+    }
     const PORTAL_CALENDAR_TIME_ZONE = 'Europe/Vienna';
     const PORTAL_CALENDAR_EVENT_RULES = [
       {
-        id: 'growth-secret',
-        weekday: 1,
-        order: 1,
-        timeMinutes: 12 * 60,
-        durationMinutes: 60,
-        title: 'Growth Secret',
-        image: '/portal/assets/live-covers/growth-secret-live.jpg',
-        liveUrl: 'https://www.skool.com/live/cGfV23MQxgF',
-        description: 'Weekly live breakdown of AI + Digital Estate: attention, hooks, content, paid exposure, digital asset systems, and monetization. Bring your bottleneck. Leave with one clear move for the next 7 days.'
-      },
-      {
-        id: 'accountability-system',
-        weekday: 1,
-        order: 2,
-        timeMinutes: 13 * 60,
-        durationMinutes: 60,
-        title: 'Accountability System',
-        image: '/portal/assets/live-covers/accountability-live.jpg',
-        liveUrl: 'https://www.skool.com/live/Gh4MVHhjwWr',
-        description: 'Set the week\'s most important goal, define what winning looks like, and leave with one clear commitment for the next 7 days.'
-      },
-      {
-        id: 'business-clarity',
-        weekday: 4,
-        order: 1,
-        timeMinutes: 12 * 60,
-        durationMinutes: 60,
-        title: 'Business Clarity',
-        image: '/portal/assets/live-covers/business-clarity-live.jpg',
-        liveUrl: 'https://www.skool.com/live/YxXfJJjf7PM',
-        description: 'Live clarity session for your offer, niche, funnel, pricing, CTA, and monetization path. Before building more attention, we define what should actually be sold.'
-      },
-      {
-        id: 'weekly-awards',
+        id: 'growth-support',
         weekday: 5,
         order: 1,
-        timeMinutes: 19 * 60,
-        durationMinutes: 30,
-        title: 'Weekly Awards',
-        image: '/portal/assets/live-covers/weekly-awards-live.jpg',
-        description: 'Each week we review the 7 day leaderboard and dish out cash prizes to the top 3 members. Plus additional cash to the weekly challenge winner!'
+        timeMinutes: 20 * 60,
+        durationMinutes: 60,
+        title: 'Growth Support',
+        image: '/portal/assets/live-covers/growth-secret-live.jpg',
+        liveUrl: 'https://www.skool.com/live/cGfV23MQxgF',
+        description: 'Bring your current objective, numbers, and biggest bottleneck. Leave with one clear move for the next 7 days.'
       }
     ];
     let portalCalendarInstances = new Map();
@@ -8896,6 +8954,7 @@
     // ===== GO =====
     init();
     initPortalListings();
+    initPortalPrompts();
     initListingAnalyticsPreview();
     initVoiceSettingsModal();
     initProfileMenu();

@@ -18,7 +18,7 @@ const ALLOWED_ORIGINS = [
 
 const ALLOWED_OFFER_KEYS = new Set([
   'roadmap_1997',
-  'done_with_you_5000',
+  'done_with_you_4997',
   'done_for_you_14997',
   'recommendation',
   'monthly_97',

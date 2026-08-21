@@ -3,6 +3,7 @@ const MAX_MESSAGE_LENGTH = 30000;
 const MAX_NAME_LENGTH = 160;
 const MAX_NOTIFICATION_IDS = 50;
 const MAX_LISTING_BUDGET = 100000000;
+const PORTAL_EVENT_NAMES = new Set(['prompt_copied', 'task_opened', 'task_completed', 'support_started']);
 const PORTAL_LISTINGS = {
   investinglab: {
     username: '@theinvestinglab',
@@ -157,7 +158,7 @@ export default async function handler(req, res) {
 
   const action = String(req.body?.action || '');
   const sessionToken = String(req.body?.session_token || '');
-  if (!['load', 'send', 'notifications', 'mark-read', 'listing-requests', 'listing-request', 'listing-undo'].includes(action) || !sessionToken || sessionToken.length > MAX_TOKEN_LENGTH) {
+  if (!['load', 'send', 'event', 'notifications', 'mark-read', 'listing-requests', 'listing-request', 'listing-undo'].includes(action) || !sessionToken || sessionToken.length > MAX_TOKEN_LENGTH) {
     return res.status(400).json({ error: 'Request unavailable.' });
   }
 
@@ -172,7 +173,7 @@ export default async function handler(req, res) {
 
   if (action === 'load') {
     const messagesResponse = await fetch(
-      `${supabaseUrl}/rest/v1/messages?${messageFilter}&select=id,sender_type,sender_name,content,message_type,metadata,read_at,created_at&order=created_at.asc&limit=100`,
+      `${supabaseUrl}/rest/v1/messages?${messageFilter}&message_type=eq.text&select=id,sender_type,sender_name,content,message_type,metadata,read_at,created_at&order=created_at.asc&limit=100`,
       { headers: serviceHeaders(serviceKey) }
     );
     if (!messagesResponse.ok) return res.status(503).json({ error: 'Support unavailable.' });
@@ -182,7 +183,7 @@ export default async function handler(req, res) {
 
   if (action === 'notifications') {
     const notificationsResponse = await fetch(
-      `${supabaseUrl}/rest/v1/messages?${messageFilter}&sender_type=eq.team&select=id,sender_name,content,message_type,metadata,read_at,created_at&order=created_at.desc&limit=50`,
+      `${supabaseUrl}/rest/v1/messages?${messageFilter}&sender_type=eq.team&message_type=eq.text&select=id,sender_name,content,message_type,metadata,read_at,created_at&order=created_at.desc&limit=50`,
       { headers: serviceHeaders(serviceKey) }
     );
     if (!notificationsResponse.ok) return res.status(503).json({ error: 'Notifications unavailable.' });
@@ -280,6 +281,26 @@ export default async function handler(req, res) {
     const state = listingRequestState(message);
     if (!state) return res.status(503).json({ error: 'Listings unavailable.' });
     return res.status(requested ? 201 : 200).json({ request: state });
+  }
+
+  if (action === 'event') {
+    const eventName = String(req.body?.event_name || '').trim();
+    const eventLabel = String(req.body?.event_label || '').trim().slice(0, 200);
+    if (!PORTAL_EVENT_NAMES.has(eventName)) return res.status(400).json({ error: 'Request unavailable.' });
+    const eventResponse = await fetch(`${supabaseUrl}/rest/v1/messages`, {
+      method: 'POST',
+      headers: serviceHeaders(serviceKey, { 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
+      body: JSON.stringify({
+        application_id: applicationId,
+        sender_type: 'customer',
+        sender_name: customer.name || 'Customer',
+        content: `${eventName}${eventLabel ? `: ${eventLabel}` : ''}`,
+        message_type: 'event',
+        metadata: { source: 'portal_event', event_name: eventName, event_label: eventLabel || null }
+      })
+    });
+    if (!eventResponse.ok) return res.status(503).json({ error: 'Event unavailable.' });
+    return res.status(201).json({ success: true });
   }
 
   const content = String(req.body?.content || '').trim();

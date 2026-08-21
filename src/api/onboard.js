@@ -730,11 +730,12 @@ function generateFoundationPrompt(data, tier) {
   }
 
   const tierConfig = {
-    secret: { name: 'AI Operator Secret', days: 30 },
+    secret: { name: 'Legacy entitlement — review required', days: 0 },
     sprint: { name: 'AI System Sprint', days: 60 },
     growth: { name: 'AI System Sprint', days: 60 },
-    retainer: { name: 'AI Operator Retainer', days: 90 },
-    empire: { name: 'AI Operator Retainer', days: 90 }
+    retainer: { name: 'AI Empire Architect', days: 90 },
+    empire: { name: 'AI Empire Architect', days: 90 },
+    architect: { name: 'AI Empire Architect', days: 90 }
   };
   const tc = tierConfig[tier] || tierConfig.secret;
   const d = (field, fallback) => data[field] || fallback;
@@ -1256,11 +1257,11 @@ function generateWelcomeEmail(data, tier, portalPassword) {
   const tierNames = {
     membership: 'GrowthEko Operator Membership',
     audit: 'GrowthEko AI Operator Audit',
-    secret: 'GrowthEko AI Operator Secret',
+    secret: 'Legacy entitlement — review required',
     sprint: 'GrowthEko AI System Sprint',
-    retainer: 'GrowthEko AI Operator Retainer',
+    retainer: 'GrowthEko AI Empire Architect',
     growth: 'GrowthEko AI System Sprint',
-    empire: 'GrowthEko AI Operator Retainer',
+    empire: 'GrowthEko AI Empire Architect',
     onetime_1997: 'GrowthEko AI Operator Audit',
     monthly_97: 'GrowthEko Operator Membership'
   };
@@ -1294,21 +1295,17 @@ function generateWelcomeEmail(data, tier, portalPassword) {
       <p style="font-size: 15px; margin: 0; line-height: 1.6;"><strong>Step 3:</strong> Your deliverable is the prioritized operator opportunity map and practical implementation roadmap described in your order.</p>
     `,
     secret: `
-      <p style="font-size: 15px; margin: 0 0 12px; line-height: 1.6;"><strong>Step 1:</strong> Your onboarding is complete.</p>
-      <p style="font-size: 15px; margin: 0 0 12px; line-height: 1.6;"><strong>Step 2:</strong> I'm reviewing your answers and building your custom AI Growth Blueprint.</p>
-      <p style="font-size: 15px; margin: 0; line-height: 1.6;"><strong>Step 3:</strong> You'll receive your blueprint + action plan within 24 hours. All communication goes through <a href="https://growtheko.com/chat" style="color: #8AB4F3; text-decoration: none;">growtheko.com/chat</a> — your invite link is coming soon.</p>
+      <p style="font-size: 15px; margin: 0; line-height: 1.6;"><strong>Review required:</strong> This legacy entitlement must be mapped to a current GrowthEko offer before delivery begins.</p>
     `,
     sprint: `
       <p style="font-size: 15px; margin: 0 0 12px; line-height: 1.6;"><strong>Step 1:</strong> Your onboarding is complete.</p>
-      <p style="font-size: 15px; margin: 0 0 12px; line-height: 1.6;"><strong>Step 2:</strong> Your 30-day build sprint starts now — we&apos;re assembling your AI System Sprint.</p>
-      <p style="font-size: 15px; margin: 0 0 12px; line-height: 1.6;"><strong>Step 3:</strong> Your <a href="https://growtheko.com/chat" style="color: #8AB4F3; text-decoration: none;">growtheko.com/chat</a> access is coming within 24 hours. That&apos;s where everything happens — updates, files, support.</p>
-      <p style="font-size: 15px; margin: 0; line-height: 1.6;"><strong>Step 4:</strong> We build. You grow. Daily updates, zero guesswork.</p>
+      <p style="font-size: 15px; margin: 0 0 12px; line-height: 1.6;"><strong>Step 2:</strong> We verify the signed 30-day scope, the single System Unit, dependencies, and acceptance test.</p>
+      <p style="font-size: 15px; margin: 0; line-height: 1.6;"><strong>Step 3:</strong> Tasks, updates, files, and support stay inside your <a href="https://growtheko.com/portal" style="color: #8AB4F3; text-decoration: none;">GrowthEko Portal</a>.</p>
     `,
     retainer: `
       <p style="font-size: 15px; margin: 0 0 12px; line-height: 1.6;"><strong>Step 1:</strong> Your onboarding is complete.</p>
-      <p style="font-size: 15px; margin: 0 0 12px; line-height: 1.6;"><strong>Step 2:</strong> Your ongoing operator support layer is being configured right now.</p>
-      <p style="font-size: 15px; margin: 0 0 12px; line-height: 1.6;"><strong>Step 3:</strong> Your dedicated <a href="https://growtheko.com/chat" style="color: #8AB4F3; text-decoration: none;">chat channel</a> + AI assistant (Nora) will be set up within 24 hours.</p>
-      <p style="font-size: 15px; margin: 0; line-height: 1.6;"><strong>Step 4:</strong> Continuous optimization, feedback loops, and system improvements all happen through <a href="https://growtheko.com/chat" style="color: #8AB4F3; text-decoration: none;">growtheko.com/chat</a>.</p>
+      <p style="font-size: 15px; margin: 0 0 12px; line-height: 1.6;"><strong>Step 2:</strong> We verify the signed 90-day scope, one revenue path, and up to three System Units.</p>
+      <p style="font-size: 15px; margin: 0; line-height: 1.6;"><strong>Step 3:</strong> Tasks, reviews, evidence, and support stay inside your <a href="https://growtheko.com/portal" style="color: #8AB4F3; text-decoration: none;">GrowthEko Portal</a>.</p>
     `
   };
 
@@ -1317,7 +1314,7 @@ function generateWelcomeEmail(data, tier, portalPassword) {
       <p style="font-size: 16px; line-height: 1.7;">Hey ${firstName},</p>
 
       <p style="font-size: 16px; line-height: 1.7;">
-        Welcome. You just made the smartest investment in your business this year.
+        Welcome to GrowthEko. Your order and onboarding details have been recorded.
       </p>
 
       <p style="font-size: 16px; line-height: 1.7;">
@@ -1339,17 +1336,17 @@ function generateWelcomeEmail(data, tier, portalPassword) {
       ` : ''}
 
       <p style="font-size: 16px; line-height: 1.7;">
-        That's it. No courses to watch. No PDFs to read. I handle the heavy lifting.
+        Your Portal is the single place for tasks, files, calendar, prompts, and support.
       </p>
 
       <p style="font-size: 16px; line-height: 1.7;">
-        All communication happens on <a href="https://growtheko.com/chat" style="color: #8AB4F3; text-decoration: none;">growtheko.com/chat</a>. Your invite is coming within 24 hours. That&apos;s where you&apos;ll get updates, files, and direct access to the team.
+        All support communication happens in your <a href="https://growtheko.com/portal?tab=chat" style="color: #8AB4F3; text-decoration: none;">GrowthEko Portal</a>.
       </p>
 
       <p style="font-size: 16px; line-height: 1.7;">Talk soon,<br><strong>Robin</strong></p>
 
       <div style="text-align: center; margin: 32px 0;">
-        <a href="https://growtheko.com/chat" style="display: inline-block; background: #8AB4F3; color: #fff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px;">Chat with us</a>
+        <a href="https://growtheko.com/portal?tab=chat" style="display: inline-block; background: #8AB4F3; color: #fff; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px;">Open Support</a>
       </div>
 
       <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;" />

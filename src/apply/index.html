@@ -637,7 +637,7 @@
           <select id="f_selected_tier" required>
             <option value="">Choose the closest path...</option>
             <option value="roadmap_1997">Clear diagnosis and roadmap: I want the exact plan first</option>
-            <option value="done_with_you_5000">Done with you implementation: I want guidance while I build with my team</option>
+            <option value="done_with_you_4997">AI System Sprint: one bottleneck, one implemented System Unit</option>
             <option value="done_for_you_14997">Done for you buildout: I want the system created with deeper private support</option>
             <option value="recommendation">I am not sure yet: I want your recommendation</option>
           </select>
@@ -665,7 +665,7 @@
     (function() {
       var tierMap = {
         'roadmap_1997': { label: 'Diagnosis + Roadmap', price: 'Plan-first path' },
-        'done_with_you_5000': { label: 'Done-With-You Implementation', price: 'Guided implementation path' },
+        'done_with_you_4997': { label: 'AI System Sprint', price: '$4,997 · scoped 30-day implementation' },
         'done_for_you_14997': { label: 'Done-For-You Buildout', price: 'Deeper private implementation path' },
         'recommendation': { label: 'Recommendation Needed', price: 'We will recommend the cleanest fit' },
         'monthly_97': { label: 'Guidance Path', price: 'Legacy link detected' },
@@ -798,7 +798,7 @@
     }
 
     function validate(data) {
-      if (!['roadmap_1997', 'done_with_you_5000', 'done_for_you_14997', 'recommendation', 'monthly_97', 'onetime_1997'].includes(data.selected_tier)) return false;
+      if (!['roadmap_1997', 'done_with_you_4997', 'done_for_you_14997', 'recommendation', 'monthly_97', 'onetime_1997'].includes(data.selected_tier)) return false;
       if (!data.email || !data.email.includes('@')) return false;
       if (!data.first_name) return false;
       if (!data.last_name) return false;

@@ -149,7 +149,7 @@
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok || !data.ok) throw new Error('denied');
-        window.location.href = data.redirect || '/ops';
+        window.location.href = data.redirect || '/crm';
       } catch {
         error.style.display = 'block';
         button.disabled = false;
