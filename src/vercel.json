@@ -42,11 +42,14 @@
   ],
   "functions": {
     "api/webhook.js": { "maxDuration": 30 },
+    "api/fireflies-webhook.js": { "maxDuration": 30 },
+    "api/cron/fireflies-retention.js": { "maxDuration": 30 },
     "api/cron/nurture.js": { "maxDuration": 60 },
     "api/cron/process-billing-outbox.js": { "maxDuration": 60 }
   },
   "crons": [
     { "path": "/api/cron/nurture", "schedule": "0 9 * * *" },
+    { "path": "/api/cron/fireflies-retention", "schedule": "15 2 * * *" },
     { "path": "/api/cron/process-billing-outbox", "schedule": "*/5 * * * *" }
   ]
 }

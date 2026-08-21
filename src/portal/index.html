@@ -4582,7 +4582,7 @@
     </div>
 
     <section class="portal-panel" id="portalPanelHome" data-portal-panel="home">
-      <div class="welcome-title" id="welcomeTitle">Welcome, Marcus.</div>
+      <div class="welcome-title" id="welcomeTitle" aria-live="polite">Welcome.</div>
 
       <div class="progress-section">
         <div class="progress-bar-wrap">
@@ -5129,8 +5129,7 @@ WEEKLY DATA:
 
     function isLocalPortalPreviewOrigin() {
       return window.location.protocol === 'http:'
-        && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
-        && window.location.port === '3004';
+        && (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost');
     }
 
     function isLocalPortalPreview() {
@@ -5905,12 +5904,12 @@ WEEKLY DATA:
 
     // ===== DATA =====
     const CUSTOMER = {
-      id: 'demo-marcus-weber',
-      name: 'Marcus',
-      fullName: 'Marcus Weber',
-      company: 'FlowState Performance',
-      tier: 'GrowthEko Operator Membership',
-      startDate: 'Mar 28, 2026',
+      id: '',
+      name: 'there',
+      fullName: '',
+      company: '',
+      tier: '',
+      startDate: '',
     };
 
     const PHASES = [
@@ -6338,12 +6337,58 @@ WEEKLY DATA:
       }
     ];
 
+    // The historical FlowState sample remains source history only. Production
+    // renders these neutral, scope-accurate workflows and never shows invented
+    // customer facts, documents, projections or testimonials.
+    PHASES.splice(0, PHASES.length,
+      {
+        id: 'delivery-setup', number: 'Phase 1', title: 'Setup & Evidence',
+        description: 'Confirm the real customer context before any diagnosis or recommendation.',
+        tasks: [
+          { id: 'setup-profile', name: 'Confirm your customer profile', desc: 'Check the name, business, offer, primary objective and contact details connected to your account.', sop: '<strong>Review the information connected to this portal.</strong><br><br>If a material fact is missing or wrong, open Support and submit the correction before continuing.' },
+          { id: 'setup-evidence', name: 'Submit current evidence', desc: 'Provide the links, screenshots and numbers needed to evaluate the current system.', sop: '<strong>Open Support and attach the evidence that exists today.</strong><br><br>Include the current offer, traffic source, conversion path, recent numbers and the bottleneck you believe is most important. Missing information stays marked as missing.' }
+        ]
+      },
+      {
+        id: 'delivery-diagnosis', number: 'Phase 2', title: 'Diagnosis',
+        description: 'Separate verified facts from assumptions and identify the highest-leverage bottleneck.',
+        tasks: [
+          { id: 'diagnosis-prepare', name: 'Prepare for diagnosis', desc: 'Bring the objective, evidence and the decisions that cannot be delegated.', sop: '<strong>Prepare one concise current-state view.</strong><br><br>Bring the objective, the primary metric, the current numbers, the largest known drop-off and any constraints that affect the decision.' },
+          { id: 'diagnosis-review', name: 'Review the verified findings', desc: 'Confirm that the diagnosis reflects the evidence before accepting the roadmap.', sop: '<strong>Review the findings delivered through your GrowthEko engagement.</strong><br><br>Check every material fact, flag missing evidence through Support and mark complete only after the stated bottleneck and next move are clear.' }
+        ]
+      },
+      {
+        id: 'delivery-scope', number: 'Phase 3', title: 'Scope & Ownership',
+        description: 'Define one bounded result, its owner and the acceptance test before implementation.',
+        tasks: [
+          { id: 'scope-unit', name: 'Approve the System Unit', desc: 'Confirm the agreed input, process, output, owner and boundary.', sop: '<strong>Review the written scope.</strong><br><br>Confirm the input, process, output, accountable owner, dependencies, exclusions and acceptance test. Do not approve an undefined or open-ended build.' },
+          { id: 'scope-access', name: 'Provide approved access', desc: 'Make only the access and source material in the signed scope available.', sop: '<strong>Provide the minimum required access.</strong><br><br>Use secure channels, never paste credentials into Support, and remove access after handoff when it is no longer required.' }
+        ]
+      },
+      {
+        id: 'delivery-implementation', number: 'Phase 4', title: 'Implementation & Acceptance',
+        description: 'Build, test and hand off only the approved scope.',
+        tasks: [
+          { id: 'implementation-review', name: 'Review the implemented workflow', desc: 'Test the agreed user journey and report evidence of any failed acceptance criterion.', sop: '<strong>Run the agreed acceptance test from beginning to end.</strong><br><br>Report the exact step, expected result, actual result and evidence for anything that does not pass.' },
+          { id: 'implementation-handoff', name: 'Accept the handoff', desc: 'Confirm ownership, SOP access and remaining known limitations.', sop: '<strong>Complete the handoff review.</strong><br><br>Confirm the owner, SOP, access, known limitations and next review date. Mark complete only when the written acceptance criteria pass.' }
+        ]
+      },
+      {
+        id: 'delivery-operate', number: 'Phase 5', title: 'Weekly Operating Loop',
+        description: 'Use real numbers to choose one next move each week.',
+        tasks: [
+          { id: 'operate-review', name: 'Complete your Weekly Operator Review', desc: 'Record the objective, primary metric, winner, bottleneck and one next move.', sop: '<strong>Review the last seven days.</strong><br><br>Record what improved, what declined, the evidence behind the bottleneck and one decision: double down, fix, switch or stop.' },
+          { id: 'operate-support', name: 'Bring the bottleneck to Growth Support', desc: 'Use the structured Support form or the Friday member clinic when another perspective is needed.', sop: '<strong>Submit one focused request.</strong><br><br>Include the current state, desired outcome, evidence, what you already tried and the exact decision or help required.' }
+        ]
+      }
+    );
+
     // ===== TIER-BASED PHASE FILTERING =====
     const TIER_PHASE_MAP = {
       'GrowthEko AI Operator Audit': [0, 1],
       'onetime_1997': [0, 1],
-      'GrowthEko Operator Membership': [0, 1, 2, 3, 4],
-      'monthly_97': [0, 1, 2, 3, 4],
+      'GrowthEko Operator Membership': [0, 4],
+      'monthly_97': [0, 4],
       'AI System Sprint': [0, 1, 2, 3],
       'done_with_you_4997': [0, 1, 2, 3],
       'AI Empire Architect': [0, 1, 2, 3, 4],
@@ -6428,7 +6473,7 @@ WEEKLY DATA:
         title: 'Growth Support',
         image: '/portal/assets/live-covers/growth-secret-live.jpg',
         liveUrl: 'https://www.skool.com/live/cGfV23MQxgF',
-        description: 'Bring your current objective, numbers, and biggest bottleneck. Leave with one clear move for the next 7 days.'
+        description: 'Bring your current objective, numbers, and biggest bottleneck. Leave with one clear move for the next 7 days. This session may be recorded and transcribed for delivery, follow-up, and CRM documentation. Recording is announced before it starts.'
       }
     ];
     let portalCalendarInstances = new Map();

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "status": "archived",
+  "reason": "Removed from the active customer calendar without deleting the historical session definitions.",
+  "archivedAt": "2026-08-21T00:00:00+02:00",
+  "sessions": [
+    {
+      "id": "growth-secret-live",
+      "title": "Growth Secret",
+      "weekday": "Monday",
+      "time": "12:00–13:00",
+      "timezone": "Europe/Vienna",
+      "url": "https://www.skool.com/live/cGfV23MQxgF",
+      "status": "archived"
+    },
+    {
+      "id": "accountability-system-live",
+      "title": "Accountability System",
+      "weekday": "Monday",
+      "time": "13:00–14:00",
+      "timezone": "Europe/Vienna",
+      "url": "https://www.skool.com/live/Gh4MVHhjwWr",
+      "status": "archived"
+    },
+    {
+      "id": "business-clarity-live",
+      "title": "Business Clarity",
+      "weekday": "Thursday",
+      "time": "12:00–13:00",
+      "timezone": "Europe/Vienna",
+      "url": "https://www.skool.com/live/YxXfJJjf7PM",
+      "status": "archived"
+    },
+    {
+      "id": "weekly-wins-live",
+      "title": "Weekly Wins",
+      "weekday": "Friday",
+      "time": "19:00–20:00",
+      "timezone": "Europe/Vienna",
+      "status": "archived"
+    }
+  ]
+}

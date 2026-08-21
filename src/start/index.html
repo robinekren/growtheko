@@ -18,11 +18,14 @@
     h1 { max-width:760px; margin:14px 0 18px; font-size:clamp(42px,7vw,78px); line-height:1; letter-spacing:-.05em; }
     .lead { max-width:700px; color:var(--muted); font-size:19px; }
     .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:48px 0 28px; }
-    .card { display:flex; flex-direction:column; min-height:390px; padding:28px; border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 55px rgba(35,61,105,.08); }
+    .card { display:flex; flex-direction:column; min-width:0; padding:28px; border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 55px rgba(35,61,105,.08); }
     .card h2 { margin:10px 0 4px; font-size:30px; line-height:1.15; }
     .price { margin:18px 0; font-size:25px; font-weight:800; }
     .price small { color:var(--muted); font-size:13px; font-weight:500; }
     ul { padding-left:20px; color:#3e495d; }
+    .label { margin:18px 0 4px; color:var(--muted); font-size:11px; font-weight:850; letter-spacing:.11em; text-transform:uppercase; }
+    .answer { margin:0; color:#3e495d; }
+    .flow { padding:13px 14px; border-radius:12px; background:#eff5ff; color:#27466f; font-size:13px; font-weight:750; }
     .boundary { margin-top:auto; padding:14px; border:1px solid #c8d8f6; border-radius:12px; color:#405b88; font-size:13px; }
     button,.card-link { margin-top:20px; padding:15px 18px; border:0; border-radius:12px; background:var(--gold); color:#fff; font:inherit; font-weight:800; cursor:pointer; text-align:center; text-decoration:none; }
     button:disabled { cursor:wait; opacity:.65; }
@@ -48,22 +51,26 @@
     <main>
       <div class="eyebrow">One path at a time</div>
       <h1>Start where the bottleneck is.</h1>
-      <p class="lead">Begin free, get recurring operator support, diagnose the system, or apply for bounded implementation. No hidden bundle and no automatic high-ticket prescription.</p>
+      <p class="lead">Compare exactly who each offer is for, what you receive, how delivery works and where the scope ends. Choose only the smallest level that matches the current bottleneck.</p>
 
       <section class="grid" aria-label="GrowthEko offers">
         <article class="card">
           <div class="eyebrow">Free</div><h2>Operator Starter</h2><div class="price">$0</div>
-          <p>Build the first clear action plan and model your Digital Estate with transparent assumptions.</p>
-          <ul><li>AI Growth Playbook and free training</li><li>Operator Action Card</li><li>Customer-safe starter prompt</li><li>Digital Estate Calculator</li></ul>
+          <div class="label">Best for</div><p class="answer">A first direction before spending money or adding complexity.</p>
+          <div class="label">You receive</div><ul><li>AI Growth Playbook and free training</li><li>Compact Start Here profile</li><li>Operator Action Card</li><li>Customer-safe starter prompt</li><li>Digital Estate Calculator</li></ul>
+          <div class="label">How it works</div><p class="flow">Profile → Scenario → One next action</p>
+          <div class="label">Done when</div><p class="answer">One direction and one executable next move are documented.</p>
           <div class="boundary">No private advice, custom analysis, or implementation.</div><a class="card-link" href="/offers/starter">View Starter</a>
         </article>
         <article class="card">
           <div class="eyebrow">Ongoing</div>
           <h2>Operator Membership</h2>
           <div class="price">$97 USD <small>/ month, net plus applicable taxes</small></div>
-          <p>Membership provides ongoing guidance, playbooks, and templates.</p>
-          <ul><li>Decision support and operating frameworks</li><li>Practical templates and implementation guidance</li><li>Recurring access while the membership is active</li></ul>
-          <div class="boundary">Guidance only; implementation remains with your team.</div>
+          <div class="label">Best for</div><p class="answer">Self-directed operators who want a weekly decision rhythm and execute themselves.</p>
+          <div class="label">You receive</div><ul><li>Friday 20:00 group Growth Support clinic</li><li>Decision frameworks, playbooks and templates</li><li>Member portal and current operator resources</li><li>A structured weekly bottleneck review</li></ul>
+          <div class="label">How it works</div><p class="flow">Review → Clinic → One move → Execute</p>
+          <div class="label">Done when</div><p class="answer">Every week ends with one evidence-based next move.</p>
+          <div class="boundary">Group guidance only. No private consulting, custom build, managed ads or guaranteed result.</div>
           <a class="card-link" href="/offers/membership">View Membership</a>
         </article>
 
@@ -71,14 +78,16 @@
           <div class="eyebrow">One time</div>
           <h2>AI Operator Audit</h2>
           <div class="price">$1,997 USD <small>one time, net plus applicable taxes</small></div>
-          <p>Audit provides a one-time diagnosis and roadmap.</p>
-          <ul><li>Structured intake and current-state review</li><li>Prioritized findings and recommendations</li><li>Delivery of the defined audit roadmap</li></ul>
-          <div class="boundary">Audit and recommendations only; no done-for-you build.</div>
+          <div class="label">Best for</div><p class="answer">An existing business, offer or asset that needs diagnosis before implementation.</p>
+          <div class="label">You receive</div><ul><li>Structured intake and evidence review</li><li>60-minute diagnostic session</li><li>Prioritized opportunity map and roadmap</li><li>45-minute findings walkthrough</li></ul>
+          <div class="label">How it works</div><p class="flow">Evidence → Diagnosis → Roadmap → Handoff</p>
+          <div class="label">Done when</div><p class="answer">The prioritized roadmap is delivered and explained.</p>
+          <div class="boundary">Diagnosis and recommendations only. No done-for-you build or ongoing private support.</div>
           <a class="card-link" href="/offers/audit">View Audit</a>
         </article>
 
-        <article class="card"><div class="eyebrow">30 days · application</div><h2>AI System Sprint</h2><div class="price">$4,997 USD <small>one time, net plus tax</small></div><p>Implement one evidence-backed bottleneck as one accepted System Unit.</p><ul><li>Kickoff, midpoint and handoff</li><li>One bounded system implementation</li><li>SOP and acceptance test</li></ul><div class="boundary">One system, not an open-ended transformation or guaranteed outcome.</div><a class="card-link" href="/offers/sprint">View Sprint</a></article>
-        <article class="card"><div class="eyebrow">90 days · application only</div><h2>AI Empire Architect</h2><div class="price">$14,997 USD <small>one time, net plus tax</small></div><p>Connect up to three System Units around one verified revenue path.</p><ul><li>Up to three connected System Units</li><li>Up to six private reviews</li><li>Proposal and signed scope before payment</li></ul><div class="boundary">Capacity-limited. No universal automation promise and no self-serve checkout.</div><a class="card-link" href="/offers/architect">View Architect</a></article>
+        <article class="card"><div class="eyebrow">30 days · application</div><h2>AI System Sprint</h2><div class="price">$4,997 USD <small>one time, net plus tax</small></div><div class="label">Best for</div><p class="answer">A verified bottleneck that needs one specific system implemented and handed over.</p><div class="label">You receive</div><ul><li>Scoped kickoff and success definition</li><li>Exactly one agreed System Unit</li><li>Midpoint review, SOP and acceptance test</li><li>Final handoff and ownership transfer</li></ul><div class="label">How it works</div><p class="flow">Apply → Scope → Build → Test → Handoff</p><div class="label">Done when</div><p class="answer">The agreed unit passes its written acceptance test.</p><div class="boundary">One bounded system. No open-ended transformation, ongoing management or guaranteed result.</div><a class="card-link" href="/offers/sprint">View Sprint</a></article>
+        <article class="card"><div class="eyebrow">90 days · application only</div><h2>AI Empire Architect</h2><div class="price">$14,997 USD <small>one time, net plus tax</small></div><div class="label">Best for</div><p class="answer">An established business that needs connected systems around one proven revenue path.</p><div class="label">You receive</div><ul><li>Architecture for one verified revenue path</li><li>Up to three connected System Units</li><li>Up to six private reviews</li><li>Roles, SOPs, decision rules and final handoff</li></ul><div class="label">How it works</div><p class="flow">Apply → Verify → Sign scope → Build → Validate</p><div class="label">Done when</div><p class="answer">The scoped units pass acceptance and are handed over.</p><div class="boundary">No unlimited builds, permanent outsourced operations, universal automation or guaranteed result.</div><a class="card-link" href="/offers/architect">View Architect</a></article>
       </section>
 
       <p class="scope"><strong>Scope boundary:</strong> Outcomes depend on customer inputs, evidence, implementation and market conditions. GrowthEko does not promise revenue or provide legal, tax, accounting or investment advice. The signed scope and checkout terms control.</p>

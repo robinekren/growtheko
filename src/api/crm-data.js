@@ -68,7 +68,7 @@ export default async function handler(req, res) {
   try {
     const [customers, applications, messages] = await Promise.all([
       rows(base, key, 'customers?select=id,email,name,company,tier,status,portal_status,onboarding_status,nora_status,amount_paid,currency,paid_at,last_activity_at,created_at,updated_at&order=created_at.desc&limit=500'),
-      rows(base, key, 'applications?select=id,email,first_name,last_name,business_name,stage,selected_tier,primary_goal,biggest_bottleneck,submitted_at,call_booked,call_time,notes,tags,created_at&order=created_at.desc&limit=500'),
+      rows(base, key, 'applications?select=id,email,first_name,last_name,preferred_name,website,product_type,stage,status,selected_tier,goal,dream_outcome,biggest_challenge,holding_back,submitted_at,call_status,call_date,internal_notes,tags,created_at&order=created_at.desc&limit=500'),
       rows(base, key, 'messages?select=id,application_id,sender_type,sender_name,content,message_type,metadata,read_at,created_at&order=created_at.desc&limit=1000')
     ]);
 
@@ -87,9 +87,9 @@ export default async function handler(req, res) {
       return {
         id: clean(customer.id, 140),
         application_id: clean(application?.id, 140),
-        name: clean(customer.name || `${application?.first_name || ''} ${application?.last_name || ''}`.trim() || 'Customer', 160),
+        name: clean(customer.name || application?.preferred_name || `${application?.first_name || ''} ${application?.last_name || ''}`.trim() || 'Customer', 160),
         email: normalizedEmail(customer.email),
-        company: clean(customer.company || application?.business_name, 200),
+        company: clean(customer.company || application?.website || application?.product_type, 200),
         status: clean(customer.status || 'unknown', 80),
         portal_status: clean(customer.portal_status, 80),
         onboarding_status: clean(customer.onboarding_status, 80),
@@ -101,26 +101,26 @@ export default async function handler(req, res) {
         created_at: customer.created_at || null,
         stage: stage(customer.status || application?.stage),
         offer: prescribed,
-        primary_goal: clean(application?.primary_goal, 1200),
-        biggest_bottleneck: clean(application?.biggest_bottleneck, 1200),
-        call_booked: Boolean(application?.call_booked),
-        call_time: application?.call_time || null
+        primary_goal: clean(application?.goal || application?.dream_outcome, 1200),
+        biggest_bottleneck: clean(application?.biggest_challenge || application?.holding_back, 1200),
+        call_booked: ['booked', 'scheduled', 'confirmed'].includes(clean(application?.call_status, 40).toLowerCase()),
+        call_time: application?.call_date || null
       };
     });
 
     const leads = applications.filter(application => !customerEmails.has(normalizedEmail(application.email))).map(application => ({
       id: clean(application.id, 140),
-      name: clean(`${application.first_name || ''} ${application.last_name || ''}`.trim() || application.business_name || 'Applicant', 160),
+      name: clean(application.preferred_name || `${application.first_name || ''} ${application.last_name || ''}`.trim() || 'Applicant', 160),
       email: normalizedEmail(application.email),
-      company: clean(application.business_name, 200),
-      stage: stage(application.stage),
-      raw_stage: clean(application.stage, 80),
+      company: clean(application.website || application.product_type, 200),
+      stage: stage(application.stage || application.status),
+      raw_stage: clean(application.stage || application.status, 80),
       offer: offer(application.selected_tier),
-      primary_goal: clean(application.primary_goal, 1200),
-      biggest_bottleneck: clean(application.biggest_bottleneck, 1200),
+      primary_goal: clean(application.goal || application.dream_outcome, 1200),
+      biggest_bottleneck: clean(application.biggest_challenge || application.holding_back, 1200),
       submitted_at: application.submitted_at || application.created_at || null,
-      call_booked: Boolean(application.call_booked),
-      call_time: application.call_time || null
+      call_booked: ['booked', 'scheduled', 'confirmed'].includes(clean(application.call_status, 40).toLowerCase()),
+      call_time: application.call_date || null
     }));
 
     const interactions = messages.map(message => {
