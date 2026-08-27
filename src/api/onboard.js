@@ -407,6 +407,7 @@ export default async function handler(req, res) {
           template_key: launch.template_key,
           traffic_mode: launch.traffic_mode,
           primary_cta: launch.primary_cta,
+          owns_existing_system: launch.owns_existing_system,
           website_state: launch.website_state,
           domain_mode: launch.domain_mode,
           status: launch.status,
@@ -745,7 +746,9 @@ function generateClientBrief(data, tier, completedAt) {
 
       <h2 style="font-size: 18px; color: #5A8AE6; margin-top: 24px;">Launch Workspace</h2>
       <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <tr><td style="padding: 6px 0; color: #888; width: 140px;">Existing system:</td><td>${data.existing_system_owner === 'yes' || (!data.existing_system_owner && data.website) ? 'Yes' : 'No — clean build'}</td></tr>
         <tr><td style="padding: 6px 0; color: #888; width: 140px;">Website:</td><td>${data.website_state || '—'}</td></tr>
+        ${data.existing_system_owner === 'yes' || (!data.existing_system_owner && data.website) ? `<tr><td style="padding: 6px 0; color: #888;">System links:</td><td>${data.existing_system_links || data.website || 'not provided'}</td></tr>` : ''}
         <tr><td style="padding: 6px 0; color: #888;">Template:</td><td><strong>${data.launch_template || '—'}</strong></td></tr>
         <tr><td style="padding: 6px 0; color: #888;">Primary CTA:</td><td>${data.primary_cta || '—'} → ${data.cta_destination || 'destination missing'}</td></tr>
         <tr><td style="padding: 6px 0; color: #888;">Traffic:</td><td>${data.traffic_mode || '—'}</td></tr>
@@ -1332,6 +1335,8 @@ ${scope}
 ## Verified input
 - Owner: ${d('name')}
 - Company: ${d('company')}
+- Existing website or funnel owner: ${d('existing_system_owner', data.website ? 'yes' : 'no')}
+- Existing system links: ${d('existing_system_links', d('website'))}
 - Website state: ${d('website_state', data.website ? 'live' : 'no_website')}
 - Existing website/domain: ${d('domain_value', d('website'))}
 - Market / niche: ${d('market')} / ${d('niche')}

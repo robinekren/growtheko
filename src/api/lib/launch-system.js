@@ -3,6 +3,7 @@ const TRAFFIC_MODES = new Set(['organic', 'paid', 'hybrid', 'undecided']);
 const CTA_KEYS = new Set(['checkout', 'application', 'book_call', 'lead_form', 'phone', 'whatsapp']);
 const WEBSITE_STATES = new Set(['live', 'needs_rebuild', 'no_website']);
 const DOMAIN_MODES = new Set(['existing', 'new', 'subdomain', 'undecided']);
+const EXISTING_SYSTEM_OWNERS = new Set(['yes', 'no']);
 
 export const LAUNCH_TEMPLATES = Object.freeze({
   authority_product: Object.freeze({
@@ -44,14 +45,22 @@ export function normalizeLaunchInput(data = {}) {
   const templateKey = choice(data.launch_template, TEMPLATE_KEYS, 'authority_product');
   const trafficMode = choice(data.traffic_mode, TRAFFIC_MODES, 'undecided');
   const primaryCta = choice(data.primary_cta, CTA_KEYS, templateKey === 'local_service' ? 'phone' : 'application');
+  const ownershipFallback = data.website || data.existing_system_links ? 'yes' : 'no';
+  const existingSystemOwner = choice(data.existing_system_owner, EXISTING_SYSTEM_OWNERS, ownershipFallback);
+  const ownsExistingSystem = existingSystemOwner === 'yes';
   return {
     template_key: templateKey,
     traffic_mode: trafficMode,
     primary_cta: primaryCta,
-    website_state: choice(data.website_state, WEBSITE_STATES, data.website ? 'live' : 'no_website'),
-    domain_mode: choice(data.domain_mode, DOMAIN_MODES, data.website ? 'existing' : 'undecided'),
+    existing_system_owner: existingSystemOwner,
+    owns_existing_system: ownsExistingSystem,
+    existing_system_links: ownsExistingSystem ? text(data.existing_system_links || data.website, 3000) : '',
+    website_state: ownsExistingSystem
+      ? choice(data.website_state, WEBSITE_STATES, data.website ? 'live' : 'needs_rebuild')
+      : 'no_website',
+    domain_mode: choice(data.domain_mode, DOMAIN_MODES, ownsExistingSystem && data.website ? 'existing' : 'undecided'),
     cta_destination: text(data.cta_destination, 1000),
-    domain_value: text(data.domain_value || data.website, 500),
+    domain_value: text(data.domain_value || (ownsExistingSystem ? data.website : ''), 500),
     asset_state: text(data.asset_state, 120) || 'needs_support',
     email_platform: text(data.email_platform, 160) || 'none',
     legal_owner: text(data.legal_owner, 160) || 'customer',
@@ -112,6 +121,7 @@ export function buildLaunchWorkspace(data = {}) {
         email_platform: input.email_platform,
         legal_owner: input.legal_owner,
         legal_links: input.legal_links,
+        existing_system_links: input.existing_system_links,
         launch_notes: input.launch_notes
       },
       rule: 'One input, one workspace, versioned artifacts, three approval gates.'

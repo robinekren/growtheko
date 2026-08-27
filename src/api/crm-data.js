@@ -499,6 +499,7 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
   }];
   const launchBase = buildLaunchWorkspace({
     name: leads[0].name, company: leads[0].company, launch_template: 'authority_product',
+    existing_system_owner: 'no',
     website_state: 'no_website', primary_cta: 'application', traffic_mode: 'organic',
     domain_mode: 'undecided', asset_state: 'needs_support'
   });
@@ -562,7 +563,7 @@ export default async function handler(req, res) {
       rows(base, key, 'ops_audit_events?select=id,event_key,actor_type,actor_id,event_type,entity_type,entity_id,customer_id,application_id,opportunity_id,source_table,source_record_id,channel,summary,metadata,occurred_at,created_at&order=occurred_at.desc&limit=5000'),
       rows(base, key, 'ops_decisions?select=id,decision_key,task_id,customer_id,application_id,opportunity_id,status,gate,question,recommendation,verified_facts,requested_by,requested_at,resolution,resolved_by,resolved_at,metadata,created_at,updated_at&order=requested_at.desc&limit=1000'),
       rows(base, key, 'stripe_webhook_events?select=event_id,event_type,event_created_at,stripe_customer_id,offer_key,status,error,payload&order=event_created_at.desc&limit=2000'),
-      rows(base, key, 'launch_workspaces?select=id,source_key,customer_id,onboarding_session_id,opportunity_id,template_key,traffic_mode,primary_cta,website_state,domain_mode,status,cta_destination,domain_value,business_snapshot,offer_snapshot,launch_config,review_required,created_at,updated_at&order=updated_at.desc&limit=1000'),
+      rows(base, key, 'launch_workspaces?select=id,source_key,customer_id,onboarding_session_id,opportunity_id,template_key,traffic_mode,primary_cta,owns_existing_system,website_state,domain_mode,status,cta_destination,domain_value,business_snapshot,offer_snapshot,launch_config,review_required,created_at,updated_at&order=updated_at.desc&limit=1000'),
       rows(base, key, 'launch_artifacts?select=id,workspace_id,artifact_key,artifact_type,version,status,content,preview_url,checksum,generated_by,approved_by,approved_at,created_at,updated_at&order=updated_at.desc&limit=5000'),
       rows(base, key, 'launch_approvals?select=id,approval_key,workspace_id,artifact_id,scope,decision,notes,decided_by,decided_at,metadata,created_at&order=decided_at.desc&limit=2000')
     ]);
@@ -672,6 +673,7 @@ export default async function handler(req, res) {
         template_key: clean(record.template_key, 80),
         traffic_mode: clean(record.traffic_mode, 80),
         primary_cta: clean(record.primary_cta, 80),
+        owns_existing_system: Boolean(record.owns_existing_system),
         website_state: clean(record.website_state, 80),
         domain_mode: clean(record.domain_mode, 80),
         status: clean(record.status, 80),
