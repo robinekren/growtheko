@@ -46,6 +46,7 @@
   ],
   "functions": {
     "api/webhook.js": { "maxDuration": 30 },
+    "api/resend-inbound.js": { "maxDuration": 30 },
     "api/fireflies-webhook.js": { "maxDuration": 30 },
     "api/cron/fireflies-retention.js": { "maxDuration": 30 },
     "api/cron/nurture.js": { "maxDuration": 60 },

@@ -88,11 +88,19 @@ Do not manufacture human latency. The service target is a clear same-business-da
 
 ### Operator Inbox delivery contract
 
-The OPS Inbox groups canonical `messages` records into one private thread per verified application. It is a communication surface, not a second CRM. The collapsed context card may open the matching Customer 360 record; the fixed conversation area contains the chronological message ledger and the only operator composer.
+Email is the only customer communication channel in the OPS Inbox. The interface groups canonical `messages` records into one email thread per verified application. It is a communication surface, not a second CRM. The collapsed context card may open the matching Customer 360 record; the fixed conversation area contains the chronological email ledger and the only operator composer.
 
-An operator reply entered in the Inbox is stored first as a `team` message from `Nora`. The customer sees it in the private portal. When the application has a verified deliverable email and Resend is configured, the system also sends an email notification linking back to the portal. The portal record remains the canonical message even if email delivery is unavailable. Every production send writes a source-linked `customer_message_sent` audit event; opening or closing the UI does not send anything.
+Incoming customer email is verified by the Resend webhook signature, resolved to a verified application by the sender address, retrieved from the Resend Receiving API and stored as a `customer` message. It appears on the left. An operator reply is sent through Resend and stored as a `team` message from `Nora`; it appears in blue on the right. `In-Reply-To` and `References` preserve the customer email thread where source metadata is available. Every production send and inbound receipt writes a source-linked audit event. Opening the UI, selecting a script or inserting a draft never sends anything.
 
-WhatsApp is not an implied fallback. It may be added only after an official business API, verified destination mapping, customer opt-in, template rules and delivery logging are connected. Localhost is always a preview: the complete composer can be tested, but no database record, email or WhatsApp message leaves the machine.
+The small mail icon with a checked badge represents the connected email route; permanent delivery sentences are intentionally omitted from the composer. Errors remain accessible and visible only when action is required. Localhost is always a preview: the full composer and script workspace can be tested, but no database record or email leaves the machine.
+
+### Nora reply workspace
+
+The collapsible workspace above the composer is a draft aid, not an autonomous sender. It provides four paths — Freestyle, Start to sale, Follow up and Expansion — with explicit phases and Text or Voice note format. Only the active phase is shown. `Use draft` moves the draft into the email composer for review; the blue Send button is the only send action.
+
+Nora drafts from the verified application and canonical email history. The tone is concise, direct, supportive and lowercase, with Robin's casual voice used naturally rather than mechanically. Drafts must not invent facts, proof, prices, urgency, scarcity, deadlines, results or availability. Commercial direction follows verified need and permission. Draft provenance, operator edits, phase completion and the final sent email are audit-linked.
+
+WhatsApp, Instagram DMs and portal chat are not fallbacks. Adding another channel requires a separate approved contract with verified destination mapping, customer consent, delivery logging and a clear reason that email cannot serve the use case.
 
 ## Customer-success decision rule
 

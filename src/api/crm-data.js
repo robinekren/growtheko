@@ -323,7 +323,7 @@ function operationalTask(entity, interactions, now = new Date()) {
     return taskBase(entity, {
       priority: 'P1', playbook: 'customer-message-response',
       action: 'Classify and answer the newest customer message',
-      reason: 'A verified inbound customer message is unread.', channel: 'Portal Inbox',
+      reason: 'A verified inbound customer email is unread.', channel: 'Email',
       deadline: deadlineFrom(unread.created_at, 4, now), next_status: 'Customer response sent',
       stop_condition: 'Escalate instead of replying when the message contains legal, security, refund-policy or outcome-claim risk.',
       facts: [`Sender: ${unread.sender_name || 'Customer'}`, `Received: ${unread.created_at || 'unknown'}`]
@@ -343,7 +343,7 @@ function operationalTask(entity, interactions, now = new Date()) {
   if (entity.entity_type === 'customer' && !['complete', 'completed', 'active', 'ready', 'done'].some(term => normalizedStatus(entity.onboarding_status).includes(term))) {
     return taskBase(entity, {
       priority: 'P1', playbook: 'onboarding-activation', action: 'Prefill onboarding and request only missing facts',
-      reason: 'The customer exists, but completed onboarding is not verified.', channel: 'Portal Inbox + Email',
+      reason: 'The customer exists, but completed onboarding is not verified.', channel: 'Email',
       deadline: deadlineFrom(entity.created_at, 48, now), next_status: 'Onboarding complete',
       stop_condition: 'Do not ask twice for facts already stored in the customer or application record.',
       facts: [`Onboarding status: ${entity.onboarding_status || 'not set'}`, `Offer: ${entity.offer?.name || 'not prescribed'}`]
@@ -379,7 +379,7 @@ function operationalTask(entity, interactions, now = new Date()) {
     facts: [`Nora status: ${entity.nora_status || entity.stage || 'verified progress'}`, `Current offer: ${entity.offer?.name || 'not prescribed'}`]
   } : {
     priority: 'P2', playbook: 'first-win-evidence', action: 'Collect one piece of first-win evidence',
-    reason: 'Access and onboarding have no higher-priority blocker, but a first win is not verified.', channel: 'Portal Inbox',
+    reason: 'Access and onboarding have no higher-priority blocker, but a first win is not verified.', channel: 'Email',
     deadline: deadlineFrom(entity.last_activity_at || entity.created_at, 72, now), next_status: 'First win verified',
     stop_condition: 'Ask for one specific proof point and pause expansion messaging until it exists.',
     facts: [`Nora status: ${entity.nora_status || 'not set'}`, `Current offer: ${entity.offer?.name || 'not prescribed'}`]
@@ -486,8 +486,8 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
     }
   ];
   const interactions = [
-    { id: 'local-test-message-team', application_id: 'local-test-customer', email: 'test-customer@growtheko.local', sender_type: 'team', sender_name: 'Nora', content: 'Application received. I will keep your next step small and specific.', message_type: 'text', metadata: { scenario: true }, read_at: at(-4), created_at: at(-5) },
-    { id: 'local-test-message', application_id: 'local-test-customer', email: 'test-customer@growtheko.local', sender_type: 'customer', sender_name: 'Mia', content: 'Can I start with my existing page and organic traffic first?', message_type: 'text', metadata: { scenario: true }, read_at: null, created_at: at(-4) }
+    { id: 'local-test-message-team', application_id: 'local-test-customer', email: 'test-customer@growtheko.local', sender_type: 'team', sender_name: 'Nora', content: 'Application received. I will keep your next step small and specific.', message_type: 'text', metadata: { scenario: true, channel: 'email', delivery_email: 'not_sent' }, read_at: at(-4), created_at: at(-5) },
+    { id: 'local-test-message', application_id: 'local-test-customer', email: 'test-customer@growtheko.local', sender_type: 'customer', sender_name: 'Mia', content: 'Can I start with my existing page and organic traffic first?', message_type: 'text', metadata: { scenario: true, channel: 'email', source: 'resend_inbound' }, read_at: null, created_at: at(-4) }
   ];
   const opportunities = [{
     id: 'local-test-opportunity', opportunity_id: 'local-test-opportunity', opportunity_status: 'open',
@@ -514,8 +514,8 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
   }];
   const activityEvents = [
     { id: 'local-test-application-event', event_type: 'application_submitted', entity_type: 'application', entity_id: 'local-test-customer', application_id: 'local-test-customer', opportunity_id: 'local-test-opportunity', email: leads[0].email, actor_type: 'customer', actor_name: 'Customer', channel: 'web', summary: 'Application submitted', detail: 'A new application entered the verified intake.', occurred_at: at(-5), source_table: 'applications' },
-    { id: 'local-test-message-team-event', event_type: 'message_stored', entity_type: 'message', entity_id: 'local-test-message-team', application_id: 'local-test-customer', opportunity_id: 'local-test-opportunity', email: leads[0].email, actor_type: 'nora', actor_name: 'Nora', channel: 'portal_inbox', summary: 'Communication stored', detail: interactions[0].content, occurred_at: at(-5), source_table: 'messages' },
-    { id: 'local-test-message-event', event_type: 'message_stored', entity_type: 'message', entity_id: 'local-test-message', application_id: 'local-test-customer', opportunity_id: 'local-test-opportunity', email: leads[0].email, actor_type: 'customer', actor_name: 'Mia', channel: 'portal_inbox', summary: 'Customer message stored', detail: interactions[1].content, occurred_at: at(-4), source_table: 'messages' }
+    { id: 'local-test-message-team-event', event_type: 'message_stored', entity_type: 'message', entity_id: 'local-test-message-team', application_id: 'local-test-customer', opportunity_id: 'local-test-opportunity', email: leads[0].email, actor_type: 'nora', actor_name: 'Nora', channel: 'email', summary: 'Email recorded', detail: interactions[0].content, occurred_at: at(-5), source_table: 'messages' },
+    { id: 'local-test-message-event', event_type: 'message_stored', entity_type: 'message', entity_id: 'local-test-message', application_id: 'local-test-customer', opportunity_id: 'local-test-opportunity', email: leads[0].email, actor_type: 'customer', actor_name: 'Mia', channel: 'email', summary: 'Customer email received', detail: interactions[1].content, occurred_at: at(-4), source_table: 'messages' }
   ];
   const queue = commandQueue(people, leads, interactions, reference, policy.active_phase, opportunities);
 

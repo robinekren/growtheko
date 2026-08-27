@@ -9,13 +9,13 @@
 import { GROWTHEKO_PUBLIC_EMAIL, GROWTHEKO_RESEND_FROM } from '../_mail-config.js';
 
 const NURTURE_SCHEDULE = [
-  { day: 1, index: 1, subject: "Quick question, {name}", type: "nurture" },
-  { day: 3, index: 2, subject: "Most people get this wrong", type: "nurture" },
-  { day: 5, index: 3, subject: "This is what's actually costing you money", type: "nurture" },
-  { day: 7, index: 4, subject: "{name}, are you still serious?", type: "nurture" },
-  { day: 14, index: 5, subject: "2 weeks later: still no call booked", type: "nurture" },
-  { day: 21, index: 6, subject: "Last few spots this month", type: "nurture" },
-  { day: 30, index: 7, subject: "Final check-in", type: "nurture" },
+  { day: 1, index: 1, subject: "your next step, {name}", type: "nurture" },
+  { day: 3, index: 2, subject: "a simple way to move forward", type: "nurture" },
+  { day: 5, index: 3, subject: "where are you stuck?", type: "nurture" },
+  { day: 7, index: 4, subject: "checking in, {name}", type: "nurture" },
+  { day: 14, index: 5, subject: "still useful?", type: "nurture" },
+  { day: 21, index: 6, subject: "want help choosing the next step?", type: "nurture" },
+  { day: 30, index: 7, subject: "closing the loop", type: "nurture" },
 ];
 
 function getNurtureHtml(index, firstName, calendlyUrl, communityUrl) {
@@ -23,52 +23,49 @@ function getNurtureHtml(index, firstName, calendlyUrl, communityUrl) {
     1: `<p>Hey ${firstName},</p>
 <p>You applied but haven't booked your Free Clarity Call yet.</p>
 <p>Quick question: did you enter the private community yet?</p>
-<p>It matters because that is where the next step and context will live before the momentum goes cold.</p>
+<p>It matters because that is where the next step and context live, so you can decide whether this fits without guessing.</p>
 <p style="text-align:center;margin:30px 0;"><a href="${communityUrl}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">Enter The Private Community</a></p>
-<p>The people who move while the idea is fresh are usually the ones who actually build something.</p>
+<p>If anything is unclear, reply directly and tell me where you're stuck.</p>
 <p>Robin & The EKO Growth Team</p>`,
 
     2: `<p>Hey ${firstName},</p>
-<p>Most people who want to build an online business start by watching 200 YouTube videos, buying 3 courses, and then doing... nothing.</p>
-<p>The ones who actually move take the next step before they overthink it.</p>
+<p>You do not need another pile of information. You only need the next clear step.</p>
 <p>Your application is still open. Enter the private community, watch the pinned next step there, then book the call if the direction fits.</p>
 <p style="text-align:center;margin:30px 0;"><a href="${communityUrl}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">Enter The Private Community</a></p>
 <p>Robin & The EKO Growth Team</p>`,
 
     3: `<p>Hey ${firstName},</p>
-<p>Every day without a system, you're leaving money on the table. Example: actual revenue you could be collecting right now with the right AI workflows in place.</p>
-<p>That is why I do not want you sitting in your inbox. Enter the private room while it is still open.</p>
+<p>I wanted to check whether the next step is clear or whether something is blocking you.</p>
+<p>You can enter the private room for the full context, or reply directly and tell me the bottleneck.</p>
 <p style="text-align:center;margin:30px 0;"><a href="${communityUrl}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">Enter The Private Community</a></p>
 <p>Robin & The EKO Growth Team</p>`,
 
     4: `<p>Hey ${firstName},</p>
-<p>It's been a week since you applied. I'm not going to pretend I don't notice.</p>
-<p>You filled out the application. You said you wanted this. So what's holding you back?</p>
-<p>If it's doubt, that is normal. Every founder feels it. The difference is whether you act anyway.</p>
-<p>The private room is still open. Enter it, watch the pinned next step, then decide with a clear head.</p>
+<p>It has been a week since you applied, so I wanted to check in.</p>
+<p>If the timing is wrong, that is completely fine. If you are unsure, reply and tell me what you need to decide.</p>
+<p>The private room is available if you want the full context first.</p>
 <p style="text-align:center;margin:30px 0;"><a href="${communityUrl}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">Enter The Private Community</a></p>
 <p>Robin & The EKO Growth Team</p>`,
 
     5: `<p>Hey ${firstName},</p>
-<p>Two weeks ago you applied to work with us. Since then, nothing happened.</p>
-<p>Meanwhile, other applicants are already inside the room, getting context and moving faster.</p>
-<p>Your application is still active. But I cannot keep the private next step open forever.</p>
-<p style="text-align:center;margin:30px 0;"><a href="${communityUrl}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">Enter Before It Closes</a></p>
+<p>Two weeks ago you applied to work with us. Is this still useful for you?</p>
+<p>If yes, the private next step is below. If no, you can ignore this and I will not treat silence as a yes.</p>
+<p style="text-align:center;margin:30px 0;"><a href="${communityUrl}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">See The Next Step</a></p>
 <p>Robin & The EKO Growth Team</p>`,
 
     6: `<p>Hey ${firstName},</p>
-<p>We're closing out applications for this month soon. Only a few Free Clarity Call spots are left.</p>
-<p>If you're still serious about building something real, now is the time.</p>
-<p>Enter the private community first. Then book if the direction fits.</p>
-<p style="text-align:center;margin:30px 0;"><a href="${communityUrl}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">Enter Before The Window Closes</a></p>
+<p>Do you still want help choosing the next step?</p>
+<p>If yes, enter the private community for the context, then book only if the direction fits.</p>
+<p style="text-align:center;margin:30px 0;"><a href="${communityUrl}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">See The Next Step</a></p>
+<p>You can also reply directly with your question.</p>
 <p>Robin & The EKO Growth Team</p>`,
 
     7: `<p>Hey ${firstName},</p>
 <p>This is my last email about this.</p>
 <p>You applied 30 days ago. I respect that you might have moved on. No hard feelings.</p>
-<p>But if there is still a part of you that wants to build a real AI-powered business, the private community is open one more time:</p>
-<p style="text-align:center;margin:30px 0;"><a href="${communityUrl}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">Final Access</a></p>
-<p>After this, I'll close your application. No follow-ups. If you ever want to come back, just reapply.</p>
+<p>If you still want the context, you can find it here:</p>
+<p style="text-align:center;margin:30px 0;"><a href="${communityUrl}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">See The Next Step</a></p>
+<p>After this, there will be no more automated follow-ups. You can reply anytime.</p>
 <p>All the best,<br/>Robin & The EKO Growth Team</p>`
   };
   return templates[index] || '';
@@ -124,31 +121,103 @@ function wrapEmail(bodyHtml) {
 </div>`;
 }
 
-async function sendEmail(to, subject, html) {
+function htmlToText(value) {
+  return String(value || '')
+    .replace(/<a[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/gis, '$2 ($1)')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>|<\/li>|<\/ul>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&#039;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+async function sendEmail(to, subject, html, messageId) {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  if (!RESEND_API_KEY) { console.log('No RESEND_API_KEY'); return false; }
+  if (!RESEND_API_KEY) { console.log('No RESEND_API_KEY'); return { ok: false, id: null }; }
+  const replyTo = String(process.env.GROWTHEKO_INBOUND_EMAIL || '').trim().toLowerCase();
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...(messageId ? { 'Idempotency-Key': `nurture-${messageId}` } : {})
     },
     body: JSON.stringify({
       from: GROWTHEKO_RESEND_FROM,
       to: [to],
       subject: subject,
-      html: wrapEmail(html)
+      html: wrapEmail(html),
+      ...(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyTo) ? { reply_to: replyTo } : {})
     })
   });
 
   if (!res.ok) {
     const err = await res.text();
     console.error(`Email failed to ${to}:`, err);
-    return false;
+    return { ok: false, id: null };
   }
+  const payload = await res.json().catch(() => ({}));
   console.log(`Email sent: "${subject}" → ${to}`);
-  return true;
+  return { ok: true, id: String(payload.id || '').slice(0, 240) || null };
+}
+
+function serviceHeaders(key, extra = {}) {
+  return { apikey: key, Authorization: `Bearer ${key}`, ...extra };
+}
+
+async function deliverTrackedEmail({ supabaseUrl, supabaseKey, application, subject, html, emailType, emailIndex }) {
+  const queuedMetadata = {
+    source: 'nurture_cron', channel: 'email', notification_type: emailType,
+    email_type: emailType, email_index: emailIndex, subject,
+    delivery_email: 'pending', automated: true
+  };
+  const insert = await fetch(`${supabaseUrl}/rest/v1/messages`, {
+    method: 'POST',
+    headers: serviceHeaders(supabaseKey, { 'Content-Type': 'application/json', Prefer: 'return=representation' }),
+    body: JSON.stringify({
+      application_id: application.id,
+      sender_type: 'team',
+      sender_name: 'Nora',
+      content: htmlToText(html),
+      message_type: 'text',
+      metadata: queuedMetadata
+    })
+  });
+  if (!insert.ok) throw new Error(`Automated email ledger rejected: ${insert.status}`);
+  const stored = (await insert.json().catch(() => []))?.[0];
+  if (!stored?.id) throw new Error('Automated email ledger returned no source record');
+
+  const delivery = await sendEmail(application.email, subject, html, stored.id);
+  const metadata = { ...queuedMetadata, delivery_email: delivery.ok ? 'sent' : 'failed', resend_id: delivery.id };
+  const update = await fetch(`${supabaseUrl}/rest/v1/messages?id=eq.${encodeURIComponent(stored.id)}`, {
+    method: 'PATCH',
+    headers: serviceHeaders(supabaseKey, { 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
+    body: JSON.stringify({ metadata })
+  });
+  if (!update.ok) throw new Error(`Automated email delivery state rejected: ${update.status}`);
+
+  const audit = await fetch(`${supabaseUrl}/rest/v1/ops_audit_events?on_conflict=event_key`, {
+    method: 'POST',
+    headers: serviceHeaders(supabaseKey, { 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=minimal' }),
+    body: JSON.stringify({
+      event_key: `automated-email:${stored.id}`,
+      actor_type: 'system', actor_id: 'nurture_cron', event_type: 'customer_email_sent',
+      entity_type: 'message', entity_id: stored.id, application_id: application.id,
+      source_table: 'messages', source_record_id: stored.id, channel: 'email',
+      summary: delivery.ok ? 'Automated customer email sent and recorded' : 'Automated customer email recorded but not delivered',
+      metadata: { email_type: emailType, email_index: emailIndex, email_delivery: metadata.delivery_email, automated: true },
+      occurred_at: new Date().toISOString()
+    })
+  });
+  if (!audit.ok) throw new Error(`Automated email audit rejected: ${audit.status}`);
+  return delivery;
 }
 
 async function logEmail(supabaseUrl, supabaseKey, email, emailType, emailIndex) {
@@ -296,9 +365,10 @@ export default async function handler(req, res) {
   const SUPABASE_URL = process.env.GROWTHEKO_SUPABASE_URL;
   const SUPABASE_KEY = process.env.GROWTHEKO_SUPABASE_SERVICE_KEY;
 
-  // ═══ NORA AUTO-REPLY MODE ═══
+  // Legacy auto-reply is permanently retired. Customer replies are drafted in OPS
+  // and can only be sent through the explicit email composer.
   if (req.query.mode === 'nora') {
-    return await handleNoraReply(req, res, SUPABASE_URL, SUPABASE_KEY);
+    return res.status(410).json({ disabled: true, reason: 'Use the reviewed OPS email workflow.' });
   }
 
   if (!SUPABASE_URL || !SUPABASE_KEY) {
@@ -318,7 +388,7 @@ export default async function handler(req, res) {
     // 1. NURTURE: Applied but NOT booked
     // ═══════════════════════════════════════════
     const nurtureRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/applications?booked_at=is.null&status=eq.new&select=email,first_name,last_name,submitted_at`,
+      `${SUPABASE_URL}/rest/v1/applications?booked_at=is.null&status=eq.new&select=id,email,first_name,last_name,submitted_at`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
     );
 
@@ -339,8 +409,8 @@ export default async function handler(req, res) {
             const html = getNurtureHtml(step.index, app.first_name, calendlyUrl, communityUrl);
 
             if (html) {
-              const ok = await sendEmail(app.email, subject, html);
-              if (ok) {
+              const delivery = await deliverTrackedEmail({ supabaseUrl: SUPABASE_URL, supabaseKey: SUPABASE_KEY, application: app, subject, html, emailType: 'nurture', emailIndex: step.index });
+              if (delivery.ok) {
                 await logEmail(SUPABASE_URL, SUPABASE_KEY, app.email, 'nurture', step.index);
                 results.nurture++;
               } else {
@@ -360,7 +430,7 @@ export default async function handler(req, res) {
     const tomorrowPlus = new Date(now.getTime() + 25 * 60 * 60 * 1000);
 
     const reminder24Res = await fetch(
-      `${SUPABASE_URL}/rest/v1/applications?call_status=eq.booked&call_date=gte.${tomorrow.toISOString()}&call_date=lte.${tomorrowPlus.toISOString()}&select=email,first_name,last_name,call_date`,
+      `${SUPABASE_URL}/rest/v1/applications?call_status=eq.booked&call_date=gte.${tomorrow.toISOString()}&call_date=lte.${tomorrowPlus.toISOString()}&select=id,email,first_name,last_name,call_date`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
     );
 
@@ -371,8 +441,9 @@ export default async function handler(req, res) {
         if (!sent.some(s => s.email_type === 'reminder_24h')) {
           const calendlyUrl = `https://calendly.com/robinekren/free-clarity-call-30-min`;
           const html = getReminderHtml('reminder_24h', app.first_name, calendlyUrl, app.call_date);
-          const ok = await sendEmail(app.email, `Tomorrow: Your Free Clarity Call, ${app.first_name}`, html);
-          if (ok) {
+          const subject = `Tomorrow: Your Free Clarity Call, ${app.first_name}`;
+          const delivery = await deliverTrackedEmail({ supabaseUrl: SUPABASE_URL, supabaseKey: SUPABASE_KEY, application: app, subject, html, emailType: 'reminder_24h', emailIndex: 0 });
+          if (delivery.ok) {
             await logEmail(SUPABASE_URL, SUPABASE_KEY, app.email, 'reminder_24h', 0);
             results.reminder_24h++;
           }
@@ -387,7 +458,7 @@ export default async function handler(req, res) {
     const oneHourPlus = new Date(now.getTime() + 65 * 60 * 1000);
 
     const reminder1hRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/applications?call_status=eq.booked&call_date=gte.${oneHour.toISOString()}&call_date=lte.${oneHourPlus.toISOString()}&select=email,first_name,last_name,call_date`,
+      `${SUPABASE_URL}/rest/v1/applications?call_status=eq.booked&call_date=gte.${oneHour.toISOString()}&call_date=lte.${oneHourPlus.toISOString()}&select=id,email,first_name,last_name,call_date`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
     );
 
@@ -398,8 +469,9 @@ export default async function handler(req, res) {
         if (!sent.some(s => s.email_type === 'reminder_1h')) {
           const calendlyUrl = `https://calendly.com/robinekren/free-clarity-call-30-min`;
           const html = getReminderHtml('reminder_1h', app.first_name, calendlyUrl, app.call_date);
-          const ok = await sendEmail(app.email, `Starting in 1 hour: your Free Clarity Call`, html);
-          if (ok) {
+          const subject = 'Starting in 1 hour: your Free Clarity Call';
+          const delivery = await deliverTrackedEmail({ supabaseUrl: SUPABASE_URL, supabaseKey: SUPABASE_KEY, application: app, subject, html, emailType: 'reminder_1h', emailIndex: 0 });
+          if (delivery.ok) {
             await logEmail(SUPABASE_URL, SUPABASE_KEY, app.email, 'reminder_1h', 0);
             results.reminder_1h++;
           }
@@ -414,7 +486,7 @@ export default async function handler(req, res) {
     const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
     const noShowRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/applications?call_status=eq.booked&call_date=gte.${oneDayAgo.toISOString()}&call_date=lte.${twoHoursAgo.toISOString()}&select=email,first_name,last_name,call_date`,
+      `${SUPABASE_URL}/rest/v1/applications?call_status=eq.booked&call_date=gte.${oneDayAgo.toISOString()}&call_date=lte.${twoHoursAgo.toISOString()}&select=id,email,first_name,last_name,call_date`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
     );
 
@@ -425,8 +497,9 @@ export default async function handler(req, res) {
         if (!sent.some(s => s.email_type === 'no_show')) {
           const calendlyUrl = `https://calendly.com/robinekren/free-clarity-call-30-min?name=${encodeURIComponent(app.first_name + ' ' + app.last_name)}&email=${encodeURIComponent(app.email)}`;
           const html = getReminderHtml('no_show', app.first_name, calendlyUrl, app.call_date);
-          const ok = await sendEmail(app.email, `We missed you: let's rebook`, html);
-          if (ok) {
+          const subject = `We missed you: let's rebook`;
+          const delivery = await deliverTrackedEmail({ supabaseUrl: SUPABASE_URL, supabaseKey: SUPABASE_KEY, application: app, subject, html, emailType: 'no_show', emailIndex: 0 });
+          if (delivery.ok) {
             await logEmail(SUPABASE_URL, SUPABASE_KEY, app.email, 'no_show', 0);
             // Mark as no_show
             await fetch(
@@ -452,7 +525,7 @@ export default async function handler(req, res) {
     // 5. NO-SHOW REBOOK: Follow-up sequence (day 2, 5 after no-show)
     // ═══════════════════════════════════════════
     const noShowRebookRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/applications?call_status=eq.no_show&select=email,first_name,last_name,call_date`,
+      `${SUPABASE_URL}/rest/v1/applications?call_status=eq.no_show&select=id,email,first_name,last_name,call_date`,
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
     );
 
@@ -460,20 +533,20 @@ export default async function handler(req, res) {
       const noShowPeople = await noShowRebookRes.json();
       const rebookSchedule = [
         { day: 2, index: 1, subject: "Still want that roadmap, {name}?" },
-        { day: 5, index: 2, subject: "Last chance to rebook: then I'm closing your file" },
+        { day: 5, index: 2, subject: "closing the loop on your call" },
       ];
 
       const rebookTemplates = {
         1: (fn, url) => `<p>Hey ${fn},</p>
 <p>Things come up, I get it. But your custom roadmap is still waiting.</p>
-<p>I kept a spot open for you. Same deal: 30 minutes, we audit your setup, give you the plan, you decide what to do with it.</p>
+<p>If a call is still useful, you can choose a new time. Same format: 30 minutes, we audit your setup, give you the plan, and you decide what to do with it.</p>
 <p style="text-align:center;margin:30px 0;"><a href="${url}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">Rebook Your Free Clarity Call</a></p>
 <p>Robin & The EKO Growth Team</p>`,
 
         2: (fn, url) => `<p>Hey ${fn},</p>
 <p>This is my last message about rebooking.</p>
-<p>I'll be closing your application file after this. If you still want the Free Clarity Call and the custom roadmap, book now:</p>
-<p style="text-align:center;margin:30px 0;"><a href="${url}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">Final Rebook: Last Spot</a></p>
+<p>If you still want the Free Clarity Call and the custom roadmap, you can choose a new time here:</p>
+<p style="text-align:center;margin:30px 0;"><a href="${url}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#DDBB6C,#C99B43);color:#11160f;text-decoration:none;border-radius:10px;font-size:16px;font-weight:700;">Choose A New Time</a></p>
 <p>No hard feelings either way. Wishing you the best.</p>
 <p>Robin & The EKO Growth Team</p>`
       };
@@ -491,8 +564,8 @@ export default async function handler(req, res) {
             const html = rebookTemplates[step.index](app.first_name, calendlyUrl);
 
             if (html) {
-              const ok = await sendEmail(app.email, subject, wrapEmail(html));
-              if (ok) {
+              const delivery = await deliverTrackedEmail({ supabaseUrl: SUPABASE_URL, supabaseKey: SUPABASE_KEY, application: app, subject, html, emailType: 'no_show_rebook', emailIndex: step.index });
+              if (delivery.ok) {
                 await logEmail(SUPABASE_URL, SUPABASE_KEY, app.email, 'no_show_rebook', step.index);
                 results.no_show_rebook++;
               }
@@ -510,80 +583,4 @@ export default async function handler(req, res) {
     console.error('Nurture cron error:', error);
     return res.status(500).json({ error: error.message });
   }
-}
-
-// ═══════════════════════════════════════════
-// NORA AUTO-REPLY — Merged from nora-reply.js
-// Checks unread customer messages, generates AI reply in Robin's voice
-// ═══════════════════════════════════════════
-async function handleNoraReply(req, res, SUPABASE_URL, SUPABASE_KEY) {
-  const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
-  const RESEND_KEY = process.env.RESEND_API_KEY;
-  if (!SUPABASE_URL || !SUPABASE_KEY || !ANTHROPIC_KEY) {
-    return res.status(500).json({ error: 'Missing env vars for Nora' });
-  }
-  try {
-    const msgsRes = await fetch(`${SUPABASE_URL}/rest/v1/messages?sender_type=eq.customer&read_at=is.null&order=created_at.asc&limit=20`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
-    const unreadMessages = await msgsRes.json();
-    if (!unreadMessages.length) return res.status(200).json({ message: 'No unread messages', replied: 0 });
-
-    const grouped = {};
-    for (const msg of unreadMessages) { if (!grouped[msg.application_id]) grouped[msg.application_id] = []; grouped[msg.application_id].push(msg); }
-
-    let repliedCount = 0;
-    for (const [appId, messages] of Object.entries(grouped)) {
-      const appRes = await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${appId}&select=*`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
-      const [app] = await appRes.json();
-      if (!app) continue;
-
-      const recentTeamRes = await fetch(`${SUPABASE_URL}/rest/v1/messages?application_id=eq.${appId}&sender_type=eq.team&order=created_at.desc&limit=1`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
-      const [lastTeamMsg] = await recentTeamRes.json();
-      if (lastTeamMsg) {
-        if (new Date(lastTeamMsg.created_at).getTime() > new Date(messages[0].created_at).getTime()) {
-          for (const msg of messages) await noraMarkRead(SUPABASE_URL, SUPABASE_KEY, msg.id);
-          continue;
-        }
-      }
-
-      const histRes = await fetch(`${SUPABASE_URL}/rest/v1/messages?application_id=eq.${appId}&order=created_at.asc&limit=30`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
-      const history = await histRes.json();
-      const stage = app.stage || 'applied';
-      const tier = app.selected_tier;
-      const name = app.name || 'there';
-      const firstName = name.split(' ')[0];
-
-      const systemPrompt = `You are Nora, ghostwriting as Robin Ekren — CEO of GrowthEko. VOICE: Casual, direct, confident. Short sentences. Use "bro","dude","let's go" naturally. No corporate fluff. No emojis overload. Under 50 words. CUSTOMER: ${firstName}, Stage: ${stage}, Tier: ${tier||'none'}, Business: ${app.product_type||'unknown'}, Revenue: ${app.current_revenue||'unknown'}, Challenge: ${app.biggest_challenge||'unknown'}. STRATEGY: applied=build trust, booked=confirm excitement, sold=welcome+next step, active=check in, upsell_ready=reference results. ONE message. End with clarity.`;
-
-      const chatMessages = history.map(m => ({ role: m.sender_type === 'customer' ? 'user' : 'assistant', content: m.content }));
-      const latestCustomerMsg = messages[messages.length - 1].content;
-
-      const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 200, system: systemPrompt, messages: [...chatMessages.slice(-15), { role: 'user', content: latestCustomerMsg }] })
-      });
-      if (!aiRes.ok) { console.error('Claude API error:', await aiRes.text()); continue; }
-      const aiData = await aiRes.json();
-      const reply = aiData.content[0]?.text;
-      if (!reply) continue;
-
-      await fetch(`${SUPABASE_URL}/rest/v1/messages`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }, body: JSON.stringify({ application_id: appId, sender_type: 'team', sender_name: 'Nora', content: reply, message_type: 'text', metadata: { auto_generated: true } }) });
-      await fetch(`${SUPABASE_URL}/rest/v1/applications?id=eq.${appId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }, body: JSON.stringify({ last_message_at: new Date().toISOString() }) });
-
-      if (RESEND_KEY && app.email) {
-        await fetch('https://api.resend.com/emails', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${RESEND_KEY}` }, body: JSON.stringify({ from: GROWTHEKO_RESEND_FROM, to: [app.email], subject: `Hey ${firstName}: quick reply`, html: `<div style="font-family:-apple-system,sans-serif;max-width:480px;margin:0 auto;padding:40px 20px;"><div style="font-family:'Times New Roman',serif;font-size:18px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:30px;color:#111;">GROWTHEKO</div><div style="font-size:15px;line-height:1.7;color:#333;margin-bottom:30px;">${reply.replace(/\n/g,'<br>')}</div><a href="https://www.growtheko.com/chat" style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg,#0066FF,#0052CC);color:white;text-decoration:none;border-radius:10px;font-size:13px;font-weight:600;">Reply in Your Portal →</a></div>` }) });
-      }
-
-      for (const msg of messages) await noraMarkRead(SUPABASE_URL, SUPABASE_KEY, msg.id);
-      repliedCount++;
-    }
-    return res.status(200).json({ success: true, replied: repliedCount, checked: Object.keys(grouped).length, timestamp: new Date().toISOString() });
-  } catch (error) {
-    console.error('Nora reply error:', error);
-    return res.status(500).json({ error: error.message });
-  }
-}
-
-async function noraMarkRead(supabaseUrl, supabaseKey, messageId) {
-  await fetch(`${supabaseUrl}/rest/v1/messages?id=eq.${messageId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` }, body: JSON.stringify({ read_at: new Date().toISOString() }) });
 }
