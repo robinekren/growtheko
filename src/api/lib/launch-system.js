@@ -8,17 +8,17 @@ const EXISTING_SYSTEM_OWNERS = new Set(['yes', 'no']);
 export const LAUNCH_TEMPLATES = Object.freeze({
   authority_product: Object.freeze({
     key: 'authority_product',
-    name: 'Authority Product',
-    bestFor: 'Digital products, expertise, education, applications and direct checkout.',
+    name: 'Digital Estate',
+    bestFor: 'A content-led digital asset, product, education path or direct checkout.',
     previewUrl: '/launch-preview?template=authority_product&mode=guide',
     suggestedCtas: Object.freeze(['checkout', 'application', 'book_call'])
   }),
   local_service: Object.freeze({
     key: 'local_service',
-    name: 'Local Service',
-    bestFor: 'Local trust, calls, WhatsApp, lead forms and appointment requests.',
+    name: 'AI Service',
+    bestFor: 'A trust-led AI service sold through proof and one clear client conversation.',
     previewUrl: '/launch-preview?template=local_service&mode=guide',
-    suggestedCtas: Object.freeze(['phone', 'whatsapp', 'lead_form', 'book_call'])
+    suggestedCtas: Object.freeze(['book_call', 'application', 'whatsapp'])
   })
 });
 
@@ -44,7 +44,7 @@ function text(value, max = 5000) {
 export function normalizeLaunchInput(data = {}) {
   const templateKey = choice(data.launch_template, TEMPLATE_KEYS, 'authority_product');
   const trafficMode = choice(data.traffic_mode, TRAFFIC_MODES, 'undecided');
-  const primaryCta = choice(data.primary_cta, CTA_KEYS, templateKey === 'local_service' ? 'phone' : 'application');
+  const primaryCta = choice(data.primary_cta, CTA_KEYS, templateKey === 'local_service' ? 'book_call' : 'checkout');
   const ownershipFallback = data.website || data.existing_system_links ? 'yes' : 'no';
   const existingSystemOwner = choice(data.existing_system_owner, EXISTING_SYSTEM_OWNERS, ownershipFallback);
   const ownsExistingSystem = existingSystemOwner === 'yes';

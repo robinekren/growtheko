@@ -7,7 +7,7 @@ import { createHash, randomBytes } from 'crypto';
 import { GROWTHEKO_NOTIFY_EMAIL, GROWTHEKO_PUBLIC_EMAIL, sender } from './_mail-config.js';
 import { verifyOnboardingToken } from './lib/onboarding-token.js';
 import { resolveOfferKey } from './lib/offer-registry.js';
-import { buildLaunchWorkspace, launchArtifactSeeds } from './lib/launch-system.js';
+import { LAUNCH_TEMPLATES, buildLaunchWorkspace, launchArtifactSeeds } from './lib/launch-system.js';
 
 // ========================================
 // PASSWORD HELPERS — matches portal-auth Edge Function exactly
@@ -706,6 +706,7 @@ async function sendCheckedResendEmail(apiKey, payload, idempotencyKey) {
 // HELPER: Generate Client Brief HTML for Robin
 // ========================================
 function generateClientBrief(data, tier, completedAt) {
+  const launchTemplateName = LAUNCH_TEMPLATES[data.launch_template]?.name || data.launch_template || '—';
   data = Object.fromEntries(Object.entries(data).map(([key, value]) => [
     key,
     escapeHtmlServer(Array.isArray(value) ? value.join(', ') : String(value ?? ''))
@@ -749,7 +750,7 @@ function generateClientBrief(data, tier, completedAt) {
         <tr><td style="padding: 6px 0; color: #888; width: 140px;">Existing system:</td><td>${data.existing_system_owner === 'yes' || (!data.existing_system_owner && data.website) ? 'Yes' : 'No — clean build'}</td></tr>
         <tr><td style="padding: 6px 0; color: #888; width: 140px;">Website:</td><td>${data.website_state || '—'}</td></tr>
         ${data.existing_system_owner === 'yes' || (!data.existing_system_owner && data.website) ? `<tr><td style="padding: 6px 0; color: #888;">System links:</td><td>${data.existing_system_links || data.website || 'not provided'}</td></tr>` : ''}
-        <tr><td style="padding: 6px 0; color: #888;">Template:</td><td><strong>${data.launch_template || '—'}</strong></td></tr>
+        <tr><td style="padding: 6px 0; color: #888;">Template:</td><td><strong>${escapeHtmlServer(launchTemplateName)}</strong></td></tr>
         <tr><td style="padding: 6px 0; color: #888;">Primary CTA:</td><td>${data.primary_cta || '—'} → ${data.cta_destination || 'destination missing'}</td></tr>
         <tr><td style="padding: 6px 0; color: #888;">Traffic:</td><td>${data.traffic_mode || '—'}</td></tr>
         <tr><td style="padding: 6px 0; color: #888;">Domain:</td><td>${data.domain_mode || '—'} · ${data.domain_value || 'not selected'}</td></tr>
@@ -1321,7 +1322,7 @@ START NOW. Phase 0, Task 0.1. Go.`;
 
 function generateLaunchWorkspacePrompt(data, tier) {
   const d = (field, fallback = 'Not captured') => String(data[field] || fallback).trim();
-  const templateName = d('launch_template', 'authority_product') === 'local_service' ? 'Local Service' : 'Authority Product';
+  const templateName = LAUNCH_TEMPLATES[d('launch_template', 'authority_product')]?.name || LAUNCH_TEMPLATES.authority_product.name;
   const scope = tier === 'architect'
     ? 'Architect: operate the signed systems in sequence. This run completes one launch path before another begins.'
     : 'Sprint: one bounded launch path with one acceptance test. Do not expand the signed System Unit.';

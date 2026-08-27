@@ -12,6 +12,8 @@ import {
 
 test('launch system exposes exactly two page families and seven canonical artifacts', () => {
   assert.deepEqual(Object.keys(LAUNCH_TEMPLATES), ['authority_product', 'local_service']);
+  assert.equal(LAUNCH_TEMPLATES.authority_product.name, 'Digital Estate');
+  assert.equal(LAUNCH_TEMPLATES.local_service.name, 'AI Service');
   assert.deepEqual(LAUNCH_ARTIFACTS.map(item => item.key), [
     'page_copy', 'page_build', 'asset_pack', 'email_sequence',
     'tracking_plan', 'legal_checklist', 'traffic_plan'
@@ -26,6 +28,7 @@ test('onboarding becomes one bounded launch workspace without inventing missing 
     traffic_mode: 'paid', domain_mode: 'undecided', asset_state: 'needs_support'
   });
   assert.equal(workspace.template_key, 'local_service');
+  assert.equal(workspace.launch_config.template_name, 'AI Service');
   assert.equal(workspace.owns_existing_system, false);
   assert.equal(workspace.website_state, 'no_website');
   assert.equal(workspace.launch_config.gates.template_approval, false);
@@ -92,6 +95,13 @@ test('guided previews and launch intake are part of the existing onboarding and 
   assert.match(onboarding, /Nothing is published and no ads run from onboarding/);
   assert.match(onboarding, /Do you already own a website or funnel system/);
   assert.match(onboarding, /Choose one answer above to reveal only the questions that apply to you/);
+  assert.match(onboarding, /digital-estate-reference\.jpg/);
+  assert.match(onboarding, /ai-service-reference\.jpg/);
+  assert.match(onboarding, /View example/);
+  assert.match(preview, /Build a digital asset that/);
+  assert.match(preview, /Your free time/);
+  assert.doesNotMatch(onboarding, />Authority Product</);
+  assert.doesNotMatch(onboarding, />Local Service</);
   assert.match(ops, /Launch Workspace/);
   assert.match(portal, /Confirm your Launch Workspace direction/);
   assert.equal((ops.match(/data-view="/g) || []).length, 5);
