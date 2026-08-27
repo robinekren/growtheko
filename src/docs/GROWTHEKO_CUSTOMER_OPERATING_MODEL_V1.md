@@ -86,6 +86,14 @@ Human approval is mandatory for pricing exceptions, refunds, contracts, scope ch
 
 Do not manufacture human latency. The service target is a clear same-business-day response; urgent security or access incidents route immediately. Do not claim Robin wrote a message that he did not write. Ryan may communicate as `Ryan — GrowthEko Customer Success`, never by impersonating Robin. Yekdal may own qualified high-ticket calls and proposals under an approved sales SOP, never inventing proof or terms.
 
+### Operator Inbox delivery contract
+
+The OPS Inbox groups canonical `messages` records into one private thread per verified application. It is a communication surface, not a second CRM. The collapsed context card may open the matching Customer 360 record; the fixed conversation area contains the chronological message ledger and the only operator composer.
+
+An operator reply entered in the Inbox is stored first as a `team` message from `Nora`. The customer sees it in the private portal. When the application has a verified deliverable email and Resend is configured, the system also sends an email notification linking back to the portal. The portal record remains the canonical message even if email delivery is unavailable. Every production send writes a source-linked `customer_message_sent` audit event; opening or closing the UI does not send anything.
+
+WhatsApp is not an implied fallback. It may be added only after an official business API, verified destination mapping, customer opt-in, template rules and delivery logging are connected. Localhost is always a preview: the complete composer can be tested, but no database record, email or WhatsApp message leaves the machine.
+
 ## Customer-success decision rule
 
 Every interaction is routed to one outcome:

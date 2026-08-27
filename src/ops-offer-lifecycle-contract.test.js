@@ -161,16 +161,16 @@ test('localhost scenario source exposes exactly one labelled test customer at th
   assert.equal(data.leads.length, 1);
   assert.equal(records.length, 1);
   assert.equal(data.command_queue.length, 1);
-  assert.equal(data.decisions.length, 0);
-  assert.equal(data.interactions.length, 1);
+  assert.equal(data.decisions.length, 1);
+  assert.equal(data.interactions.length, 2);
   assert.equal(data.opportunities.length, 1);
-  assert.equal(data.activity_events.length, 2);
+  assert.equal(data.activity_events.length, 3);
   assert.equal(data.audit_coverage.active, true);
   assert.equal(data.command_queue[0].opportunity_id, data.opportunities[0].id);
   assert.equal(records[0].is_scenario, true);
   assert.equal(records[0].name, 'Test customer · New application');
   assert.equal(records[0].stage, 'Diagnose');
-  assert.equal(data.command_queue[0].playbook, 'scope-diagnosis');
+  assert.equal(data.command_queue[0].playbook, 'customer-message-response');
   assert.deepEqual(data.offer_lifecycle.map(step => step.records), [1, 0, 0, 0, 0]);
 });
 

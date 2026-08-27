@@ -486,7 +486,8 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
     }
   ];
   const interactions = [
-    { id: 'local-test-message', application_id: 'local-test-customer', email: 'test-customer@growtheko.local', sender_type: 'team', sender_name: 'Nora', content: 'Application received. Scope diagnosis is queued from the verified intake.', message_type: 'text', metadata: { scenario: true }, read_at: at(-4), created_at: at(-5) }
+    { id: 'local-test-message-team', application_id: 'local-test-customer', email: 'test-customer@growtheko.local', sender_type: 'team', sender_name: 'Nora', content: 'Application received. I will keep your next step small and specific.', message_type: 'text', metadata: { scenario: true }, read_at: at(-4), created_at: at(-5) },
+    { id: 'local-test-message', application_id: 'local-test-customer', email: 'test-customer@growtheko.local', sender_type: 'customer', sender_name: 'Mia', content: 'Can I start with my existing page and organic traffic first?', message_type: 'text', metadata: { scenario: true }, read_at: null, created_at: at(-4) }
   ];
   const opportunities = [{
     id: 'local-test-opportunity', opportunity_id: 'local-test-opportunity', opportunity_status: 'open',
@@ -513,7 +514,8 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
   }];
   const activityEvents = [
     { id: 'local-test-application-event', event_type: 'application_submitted', entity_type: 'application', entity_id: 'local-test-customer', application_id: 'local-test-customer', opportunity_id: 'local-test-opportunity', email: leads[0].email, actor_type: 'customer', actor_name: 'Customer', channel: 'web', summary: 'Application submitted', detail: 'A new application entered the verified intake.', occurred_at: at(-5), source_table: 'applications' },
-    { id: 'local-test-message-event', event_type: 'message_stored', entity_type: 'message', entity_id: 'local-test-message', application_id: 'local-test-customer', opportunity_id: 'local-test-opportunity', email: leads[0].email, actor_type: 'nora', actor_name: 'Nora', channel: 'portal_inbox', summary: 'Communication stored', detail: interactions[0].content, occurred_at: at(-5), source_table: 'messages' }
+    { id: 'local-test-message-team-event', event_type: 'message_stored', entity_type: 'message', entity_id: 'local-test-message-team', application_id: 'local-test-customer', opportunity_id: 'local-test-opportunity', email: leads[0].email, actor_type: 'nora', actor_name: 'Nora', channel: 'portal_inbox', summary: 'Communication stored', detail: interactions[0].content, occurred_at: at(-5), source_table: 'messages' },
+    { id: 'local-test-message-event', event_type: 'message_stored', entity_type: 'message', entity_id: 'local-test-message', application_id: 'local-test-customer', opportunity_id: 'local-test-opportunity', email: leads[0].email, actor_type: 'customer', actor_name: 'Mia', channel: 'portal_inbox', summary: 'Customer message stored', detail: interactions[1].content, occurred_at: at(-4), source_table: 'messages' }
   ];
   const queue = commandQueue(people, leads, interactions, reference, policy.active_phase, opportunities);
 
