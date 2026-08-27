@@ -56,6 +56,7 @@ test('Nora scripts are draft-only, lowercase and reject fabricated commercial pr
   assert.doesNotMatch(contextDraft, /\.\./);
   assert.match(draftEndpoint, /draft_only: true/);
   assert.match(draftEndpoint, /auto_sent: false/);
+  assert.match(draftEndpoint, /email_subject: emailSubject/);
   assert.doesNotMatch(draftEndpoint, /https:\/\/api\.resend\.com\/emails/);
 });
 

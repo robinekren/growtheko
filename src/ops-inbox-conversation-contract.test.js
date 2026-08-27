@@ -73,6 +73,10 @@ test('Inbox has the minimal email status and collapsible Nora script workspace',
   assert.match(template, /data-script-toggle/);
   assert.match(template, /class="script-grip"/);
   assert.match(template, /script-toggle-label">Script/);
+  assert.match(template, /class="script-subject"/);
+  assert.match(template, /data-email-subject/);
+  assert.match(template, /conversation-script\{[^}]*background:transparent/);
+  assert.match(template, /conversation-script\.open\{[^}]*background:rgba\(255,255,255,\.97\)/);
   assert.match(template, /data-script-stage/);
   assert.match(template, /data-script-use/);
   assert.match(template, /data-script-complete/);

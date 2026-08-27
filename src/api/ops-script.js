@@ -10,6 +10,7 @@ import {
   normalizeConversationDraft,
   normalizeConversationScriptRequest
 } from './lib/conversation-scripts.js';
+import { attentionEmailSubject } from './lib/email-subject.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -34,13 +35,16 @@ function serviceHeaders(key) {
 async function canonicalSource(base, key, applicationId) {
   const [applicationResponse, messagesResponse] = await Promise.all([
     fetch(`${base}/rest/v1/applications?id=eq.${encodeURIComponent(applicationId)}&select=id,first_name,last_name,preferred_name,website,product_type,stage,status,selected_tier,goal,dream_outcome,biggest_challenge,holding_back,call_status,call_date&limit=1`, { headers: serviceHeaders(key) }),
-    fetch(`${base}/rest/v1/messages?application_id=eq.${encodeURIComponent(applicationId)}&message_type=eq.text&select=sender_type,content,created_at&order=created_at.asc&limit=50`, { headers: serviceHeaders(key) })
+    fetch(`${base}/rest/v1/messages?application_id=eq.${encodeURIComponent(applicationId)}&message_type=eq.text&select=sender_type,content,created_at,metadata&order=created_at.asc&limit=50`, { headers: serviceHeaders(key) })
   ]);
   if (!applicationResponse.ok || !messagesResponse.ok) throw new Error('Conversation source unavailable');
   const application = (await applicationResponse.json().catch(() => []))?.[0];
   if (!application) return null;
   const messages = await messagesResponse.json().catch(() => []);
-  return canonicalConversationSource(application, messages);
+  const source = canonicalConversationSource(application, messages);
+  const latestInbound = [...messages].reverse().find(message => message?.sender_type === 'customer');
+  source.thread_subject = clean(latestInbound?.metadata?.subject, 300);
+  return source;
 }
 
 function localSource(applicationId) {
@@ -149,9 +153,15 @@ export default async function handler(req, res) {
     format: request.format,
     status: 'draft_only'
   };
+  const emailSubject = attentionEmailSubject({
+    name: source.application.first_name,
+    content: draft,
+    threadSubject: source.thread_subject
+  });
   return res.status(200).json({
     ok: true,
     draft,
+    email_subject: emailSubject,
     script_progress: progress,
     source: isLocal ? 'local_deterministic_scenario' : 'canonical_application_messages',
     verified_message_count: source.messages.length,

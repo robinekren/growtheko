@@ -2,6 +2,11 @@ import { createHash } from 'node:crypto';
 
 import { sender } from './_mail-config.js';
 import { draftHash, normalizeConversationScriptRequest, normalizeScriptProgress } from './lib/conversation-scripts.js';
+import {
+  attentionEmailSubject as attentionSubject,
+  replyEmailSubject as replySubject,
+  safeEmailHeader as safeHeader
+} from './lib/email-subject.js';
 import { hasOpsSession, isLocalDevelopmentRequest, isSameOrigin } from './lib/ops-session.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -103,27 +108,6 @@ async function markCustomerMessagesRead(base, key, applicationId, now) {
     }
   );
   if (!response.ok) throw new Error(`Read state rejected: ${response.status}`);
-}
-
-function safeHeader(value, max = 500) {
-  return clean(value, max).replace(/[\r\n]+/g, ' ');
-}
-
-function replySubject(value) {
-  const subject = safeHeader(value, 300);
-  if (!subject) return 'A message from Nora at GrowthEko';
-  return /^re:/i.test(subject) ? subject : `Re: ${subject}`;
-}
-
-function attentionSubject({ name, content, threadSubject }) {
-  const existing = safeHeader(threadSubject, 300);
-  if (existing) return replySubject(existing);
-  const firstName = (safeHeader(name, 120).split(/\s+/)[0] || 'there').toLowerCase();
-  const message = clean(content, 1200).toLowerCase();
-  if (/\b(?:following up|picking this back up|still relevant)\b/.test(message)) return `${firstName}, should i close this?`;
-  if (/\b(?:next step|move forward)\b/.test(message)) return `${firstName}, your cleanest next move`;
-  if (message.includes('?')) return `${firstName}, one thing before we continue`;
-  return `${firstName}, a quick update`;
 }
 
 function replyHeaders(thread = {}) {
