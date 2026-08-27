@@ -125,7 +125,7 @@
       </div>
     </div>
     <h1>Ops Login</h1>
-    <p>Enter the internal access password to open the team pipeline.</p>
+    <p id="loginHelp">Enter the internal access password to open the team pipeline.</p>
     <form id="loginForm">
       <label for="password">Password</label>
       <input id="password" name="password" type="password" autocomplete="current-password" required autofocus>
@@ -137,6 +137,12 @@
     const form = document.getElementById('loginForm');
     const button = document.getElementById('submitBtn');
     const error = document.getElementById('error');
+    const localDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (localDev) {
+      document.getElementById('loginHelp').textContent = 'Local development mode: enter any non-empty value.';
+      document.querySelector('label[for="password"]').textContent = 'Local access';
+      document.getElementById('password').placeholder = 'Anything works locally';
+    }
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       error.style.display = 'none';
@@ -149,7 +155,7 @@
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok || !data.ok) throw new Error('denied');
-        window.location.href = data.redirect || '/crm';
+        window.location.href = data.redirect || '/ops';
       } catch {
         error.style.display = 'block';
         button.disabled = false;

@@ -197,6 +197,39 @@ test('creates a verified listing request ticket with the portal budget', async (
   });
 });
 
+test('accepts a request for the newest approved Instagram listing', async () => {
+  await withSupportEnvironment(async () => {
+    let insertedBody = null;
+    global.fetch = async (url, options = {}) => {
+      if (String(url).includes('/portal-auth/verify')) {
+        return Response.json({ customer: { id: 'own-customer-123', name: 'Verified Customer', email: 'owner@example.com' } });
+      }
+      if (String(url).includes('/rest/v1/applications')) {
+        return Response.json([{ id: 'own-application-123' }]);
+      }
+      if (!options.method) return Response.json([]);
+      insertedBody = JSON.parse(options.body);
+      return Response.json([{
+        id: 'listing-message-ashalea',
+        created_at: '2026-08-25T20:24:07.000Z',
+        ...insertedBody
+      }]);
+    };
+    const res = response();
+    await handler(request({
+      action: 'listing-request',
+      session_token: 'valid-token',
+      listing_id: 'ashalea-1',
+      budget: 2500
+    }), res);
+    assert.equal(res.statusCode, 201);
+    assert.equal(insertedBody.metadata.listing_id, 'ashalea-1');
+    assert.equal(insertedBody.metadata.listing_username, '@ashalea_1');
+    assert.match(insertedBody.content, /Platform: Instagram/);
+    assert.match(insertedBody.content, /Niche: Model & Fashion Girls/);
+  });
+});
+
 test('withdraws an active listing request without deleting its audit trail', async () => {
   await withSupportEnvironment(async () => {
     let insertedBody = null;

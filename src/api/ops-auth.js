@@ -1,5 +1,5 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
-import { createOpsCookie, isSameOrigin } from './lib/ops-session.js';
+import { createOpsCookie, isLocalDevelopmentRequest, isSameOrigin } from './lib/ops-session.js';
 
 function hash(value) {
   return createHash('sha256').update(String(value || '')).digest('hex');
@@ -30,17 +30,25 @@ export default function handler(req, res) {
 
   if (!isSameOrigin(req)) return res.status(403).json({ ok: false, error: 'Request unavailable' });
 
+  const body = parseBody(req.body);
+  if (isLocalDevelopmentRequest(req)) {
+    if (!String(body.password || '').trim()) {
+      return res.status(400).json({ ok: false, error: 'Enter any non-empty local value' });
+    }
+    res.setHeader('Set-Cookie', createOpsCookie({ secure: false }));
+    return res.status(200).json({ ok: true, redirect: '/ops', local_dev: true });
+  }
+
   const expectedHash = String(process.env.GROWTHEKO_OPS_PASSWORD_HASH || '');
   if (!/^[a-f0-9]{64}$/i.test(expectedHash)) {
     return res.status(503).json({ ok: false, error: 'Ops access is not configured' });
   }
 
-  const body = parseBody(req.body);
   const passwordHash = hash(body.password);
   if (!safeEqual(passwordHash, expectedHash)) {
     return res.status(401).json({ ok: false, error: 'Invalid password' });
   }
 
   res.setHeader('Set-Cookie', createOpsCookie());
-  return res.status(200).json({ ok: true, redirect: '/crm' });
+  return res.status(200).json({ ok: true, redirect: '/ops' });
 }

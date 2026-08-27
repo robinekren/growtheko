@@ -5,6 +5,11 @@ const MAX_NOTIFICATION_IDS = 50;
 const MAX_LISTING_BUDGET = 100000000;
 const PORTAL_EVENT_NAMES = new Set(['prompt_copied', 'task_opened', 'task_completed', 'support_started']);
 const PORTAL_LISTINGS = {
+  'ashalea-1': {
+    username: '@ashalea_1',
+    platform: 'Instagram',
+    niche: 'Model & Fashion Girls'
+  },
   investinglab: {
     username: '@theinvestinglab',
     platform: 'TikTok',

@@ -59,7 +59,10 @@
       text-transform: uppercase; color: #000; margin-bottom: 8px;
     }
     .wizard-header p { color: #888; font-size: 15px; }
-    .wizard-brand-mark { width: 68px; height: 68px; object-fit: contain; margin: 0 auto 12px; }
+    .wizard-brand-mark {
+      display: block; width: 56px; height: 56px; object-fit: contain;
+      margin: 0 auto 10px;
+    }
     .tier-badge {
       display: inline-block; padding: 4px 14px; border-radius: 20px;
       font-size: 12px; font-weight: 700; text-transform: uppercase;
@@ -286,7 +289,7 @@
       body { align-items: flex-start; justify-content: flex-start; padding: 20px 12px; }
       .step-card { padding: 24px 20px; border-radius: 16px; }
       .wizard-header h1 { font-size: 26px; }
-      .wizard-brand-mark { width: 54px; height: 54px; }
+      .wizard-brand-mark { width: 48px; height: 48px; margin-bottom: 8px; }
       .tier-badge { font-size: 11px; letter-spacing: 0.8px; }
       .review-row { flex-direction: column; gap: 2px; }
       .review-value { text-align: left; max-width: 100%; }
@@ -299,7 +302,7 @@
 
 <div class="wizard" id="wizard">
   <div class="wizard-header">
-    <img class="wizard-brand-mark" src="/og/growtheko-mark-gold-512.png" width="68" height="68" alt="GrowthEko">
+    <img class="wizard-brand-mark" src="/og/growtheko-mark-gold-512.png" width="56" height="56" alt="GrowthEko">
     <div class="tier-badge" id="tierBadge"></div>
     <h1>Onboarding</h1>
     <p id="headerSubtitle">Let's learn about your business</p>
@@ -354,7 +357,7 @@ const PLACEHOLDERS = {
 // STATE
 // ============================
 const urlParams = new URLSearchParams(window.location.search);
-const rawTier = urlParams.get('tier') || 'audit';
+const rawTier = (urlParams.get('tier') || '').toLowerCase();
 const tokenFromUrl = urlParams.get('token') || '';
 if (tokenFromUrl) sessionStorage.setItem('ge_onboarding_token', tokenFromUrl);
 const onboardingToken = tokenFromUrl || sessionStorage.getItem('ge_onboarding_token') || '';
@@ -364,9 +367,18 @@ if (tokenFromUrl) {
   history.replaceState({}, '', location.pathname + (cleanQuery ? '?' + cleanQuery : ''));
 }
 const billingOfferKey = rawTier === 'monthly_97' || rawTier === 'onetime_1997' ? rawTier : '';
-const tierAliases = { monthly_97: 'membership', onetime_1997: 'audit', audit: 'audit', membership: 'membership', growth: 'sprint', sprint: 'sprint', empire: 'retainer', retainer: 'retainer', secret: 'secret' };
-const tier = tierAliases[rawTier] || rawTier;
-const tierNames = { membership: 'GrowthEko Operator Membership', audit: 'GrowthEko AI Operator Audit', secret: 'Legacy entitlement — review required', sprint: 'GrowthEko AI System Sprint', retainer: 'GrowthEko AI Empire Architect', architect: 'GrowthEko AI Empire Architect' };
+const tierAliases = {
+  monthly_97: 'membership', membership: 'membership',
+  onetime_1997: 'audit', audit: 'audit', roadmap_1997: 'audit',
+  done_with_you_4997: 'sprint', sprint: 'sprint',
+  done_for_you_14997: 'architect', architect: 'architect'
+};
+const tier = tierAliases[rawTier] || 'legacy_review';
+const tierNames = {
+  membership: 'GrowthEko Operator Membership', audit: 'GrowthEko AI Operator Audit',
+  sprint: 'GrowthEko AI System Sprint', architect: 'GrowthEko AI Empire Architect',
+  legacy_review: 'Legacy entitlement — review required'
+};
 const tierBadge = document.getElementById('tierBadge');
 tierBadge.textContent = tierNames[tier] || 'GrowthEko';
 tierBadge.className = 'tier-badge tier-' + tier;
@@ -554,7 +566,7 @@ async function verifyEmail() {
     if (res.ok) {
       const result = await res.json().catch(() => ({}));
       if (result.tier) {
-        const normalizedTier = tierAliases[result.tier] || result.tier;
+        const normalizedTier = tierAliases[result.tier] || (tierNames[result.tier] ? result.tier : 'legacy_review');
         window.verifiedTier = normalizedTier;
         tierBadge.textContent = tierNames[normalizedTier] || tierNames[tier] || 'GrowthEko';
         tierBadge.className = 'tier-badge tier-' + normalizedTier;
@@ -1377,16 +1389,18 @@ function renderSuccess() {
     nextSteps = '<div class="next-step-item"><div class="next-step-num">1</div><div class="next-step-text">Your GrowthEko AI Operator Audit onboarding is complete.</div></div><div class="next-step-item"><div class="next-step-num">2</div><div class="next-step-text">Your marketing/funnel workflows and AI readiness will be reviewed from your answers.</div></div><div class="next-step-item"><div class="next-step-num">3</div><div class="next-step-text">You will receive the prioritized opportunity map and practical implementation roadmap described in your order.</div></div>';
   } else if (finalTier === 'membership') {
     nextSteps = '<div class="next-step-item"><div class="next-step-num">1</div><div class="next-step-text">Your GrowthEko Operator Membership onboarding is complete.</div></div><div class="next-step-item"><div class="next-step-num">2</div><div class="next-step-text">Your first monthly marketing-focused operator priorities and resources are being prepared.</div></div><div class="next-step-item"><div class="next-step-num">3</div><div class="next-step-text">Billing documents, payment method and cancellation remain available through Stripe\'s secure billing portal.</div></div>';
-  } else if (finalTier === 'secret') {
-    nextSteps = '<div class="next-step-item"><div class="next-step-num">1</div><div class="next-step-text">Your AI Clarity Blueprint will arrive via email within 24 hours.</div></div><div class="next-step-item"><div class="next-step-num">2</div><div class="next-step-text">It includes your market positioning, niche strategy, and first action steps.</div></div><div class="next-step-item"><div class="next-step-num">3</div><div class="next-step-text">Follow the step-by-step instructions to start building.</div></div>';
   } else if (finalTier === 'sprint') {
     nextSteps = '<div class="next-step-item"><div class="next-step-num">1</div><div class="next-step-text">Your signed Sprint scope defines the single System Unit and acceptance test.</div></div><div class="next-step-item"><div class="next-step-num">2</div><div class="next-step-text">Kickoff, midpoint, handoff, tasks and evidence are organized in your Portal.</div></div><div class="next-step-item"><div class="next-step-num">3</div><div class="next-step-text">Only verified dependencies and access gates are requested.</div></div><div class="next-step-item"><div class="next-step-num">4</div><div class="next-step-text">Support remains in growtheko.com/portal?tab=chat.</div></div>';
-  } else {
+  } else if (finalTier === 'architect') {
     nextSteps = '<div class="next-step-item"><div class="next-step-num">1</div><div class="next-step-text">We verify the signed scope, access gates, and evidence required for your Architect engagement.</div></div><div class="next-step-item"><div class="next-step-num">2</div><div class="next-step-text">We establish the agreed 90-day cadence around one revenue path and up to three System Units.</div></div><div class="next-step-item"><div class="next-step-num">3</div><div class="next-step-text">Approved tasks, decisions, and support remain inside your GrowthEko Portal.</div></div><div class="next-step-item"><div class="next-step-num">4</div><div class="next-step-text">No external action is taken outside the signed scope and required approvals.</div></div>';
+  } else {
+    nextSteps = '<div class="next-step-item"><div class="next-step-num">1</div><div class="next-step-text">This entitlement cannot be mapped to a current GrowthEko offer automatically.</div></div><div class="next-step-item"><div class="next-step-num">2</div><div class="next-step-text">GrowthEko must review the original agreement and payment evidence before delivery begins.</div></div>';
   }
   const currentOfferSupport = finalTier === 'audit' || finalTier === 'membership'
     ? '<div class="slack-cta"><strong>Need help?</strong><br>Email info@growtheko.com. Your Stripe invoice is sent separately by Stripe.</div>'
-    : '<a href="https://calendly.com/robinekren/free-clarity-call-30-min?name=' + encodeURIComponent(customerData.name || '') + '&email=' + encodeURIComponent(customerData.email || '') + '" target="_blank" style="display:block;text-align:center;padding:16px 24px;background:linear-gradient(135deg,#6B9EF7,#5A8AE6);color:#fff;border-radius:12px;font-size:16px;font-weight:600;text-decoration:none;margin:20px 0;box-shadow:0 4px 14px rgba(90,138,230,0.3);transition:all 0.15s">Book Your Free Clarity Call</a><div class="slack-cta"><strong>Legacy customer support</strong><br>Use the support details in your original agreement.</div>';
+    : finalTier === 'sprint' || finalTier === 'architect'
+      ? '<div class="slack-cta"><strong>Scoped engagement support</strong><br>Use the support route named in your signed agreement.</div>'
+      : '<div class="slack-cta"><strong>Manual review required</strong><br>Email info@growtheko.com with the original agreement and payment evidence.</div>';
   c.innerHTML = '<div class="step-card success-screen"><div class="success-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>' +
     '<h2 class="step-title">Onboarding Complete</h2><p class="step-subtitle">Thanks, ' + escapeHtml(customerData.name || '') + '. We have everything we need.</p>' +
     '<div class="next-steps">' + nextSteps + '</div>' + currentOfferSupport + '</div>';

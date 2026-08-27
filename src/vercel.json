@@ -26,16 +26,20 @@
   ],
   "redirects": [
     { "source": "/", "destination": "/ai-growth-training", "permanent": false },
+    { "source": "/revenue-leak", "destination": "https://www.robinekren.com/digital-estate", "permanent": true },
+    { "source": "/revenue-leak/:path*", "destination": "https://www.robinekren.com/digital-estate", "permanent": true },
+    { "source": "/scorecard", "destination": "https://www.robinekren.com/digital-estate", "permanent": true },
+    { "source": "/scorecard/:path*", "destination": "https://www.robinekren.com/digital-estate", "permanent": true },
+    { "source": "/vision/revenue-funnel", "destination": "https://www.robinekren.com/digital-estate", "permanent": true },
+    { "source": "/vision/revenue-funnel/:path*", "destination": "https://www.robinekren.com/digital-estate", "permanent": true },
     { "source": "/routine", "destination": "https://www.robinekren.com/routine", "permanent": false },
     { "source": "/routine/:path*", "destination": "https://www.robinekren.com/routine", "permanent": false },
     { "source": "/connect", "destination": "/contact", "permanent": false },
-    { "source": "/ops", "destination": "/crm", "permanent": true },
-    { "source": "/ops/:path*", "destination": "/crm", "permanent": true }
+    { "source": "/crm", "destination": "/ops", "permanent": false },
+    { "source": "/crm/:path*", "destination": "/ops", "permanent": false }
   ],
   "rewrites": [
     { "source": "/offers/:slug", "destination": "/offer" },
-    { "source": "/crm", "destination": "/api/ops-page" },
-    { "source": "/crm/:path*", "destination": "/api/ops-page" },
     { "source": "/onboarding", "destination": "/onboard" },
     { "source": "/onboarding/:path*", "destination": "/onboard/:path*" },
     { "source": "/onboard/:path*", "destination": "/onboard" }

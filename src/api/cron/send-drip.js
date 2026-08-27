@@ -38,9 +38,9 @@ const DRIPS = {
 <p>Most operators read it linearly — start at page 1, end at page 40, close it, never act.</p>
 <p>Don't.</p>
 <p>Here's how to actually use it:</p>
-<p style="margin:24px 0;padding:20px 24px;background:#fafafa;border-left:3px solid #b08a4a;"><strong>If you don't have an offer yet</strong> → start at the <em>Niche-to-Customer Mapping</em> section. 24 sub-markets, pick one, narrow until you have a single ideal customer profile.</p>
-<p style="margin:0 0 24px;padding:20px 24px;background:#fafafa;border-left:3px solid #b08a4a;"><strong>If you have an offer but no system</strong> → jump to <em>The Foundation Prompt</em>. That's the master prompt that runs every client's strategy stack. Copy it, fill it, run it.</p>
-<p style="margin:0 0 24px;padding:20px 24px;background:#fafafa;border-left:3px solid #b08a4a;"><strong>If you have a system but it's leaking</strong> → go straight to <em>AI-Native Ops Architecture</em>. That section diagnoses the 4 most common ops-leaks I see in $5-50K/mo coaches.</p>
+<p style="margin:24px 0;padding:20px 24px;background:#fafafa;border-left:3px solid #b08a4a;"><strong>If you don't have an offer yet</strong> → start at the <em>Niche-to-Customer Mapping</em> section. Narrow the market until you can name one useful customer profile.</p>
+<p style="margin:0 0 24px;padding:20px 24px;background:#fafafa;border-left:3px solid #b08a4a;"><strong>If you have an offer but no system</strong> → jump to <em>The Foundation Prompt</em>. Use it to define one outcome, one input and one next action.</p>
+<p style="margin:0 0 24px;padding:20px 24px;background:#fafafa;border-left:3px solid #b08a4a;"><strong>If you have a system but it is leaking</strong> → go straight to <em>AI-Native Ops Architecture</em>. Map the handoff where evidence, ownership or the next action becomes unclear.</p>
 <p>The CARP framework (5 layers) is the spine. Every other section is a vertebra.</p>
 <p>Reply with which section hit hardest — I read everything.</p>
 <p style="margin-top:32px;">— Robin</p>
@@ -55,11 +55,11 @@ Most operators read it linearly — start at page 1, end at page 40, close it, n
 
 Here's how to actually use it:
 
-→ If you don't have an offer yet — start at Niche-to-Customer Mapping. 24 sub-markets, pick one, narrow until you have a single ideal customer profile.
+→ If you don't have an offer yet — start at Niche-to-Customer Mapping. Narrow the market until you can name one useful customer profile.
 
-→ If you have an offer but no system — jump to The Foundation Prompt. That's the master prompt that runs every client's strategy stack.
+→ If you have an offer but no system — jump to The Foundation Prompt. Use it to define one outcome, one input and one next action.
 
-→ If you have a system but it's leaking — go straight to AI-Native Ops Architecture. Diagnoses the 4 most common ops-leaks I see in $5-50K/mo coaches.
+→ If you have a system but it is leaking — go straight to AI-Native Ops Architecture. Map the handoff where evidence, ownership or the next action becomes unclear.
 
 The CARP framework (5 layers) is the spine. Every other section is a vertebra.
 
@@ -78,23 +78,23 @@ ${footerText(id)}`,
     html: (fn, id) => `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;color:#0a0a0a;line-height:1.55;font-size:16px;">
 <p style="font-size:14px;color:#6a6a6a;margin:0 0 24px;letter-spacing:0.5px;">GROWTHEKO · BY ROBIN EKREN</p>
 <p>${esc(fn)},</p>
-<p>Every operator I work with hits the same fork around $5-20K/mo.</p>
+<p>Most owner-operated businesses eventually face the same design choice.</p>
 <p>The fork is this:</p>
 <p style="margin:24px 0;padding:24px;background:#0a0a0a;color:#fff;border-radius:12px;font-style:italic;font-family:'Instrument Serif',Georgia,serif;font-size:22px;line-height:1.3;">Build a job that pays well.<br/>Or build a system that runs without you.</p>
 <p>Sounds obvious. Almost no one picks the right side.</p>
 <p>The "job that pays well" feels safer. Adding hours = adding revenue. Linear, predictable, comforting.</p>
 <p>The "system that runs without you" feels insane. You stop billing hours. You build infrastructure that has no immediate payoff. For weeks you ship things no client sees.</p>
-<p>But here's the math:</p>
-<p>The job-version caps at maybe $30K/mo. You become the bottleneck. You can't take a holiday without revenue tanking. The business owns you.</p>
-<p>The system-version takes 90 days of building. Then it compounds. Year 1 you do $200K. Year 2 you do $1M. Year 3 you can step away.</p>
-<p>That's what I help operators do — architect the system, then stay accountable through the 90 days where everyone else would quit.</p>
+<p>Here is the operational difference:</p>
+<p>In the job-version, delivery depends on the owner's next hour. The owner remains the bottleneck.</p>
+<p>In the system-version, one defined outcome has inputs, an owner, a repeatable process and a test. It still requires work, but the work can be measured and improved.</p>
+<p>That is what GrowthEko helps operators diagnose and document: the next bounded system worth building.</p>
 <p>Reply with which side of the fork you're on right now. I'll tell you honestly what the next move is.</p>
 <p style="margin-top:32px;">— Robin</p>
 ${footer(id)}
 </div>`,
     text: (fn, id) => `${fn},
 
-Every operator I work with hits the same fork around $5-20K/mo.
+Most owner-operated businesses eventually face the same design choice.
 
 The fork is this:
   Build a job that pays well.
@@ -106,13 +106,13 @@ The "job that pays well" feels safer. Adding hours = adding revenue.
 
 The "system that runs without you" feels insane. For weeks you ship things no client sees.
 
-But here's the math:
+Here is the operational difference:
 
-Job-version caps at maybe $30K/mo. You become the bottleneck.
+In the job-version, delivery depends on the owner's next hour. The owner remains the bottleneck.
 
-System-version takes 90 days. Then it compounds. Year 1: $200K. Year 2: $1M. Year 3: step away.
+In the system-version, one defined outcome has inputs, an owner, a repeatable process and a test.
 
-That's what I help operators do — architect the system, then stay accountable through the 90 days where everyone else would quit.
+That is what GrowthEko helps operators diagnose and document: the next bounded system worth building.
 
 Reply with which side of the fork you're on right now.
 
@@ -261,6 +261,9 @@ const DRIP_WINDOWS = {
 export default async function handler(req, res) {
   if (process.env.GROWTHEKO_DRIP_ENABLED !== 'true') {
     return res.status(200).json({ disabled: true, reason: 'GROWTHEKO_DRIP_ENABLED is not true' });
+  }
+  if (process.env.GROWTHEKO_CLAIMS_REGISTRY_VERSION !== '2026-08-24.1') {
+    return res.status(423).json({ disabled: true, reason: 'Claims registry approval is missing or stale' });
   }
 
   // Auth — Vercel Cron sends a Bearer header with CRON_SECRET

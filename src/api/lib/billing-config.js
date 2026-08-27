@@ -1,8 +1,9 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
+import { BILLING_TERMS_VERSION } from './offer-registry.js';
 
 export const DEFAULT_BILLING_BASE_URL = 'https://www.growtheko.com';
 export const PORTAL_COOKIE_NAME = 'ge_billing_portal';
-export const BILLING_TERMS_VERSION = '2026-07-10';
+export { BILLING_TERMS_VERSION };
 
 export const OFFER_DEFINITIONS = Object.freeze({
   monthly_97: Object.freeze({

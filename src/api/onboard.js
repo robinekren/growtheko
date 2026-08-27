@@ -6,6 +6,7 @@
 import { createHash, randomBytes } from 'crypto';
 import { GROWTHEKO_NOTIFY_EMAIL, GROWTHEKO_PUBLIC_EMAIL, sender } from './_mail-config.js';
 import { verifyOnboardingToken } from './lib/onboarding-token.js';
+import { resolveOfferKey } from './lib/offer-registry.js';
 
 // ========================================
 // PASSWORD HELPERS — matches portal-auth Edge Function exactly
@@ -23,10 +24,7 @@ function hashPasswordSync(password) {
 }
 
 export function normalizeBillingTier(value) {
-  const tier = String(value || '').trim().toLowerCase();
-  if (tier === 'monthly_97') return 'membership';
-  if (tier === 'onetime_1997') return 'audit';
-  return tier || 'audit';
+  return resolveOfferKey(value).offerId || 'legacy_review';
 }
 
 export default async function handler(req, res) {
@@ -118,7 +116,11 @@ export default async function handler(req, res) {
           }
         } catch (e) { console.warn('Application lookup failed:', e); }
 
-        return res.status(200).json({ verified: true, tier: verifiedOffer, applicationData });
+        const normalizedOffer = normalizeBillingTier(verifiedOffer);
+        if (normalizedOffer === 'legacy_review') {
+          return res.status(409).json({ code: 'legacy_entitlement_review', error: 'This entitlement requires manual review before onboarding.' });
+        }
+        return res.status(200).json({ verified: true, tier: normalizedOffer, applicationData });
       }
       return res.status(503).json({ error: 'Secure onboarding verification is unavailable.' });
     }
@@ -180,7 +182,7 @@ export default async function handler(req, res) {
     let customerId = null;
     let sessionId = null;
     let generatedPassword = null;
-    let verifiedTier = tier || 'audit';
+    let verifiedTier = tier || '';
 
     if (SUPABASE_URL && SUPABASE_KEY) {
       if (tokenClaims) {
@@ -204,7 +206,12 @@ export default async function handler(req, res) {
         if (!existing || existing.length === 0 || !['paid', 'active'].includes(existing[0].status)) {
           return res.status(403).json({ error: 'Payment not verified.' });
         }
-        verifiedTier = existing[0].tier || tier || 'audit';
+        verifiedTier = existing[0].tier || tier || '';
+      }
+
+      const normalizedVerifiedTier = normalizeBillingTier(verifiedTier);
+      if (normalizedVerifiedTier === 'legacy_review') {
+        return res.status(409).json({ code: 'legacy_entitlement_review', error: 'This entitlement requires manual review before onboarding.' });
       }
 
       // A completed submission is immutable. Retrying the same signed link
@@ -234,10 +241,10 @@ export default async function handler(req, res) {
       const customerRes = await supabaseFetch(SUPABASE_URL, SUPABASE_KEY, 'customers', 'POST', {
         email: data.email,
         name: data.name,
-        tier: verifiedTier,
+        tier: normalizedVerifiedTier,
         status: 'active',
         onboarding_status: 'processing',
-        nora_status: verifiedTier === 'empire' ? 'pending' : 'none',
+        nora_status: normalizedVerifiedTier === 'architect' ? 'pending' : 'none',
         last_activity_at: new Date().toISOString()
       }, {
         prefer: 'return=representation',
@@ -267,9 +274,9 @@ export default async function handler(req, res) {
             'PATCH',
             {
               name: data.name,
-              tier: verifiedTier,
+              tier: normalizedVerifiedTier,
               status: 'active',
-              nora_status: verifiedTier === 'empire' ? 'pending' : 'none',
+              nora_status: normalizedVerifiedTier === 'architect' ? 'pending' : 'none',
               last_activity_at: new Date().toISOString()
             },
             { prefer: 'return=minimal' }
@@ -281,7 +288,7 @@ export default async function handler(req, res) {
       // ========================================
       // 1b. GENERATE PORTAL LOGIN PASSWORD
       // ========================================
-      if (customerId && !['monthly_97', 'onetime_1997'].includes(verifiedTier)) {
+      if (customerId && !['membership', 'audit'].includes(normalizedVerifiedTier)) {
         // Only generate if customer doesn't already have a password
         const pwCheckRes = await fetch(
           `${SUPABASE_URL}/rest/v1/customers?id=eq.${customerId}&select=password_hash`,
@@ -319,7 +326,7 @@ export default async function handler(req, res) {
       if (customerId) {
         const sessionRes = await supabaseFetch(SUPABASE_URL, SUPABASE_KEY, 'onboarding_sessions', 'POST', {
           customer_id: customerId,
-          tier: verifiedTier,
+          tier: normalizedVerifiedTier,
           status: 'processing',
           completed_at: null,
           utm_source: data.referral_source || null,
@@ -376,14 +383,14 @@ export default async function handler(req, res) {
         await supabaseFetch(SUPABASE_URL, SUPABASE_KEY, 'blueprints', 'POST', {
           customer_id: customerId,
           session_id: sessionId,
-          tier: verifiedTier,
+          tier: normalizedVerifiedTier,
           blueprint_data: data
         }, { onConflict: 'session_id' });
       }
     }
 
     // Use the entitlement verified against the signed onboarding token.
-    const finalTier = normalizeBillingTier(verifiedTier || tier || 'audit');
+    const finalTier = normalizeBillingTier(verifiedTier || tier);
 
     // ========================================
     // 2. SEND NOTIFICATION + FOUNDATION PROMPT TO ROBIN (via Resend)

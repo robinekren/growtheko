@@ -289,6 +289,10 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
+  if (process.env.GROWTHEKO_CLAIMS_REGISTRY_VERSION !== '2026-08-24.1') {
+    return res.status(423).json({ disabled: true, reason: 'Claims registry approval is missing or stale' });
+  }
+
   const SUPABASE_URL = process.env.GROWTHEKO_SUPABASE_URL;
   const SUPABASE_KEY = process.env.GROWTHEKO_SUPABASE_SERVICE_KEY;
 

@@ -4,46 +4,70 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Start with GrowthEko</title>
-  <meta name="description" content="Choose the bounded GrowthEko guidance or audit offer that fits your next step.">
+  <meta name="description" content="Compare the separate RobinEkren entry product and the bounded GrowthEko offer containers.">
   <style>
-    :root { --ink:#0b1020; --muted:#687386; --line:rgba(15,23,42,.10); --gold:#1769e8; --panel:rgba(255,255,255,.84); }
+    :root { --ink:#111512; --forest:#10281d; --forest-2:#1d4431; --gold:#dcb35f; --gold-2:#f4d892; --sky:#d8ecff; --cloud:#f8fbff; --muted:#65706b; --line:rgba(17,21,18,.10); --panel:rgba(255,255,255,.84); }
     * { box-sizing:border-box; }
-    body { margin:0; background:radial-gradient(circle at 12% 0,rgba(74,137,255,.18),transparent 25%),linear-gradient(145deg,#fbfdff,#eef4ff); color:var(--ink); font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,sans-serif; }
+    html { overflow-x:clip; scroll-behavior:smooth; }
+    body { margin:0; background:radial-gradient(circle at 10% 0,rgba(255,255,255,.94),transparent 24%),radial-gradient(circle at 90% 18%,rgba(220,179,95,.13),transparent 23%),linear-gradient(180deg,#cde8ff 0,#f8fbff 24%,#f1f5ef 100%); color:var(--ink); font:16px/1.6 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; }
+    body:before { content:""; position:fixed; z-index:-1; inset:0; background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.34) 58%,transparent 72%); pointer-events:none; }
     a { color:inherit; }
-    .wrap { width:min(1080px,calc(100% - 32px)); margin:auto; }
-    header { display:flex; justify-content:space-between; align-items:center; padding:24px 0; border-bottom:1px solid var(--line); }
-    .brand { font-weight:800; letter-spacing:.08em; text-decoration:none; }
-    .eyebrow { color:var(--gold); font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
-    main { padding:76px 0 56px; }
-    h1 { max-width:760px; margin:14px 0 18px; font-size:clamp(42px,7vw,78px); line-height:1; letter-spacing:-.05em; }
-    .lead { max-width:700px; color:var(--muted); font-size:19px; }
-    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:48px 0 28px; }
-    .card { display:flex; flex-direction:column; min-width:0; padding:28px; border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 55px rgba(35,61,105,.08); }
-    .card h2 { margin:10px 0 4px; font-size:30px; line-height:1.15; }
-    .price { margin:18px 0; font-size:25px; font-weight:800; }
-    .price small { color:var(--muted); font-size:13px; font-weight:500; }
-    ul { padding-left:20px; color:#3e495d; }
-    .label { margin:18px 0 4px; color:var(--muted); font-size:11px; font-weight:850; letter-spacing:.11em; text-transform:uppercase; }
-    .answer { margin:0; color:#3e495d; }
-    .flow { padding:13px 14px; border-radius:12px; background:#eff5ff; color:#27466f; font-size:13px; font-weight:750; }
-    .boundary { margin-top:auto; padding:14px; border:1px solid #c8d8f6; border-radius:12px; color:#405b88; font-size:13px; }
-    button,.card-link { margin-top:20px; padding:15px 18px; border:0; border-radius:12px; background:var(--gold); color:#fff; font:inherit; font-weight:800; cursor:pointer; text-align:center; text-decoration:none; }
+    .wrap { width:min(1120px,calc(100% - 36px)); margin:auto; }
+    header { position:sticky; z-index:20; top:12px; display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding:13px 17px; border:1px solid rgba(255,255,255,.58); border-radius:18px; background:rgba(248,251,255,.76); box-shadow:0 14px 42px rgba(24,56,43,.09),inset 0 1px 0 rgba(255,255,255,.9); backdrop-filter:blur(18px); }
+    header>a:last-child { color:#466057; font-size:13px; text-decoration:none; }
+    .brand { font-weight:920; letter-spacing:-.03em; text-decoration:none; }
+    .eyebrow { color:#32704f; font-size:10px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; }
+    main { position:relative; padding:76px 0 62px; }
+    main:before { content:""; position:absolute; z-index:-1; top:35px; right:-190px; width:470px; height:470px; border:1px solid rgba(220,179,95,.18); border-radius:50%; box-shadow:0 0 0 56px rgba(220,179,95,.035),0 0 0 112px rgba(220,179,95,.022); pointer-events:none; }
+    h1 { max-width:800px; margin:14px 0 18px; font-size:clamp(48px,7vw,82px); line-height:.94; letter-spacing:-.065em; text-wrap:balance; }
+    .lead { max-width:720px; margin:0; color:#4f5b57; font-size:19px; line-height:1.58; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin:46px 0 30px; }
+    .bridge { margin:44px 0 0; }
+    .bridge .card { overflow:hidden; border-color:rgba(220,179,95,.38); background:radial-gradient(circle at 88% 0,rgba(244,216,146,.36),transparent 29%),linear-gradient(145deg,rgba(255,255,255,.95),rgba(230,244,255,.87)); box-shadow:0 30px 90px rgba(35,76,61,.14),inset 0 1px 0 #fff; }
+    .bridge .card:after { content:"ENTRY PRODUCT"; position:absolute; right:-31px; top:28px; padding:7px 34px; transform:rotate(38deg); color:#173629; background:linear-gradient(180deg,var(--gold-2),var(--gold)); font-size:8px; font-weight:950; letter-spacing:.12em; }
+    .bridge-note { margin:8px 0 0; color:var(--muted); font-size:13px; }
+    .section-title { display:flex; align-items:center; gap:14px; margin:60px 0 -22px; font-size:24px; letter-spacing:-.035em; }
+    .section-title:after { content:""; height:1px; flex:1; background:linear-gradient(90deg,rgba(16,40,29,.18),transparent); }
+    .card { position:relative; display:flex; flex-direction:column; min-width:0; padding:30px; overflow:hidden; border:1px solid rgba(255,255,255,.74); border-radius:28px; background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(247,250,247,.78)); box-shadow:0 22px 65px rgba(27,50,39,.09),inset 0 1px 0 rgba(255,255,255,.96); backdrop-filter:blur(15px); transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s ease,border-color .5s ease; }
+    .card:before { content:""; position:absolute; right:-70px; bottom:-95px; width:220px; height:220px; border:1px solid rgba(29,68,49,.06); border-radius:50%; box-shadow:0 0 0 34px rgba(29,68,49,.022); pointer-events:none; }
+    .card:hover { transform:translateY(-6px); border-color:rgba(220,179,95,.36); box-shadow:0 34px 90px rgba(27,50,39,.15),inset 0 1px 0 #fff; }
+    .card h2 { position:relative; margin:10px 0 4px; font-size:31px; line-height:1.08; letter-spacing:-.045em; }
+    .price { position:relative; margin:20px 0; font-size:27px; font-weight:900; letter-spacing:-.035em; }
+    .price s { color:rgba(65,76,70,.42); font-weight:650; text-decoration-color:rgba(232,76,100,.62); text-decoration-thickness:2px; }
+    .price strong { color:#b47d24; font-size:1.34em; }
+    .price small { color:var(--muted); font-size:12px; font-weight:550; letter-spacing:0; }
+    ul { position:relative; padding-left:20px; color:#4f5b57; }
+    li::marker { color:#b98632; }
+    .label { position:relative; margin:18px 0 4px; color:#32704f; font-size:9px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; }
+    .answer { position:relative; margin:0; color:#4f5b57; }
+    .flow { position:relative; padding:13px 14px; border:1px solid rgba(29,68,49,.08); border-radius:15px; color:#244b38; background:rgba(189,227,201,.24); font-size:13px; font-weight:800; }
+    .boundary { position:relative; margin-top:auto; padding:14px 15px; border:1px solid rgba(16,40,29,.10); border-radius:16px; color:#53625b; background:rgba(255,255,255,.5); font-size:12px; }
+    button,.card-link { position:relative; min-height:54px; display:inline-flex; align-items:center; justify-content:center; margin-top:22px; padding:0 20px; border:0; border-radius:15px; color:#14130d; background:linear-gradient(180deg,var(--gold-2),#d9ad55); box-shadow:0 17px 42px rgba(156,114,38,.2),inset 0 1px 0 rgba(255,255,255,.86); font:inherit; font-weight:920; cursor:pointer; text-align:center; text-decoration:none; transition:transform .2s ease,filter .2s ease,box-shadow .2s ease; }
+    button:hover,.card-link:hover { transform:translateY(-2px); filter:brightness(1.025); box-shadow:0 21px 48px rgba(156,114,38,.27),inset 0 1px 0 rgba(255,255,255,.9); }
     button:disabled { cursor:wait; opacity:.65; }
-    .scope { padding:22px; border:1px solid var(--line); border-radius:14px; color:var(--muted); }
-    footer { padding:32px 0 48px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
-    footer nav { display:flex; flex-wrap:wrap; gap:18px; margin-bottom:16px; }
-    dialog { width:min(590px,calc(100% - 28px)); padding:0; border:1px solid var(--line); border-radius:18px; background:#fff; color:var(--ink); }
-    dialog::backdrop { background:rgba(0,0,0,.78); }
-    .modal { padding:28px; }
+    .scope { padding:24px; border:1px solid rgba(255,255,255,.7); border-radius:22px; color:#53625b; background:rgba(255,255,255,.64); box-shadow:0 18px 52px rgba(27,50,39,.07); backdrop-filter:blur(14px); }
+    footer { margin-bottom:18px; padding:30px 26px; border:1px solid rgba(255,255,255,.08); border-radius:28px; color:rgba(255,255,255,.58); background:linear-gradient(145deg,#0b1b13,#132d20); box-shadow:0 26px 80px rgba(15,52,35,.19); font-size:12px; }
+    footer nav { display:flex; flex-wrap:wrap; gap:18px; margin-bottom:14px; }
+    footer a { color:rgba(255,255,255,.82); }
+    dialog { width:min(590px,calc(100% - 28px)); padding:0; overflow:hidden; border:1px solid rgba(255,255,255,.8); border-radius:26px; color:var(--ink); background:linear-gradient(160deg,#fff,#f2f7f2); box-shadow:0 34px 110px rgba(0,0,0,.34); }
+    dialog::backdrop { background:rgba(7,19,13,.72); backdrop-filter:blur(8px); }
+    .modal { padding:30px; }
     .modal-head { display:flex; justify-content:space-between; gap:20px; align-items:start; }
-    .close { margin:0; padding:5px 10px; background:#262522; color:var(--ink); }
-    label { display:block; margin:16px 0 6px; font-size:13px; font-weight:700; }
-    input,select { width:100%; padding:13px; border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--ink); font:inherit; }
+    .modal-head h2 { margin:8px 0 0; letter-spacing:-.04em; }
+    .close { width:38px; min-height:38px; margin:0; padding:0; border-radius:12px; color:#fff; background:var(--forest); box-shadow:none; }
+    label { display:block; margin:16px 0 6px; font-size:12px; font-weight:800; }
+    input,select { width:100%; padding:13px; border:1px solid rgba(16,40,29,.14); border-radius:12px; color:var(--ink); background:rgba(255,255,255,.85); font:inherit; outline:none; transition:border-color .2s ease,box-shadow .2s ease; }
+    input:focus,select:focus { border-color:rgba(185,134,50,.64); box-shadow:0 0 0 4px rgba(220,179,95,.16); }
     .check { display:grid; grid-template-columns:20px 1fr; gap:10px; align-items:start; font-weight:500; }
     .check input { margin-top:5px; }
-    .status { min-height:24px; margin-top:14px; color:#e9ca70; }
-    @media (max-width:760px) { .grid { grid-template-columns:1fr; } main { padding-top:48px; } }
+    .status { min-height:24px; margin-top:14px; color:#8b651f; }
+    .motion-ready .reveal-target { opacity:0; filter:blur(6px); transform:translate3d(0,28px,0); transition:opacity .72s ease var(--reveal-delay,0ms),filter .72s ease var(--reveal-delay,0ms),transform .82s cubic-bezier(.22,1,.36,1) var(--reveal-delay,0ms); }
+    .motion-ready .reveal-target.is-revealed { opacity:1; filter:none; transform:none; }
+    @media (max-width:760px) { .wrap { width:min(100% - 24px,1120px); } header { top:8px; margin-top:8px; border-radius:15px; } main { padding-top:50px; } h1 { font-size:clamp(43px,13vw,58px); } .lead { font-size:16px; } .grid { grid-template-columns:1fr; gap:14px; } .card { padding:24px 20px; border-radius:23px; } .card:hover { transform:none; } .bridge .card:after { right:-36px; top:23px; } .section-title { margin-top:50px; font-size:21px; } footer { border-radius:23px; text-align:center; } footer nav { justify-content:center; } }
+    @media (prefers-reduced-motion:reduce) { * { scroll-behavior:auto!important; animation:none!important; transition:none!important; } }
   </style>
+  <script src="/assets/growtheko-consent.js" defer></script>
+  <script src="/assets/growtheko-meta.js" defer></script>
 </head>
 <body>
   <div class="wrap">
@@ -51,7 +75,23 @@
     <main>
       <div class="eyebrow">One path at a time</div>
       <h1>Start where the bottleneck is.</h1>
-      <p class="lead">Compare exactly who each offer is for, what you receive, how delivery works and where the scope ends. Choose only the smallest level that matches the current bottleneck.</p>
+      <p class="lead">Compare the separate RobinEkren self-serve entry product and GrowthEko's five bounded containers. Choose only the smallest level that matches the current bottleneck.</p>
+
+      <section class="bridge" aria-label="RobinEkren acquisition entry">
+        <article class="card">
+          <div class="eyebrow">RobinEkren · separate entry product</div>
+          <h2>AI Digital Estate Launch System</h2>
+          <div class="price"><s>$97 USD</s> <strong>$7 USD</strong> <small>one time</small></div>
+          <div class="label">Best for</div><p class="answer">Building a first focused digital-estate concept before choosing a GrowthEko service container.</p>
+          <div class="label">You receive</div><ul><li>Interactive Launch Desk</li><li>Positioning builder and content prompts</li><li>Monetization map</li><li>Seven-day action board</li></ul>
+          <div class="label">How it works</div><p class="flow">Position → Publish → Monetize → Seven next actions</p>
+          <div class="label">Done when</div><p class="answer">One digital-estate concept and the next seven actions are documented.</p>
+          <div class="boundary">This is a separate RobinEkren educational product, not a GrowthEko delivery container or revenue entitlement. No revenue or follower result is guaranteed.</div>
+          <a class="card-link" href="https://www.robinekren.com/digital-estate">View current RobinEkren offer</a>
+        </article>
+      </section>
+
+      <h2 class="section-title">GrowthEko core offers</h2>
 
       <section class="grid" aria-label="GrowthEko offers">
         <article class="card">
@@ -116,9 +156,33 @@
 
   <script>
     (function () {
+      var targets = Array.from(document.querySelectorAll('main > .eyebrow, main > h1, main > .lead, .card, .section-title, .scope, footer'));
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      targets.forEach(function (target, index) {
+        target.classList.add('reveal-target');
+        target.style.setProperty('--reveal-delay', ((index % 3) * 55) + 'ms');
+      });
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        targets.forEach(function (target) { target.classList.add('is-revealed'); });
+        return;
+      }
+      document.documentElement.classList.add('motion-ready');
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      targets.forEach(function (target) { observer.observe(target); });
+    }());
+  </script>
+
+  <script>
+    (function () {
       var offers = {
-        monthly_97: { label: 'GrowthEko Operator Membership · $97 USD/month' },
-        onetime_1997: { label: 'GrowthEko AI Operator Audit · $1,997 USD one time' }
+        monthly_97: { label: 'GrowthEko Operator Membership · $97 USD/month', value: 97 },
+        onetime_1997: { label: 'GrowthEko AI Operator Audit · $1,997 USD one time', value: 1997 }
       };
       var activeOfferKey = '';
       var modal = document.getElementById('checkoutModal');
@@ -154,19 +218,28 @@
         submit.textContent = 'Opening secure checkout…';
         status.textContent = '';
         try {
+          var checkoutRequestId = requestId();
+          if (window.GrowthEkoMeta) {
+            window.GrowthEkoMeta.track('InitiateCheckout', {
+              value: offers[activeOfferKey].value,
+              currency: 'USD',
+              content_ids: [activeOfferKey],
+              content_type: 'product'
+            }, 'ge_checkout_' + checkoutRequestId);
+          }
           var response = await fetch('/api/create-checkout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               offer: activeOfferKey,
-              requestId: requestId(),
+              requestId: checkoutRequestId,
               email: document.getElementById('checkoutEmail').value.trim(),
               companyName: document.getElementById('checkoutCompany').value.trim(),
               buyerCountry: country.value,
               acceptsB2B: document.getElementById('checkoutBusiness').checked,
               acceptsTerms: document.getElementById('checkoutTerms').checked,
               acceptsElectronicInvoices: document.getElementById('checkoutInvoices').checked,
-              termsVersion: '2026-07-10',
+              termsVersion: '2026-08-23-v1.2',
               acceptedAt: new Date().toISOString()
             })
           });

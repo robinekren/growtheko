@@ -20,9 +20,7 @@ const ALLOWED_OFFER_KEYS = new Set([
   'roadmap_1997',
   'done_with_you_4997',
   'done_for_you_14997',
-  'recommendation',
-  'monthly_97',
-  'onetime_1997'
+  'recommendation'
 ]);
 const REQUIRED_FIELDS = [
   'email', 'first_name', 'last_name', 'motivation', 'profile_type',

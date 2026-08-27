@@ -779,7 +779,8 @@
       background: rgba(255,255,255,0.88);
       box-shadow: 0 7px 18px rgba(84,137,230,0.08);
     }
-    .listing-tiktok-logo {
+    .listing-tiktok-logo,
+    .listing-instagram-logo {
       width: 22px;
       height: 22px;
       display: block;
@@ -868,6 +869,17 @@
       font-weight: 900;
       letter-spacing: 0.12em;
       text-transform: uppercase;
+    }
+    .portal-listing-proof-note {
+      margin: 0 0 12px;
+      padding: 12px 13px;
+      border: 1px solid rgba(180,200,240,0.4);
+      border-radius: 12px;
+      background: rgba(247,249,253,0.82);
+      color: rgba(17,24,39,0.6);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.45;
     }
     .listing-analytics-grid {
       display: grid;
@@ -4318,7 +4330,8 @@
         height: 34px;
         border-radius: 11px;
       }
-      .listing-tiktok-logo {
+      .listing-tiktok-logo,
+      .listing-instagram-logo {
         width: 18px;
         height: 18px;
       }
@@ -4749,6 +4762,45 @@ WEEKLY DATA:
                       <img src="/assets/portal/listings/investinglab-analytics-locations.jpg" alt="TikTok viewer location analytics for @theinvestinglab">
                     </button>
                   </div>
+                  <div class="portal-listing-action-row">
+                    <span class="portal-listing-action-note" data-listing-request-status aria-live="polite"></span>
+                    <button class="listing-request-button" type="button" data-listing-request>
+                      <span data-listing-request-label>Request</span>
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="portal-listing-card" data-listing-id="ashalea-1" data-listing-platform="instagram" data-listing-niche="Model &amp; Fashion Girls" data-listing-price="">
+                <button class="portal-listing-summary" type="button" aria-expanded="false" aria-controls="portalListingAshaleaDetails">
+                  <span class="listing-platform" aria-label="Instagram">
+                    <svg class="listing-instagram-logo" viewBox="0 0 24 24" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="listingInstagramGradient" x1="3" y1="21" x2="21" y2="3" gradientUnits="userSpaceOnUse">
+                          <stop stop-color="#FFD600"/>
+                          <stop offset=".42" stop-color="#FF0169"/>
+                          <stop offset="1" stop-color="#7638FA"/>
+                        </linearGradient>
+                      </defs>
+                      <rect x="3" y="3" width="18" height="18" rx="5.5" fill="none" stroke="url(#listingInstagramGradient)" stroke-width="2.2"/>
+                      <circle cx="12" cy="12" r="4.1" fill="none" stroke="url(#listingInstagramGradient)" stroke-width="2.2"/>
+                      <circle cx="17.4" cy="6.7" r="1.25" fill="url(#listingInstagramGradient)"/>
+                    </svg>
+                  </span>
+                  <span class="portal-listing-summary-copy">
+                    <span class="listing-username">@ashalea_1</span>
+                    <span class="portal-listing-summary-meta">184K · Instagram · Model &amp; Fashion</span>
+                  </span>
+                  <span class="portal-listing-chevron" aria-hidden="true">⌄</span>
+                </button>
+                <div class="portal-listing-details" id="portalListingAshaleaDetails">
+                  <div class="portal-listing-stats">
+                    <div class="portal-listing-stat"><small>Platform</small><strong>Instagram</strong></div>
+                    <div class="portal-listing-stat"><small>Followers</small><strong>184K</strong></div>
+                    <div class="portal-listing-stat"><small>Top country</small><strong>US · claimed</strong></div>
+                    <div class="portal-listing-stat"><small>Price</small><strong>On request</strong></div>
+                  </div>
+                  <span class="portal-listing-detail-label">Live profile confirmed</span>
+                  <p class="portal-listing-proof-note">Seller-submitted analytics are pending review. GrowthEko verifies proof before any deal moves forward.</p>
                   <div class="portal-listing-action-row">
                     <span class="portal-listing-action-note" data-listing-request-status aria-live="polite"></span>
                     <button class="listing-request-button" type="button" data-listing-request>
@@ -6386,12 +6438,16 @@ WEEKLY DATA:
     // ===== TIER-BASED PHASE FILTERING =====
     const TIER_PHASE_MAP = {
       'GrowthEko AI Operator Audit': [0, 1],
+      'audit': [0, 1],
       'onetime_1997': [0, 1],
       'GrowthEko Operator Membership': [0, 4],
+      'membership': [0, 4],
       'monthly_97': [0, 4],
-      'AI System Sprint': [0, 1, 2, 3],
+      'GrowthEko AI System Sprint': [0, 1, 2, 3],
+      'sprint': [0, 1, 2, 3],
       'done_with_you_4997': [0, 1, 2, 3],
-      'AI Empire Architect': [0, 1, 2, 3, 4],
+      'GrowthEko AI Empire Architect': [0, 1, 2, 3, 4],
+      'architect': [0, 1, 2, 3, 4],
       'done_for_you_14997': [0, 1, 2, 3, 4],
     };
 
@@ -7590,9 +7646,16 @@ WEEKLY DATA:
           // Map tier names from DB to display names
           const tierDisplayNames = {
             'monthly_97': 'GrowthEko Operator Membership',
+            'membership': 'GrowthEko Operator Membership',
             'onetime_1997': 'GrowthEko AI Operator Audit',
+            'audit': 'GrowthEko AI Operator Audit',
+            'roadmap_1997': 'GrowthEko AI Operator Audit',
+            'done_with_you_4997': 'GrowthEko AI System Sprint',
+            'sprint': 'GrowthEko AI System Sprint',
+            'done_for_you_14997': 'GrowthEko AI Empire Architect',
+            'architect': 'GrowthEko AI Empire Architect',
           };
-          CUSTOMER.tier = tierDisplayNames[data.customer.tier] || data.customer.tier;
+          CUSTOMER.tier = tierDisplayNames[data.customer.tier] || 'Legacy entitlement — review required';
           CUSTOMER.name = (data.customer.name || '').split(' ')[0] || 'there';
           CUSTOMER.fullName = data.customer.name || '';
           CUSTOMER.company = data.customer.company || '';

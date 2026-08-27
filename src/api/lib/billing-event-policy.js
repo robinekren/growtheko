@@ -1,3 +1,5 @@
+import { BILLING_TERMS_VERSION } from './offer-registry.js';
+
 const HANDLED_TYPES = new Set([
   'checkout.session.completed',
   'invoice.paid',
@@ -140,7 +142,7 @@ function offerFromMetadata(metadata, catalog) {
   const offer = catalog[key];
   if (!offer) throw new BillingScopeError('Stripe object uses an unapproved offer');
   if (
-    metadata.terms_version !== '2026-07-10' ||
+    metadata.terms_version !== BILLING_TERMS_VERSION ||
     metadata.b2b_attested !== 'true' ||
     metadata.electronic_invoice_consented !== 'true' ||
     !/^\d{4}-\d{2}-\d{2}T/.test(String(metadata.terms_accepted_at || ''))

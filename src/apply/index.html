@@ -416,7 +416,7 @@
       <div id="tierBanner" class="tier-banner">
         <div class="label">Applying for</div>
         <div id="tierLabel" class="name"></div>
-        <div id="tierPrice" class="price"></div>
+        <div id="tierContext" class="price"></div>
       </div>
 
       <div class="form-shell" id="applicationForm">
@@ -638,7 +638,7 @@
             <option value="">Choose the closest path...</option>
             <option value="roadmap_1997">Clear diagnosis and roadmap: I want the exact plan first</option>
             <option value="done_with_you_4997">AI System Sprint: one bottleneck, one implemented System Unit</option>
-            <option value="done_for_you_14997">Done for you buildout: I want the system created with deeper private support</option>
+            <option value="done_for_you_14997">AI Empire Architect: up to three connected System Units around one verified revenue path</option>
             <option value="recommendation">I am not sure yet: I want your recommendation</option>
           </select>
           <p class="field-hint">This is not a purchase and no contract is created by submitting. It only helps us understand whether you want a roadmap, guided implementation, full implementation, or a recommendation after reviewing your answers.</p>
@@ -664,12 +664,10 @@
   <script>
     (function() {
       var tierMap = {
-        'roadmap_1997': { label: 'Diagnosis + Roadmap', price: 'Plan-first path' },
-        'done_with_you_4997': { label: 'AI System Sprint', price: '$4,997 · scoped 30-day implementation' },
-        'done_for_you_14997': { label: 'Done-For-You Buildout', price: 'Deeper private implementation path' },
-        'recommendation': { label: 'Recommendation Needed', price: 'We will recommend the cleanest fit' },
-        'monthly_97': { label: 'Guidance Path', price: 'Legacy link detected' },
-        'onetime_1997': { label: 'Diagnosis + Roadmap', price: 'Legacy link detected' }
+        'roadmap_1997': { label: 'Diagnosis + Roadmap', context: 'Plan-first path' },
+        'done_with_you_4997': { label: 'AI System Sprint', context: 'Scoped 30-day implementation' },
+        'done_for_you_14997': { label: 'AI Empire Architect', context: 'Scoped 90-day architecture engagement' },
+        'recommendation': { label: 'Recommendation Needed', context: 'We will recommend the cleanest fit' }
       };
       var tierSelect = document.getElementById('f_selected_tier');
       var tierBanner = document.getElementById('tierBanner');
@@ -680,12 +678,20 @@
           return;
         }
         document.getElementById('tierLabel').textContent = tierMap[tier].label;
-        document.getElementById('tierPrice').textContent = tierMap[tier].price;
+        document.getElementById('tierContext').textContent = tierMap[tier].context;
         tierBanner.style.display = 'block';
       }
 
       var params = new URLSearchParams(window.location.search);
-      var tier = (params.get('tier') || '').toLowerCase();
+      var tier = (params.get('offer') || params.get('tier') || '').toLowerCase();
+      if (tier === 'monthly_97' || tier === 'membership') {
+        window.location.replace('/start?checkout=monthly_97');
+        return;
+      }
+      if (tier === 'onetime_1997' || tier === 'audit') {
+        window.location.replace('/start?checkout=onetime_1997');
+        return;
+      }
       if (tierMap[tier]) {
         tierSelect.value = tier;
         renderTier(tier);
@@ -798,7 +804,7 @@
     }
 
     function validate(data) {
-      if (!['roadmap_1997', 'done_with_you_4997', 'done_for_you_14997', 'recommendation', 'monthly_97', 'onetime_1997'].includes(data.selected_tier)) return false;
+      if (!['roadmap_1997', 'done_with_you_4997', 'done_for_you_14997', 'recommendation'].includes(data.selected_tier)) return false;
       if (!data.email || !data.email.includes('@')) return false;
       if (!data.first_name) return false;
       if (!data.last_name) return false;

@@ -211,7 +211,7 @@ async function sendWelcomeEmail(email, firstName, apiKey, from) {
       <p style="margin:24px 0;">
         <a href="${downloadUrl}" style="background:#0a0a0a;color:#fff;padding:12px 24px;text-decoration:none;border-radius:999px;display:inline-block;font-weight:500;">Download the Playbook (PDF)</a>
       </p>
-      <p>40 pages, 12 minutes. Read it cover to cover. If the framework lands, choose either the ongoing GrowthEko Operator Membership or the focused GrowthEko AI Operator Audit at <a href="https://growtheko.com/start#offers" style="color:#0a0a0a;">growtheko.com/start</a>.</p>
+      <p>It is a 13-page guide. Read it once and write down the single operating move you will test first. If the framework fits, compare the ongoing GrowthEko Operator Membership and the focused GrowthEko AI Operator Audit at <a href="https://growtheko.com/start#offers" style="color:#0a0a0a;">growtheko.com/start</a>.</p>
       <p>Or just reply to this email — I read everything.</p>
       <p style="margin-top:32px;">— Robin Ekren<br/><span style="color:#6a6a6a;font-size:13px;">growtheko.com · @robinekren</span></p>
     </div>

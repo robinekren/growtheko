@@ -13,6 +13,18 @@ function secret() {
   return String(process.env.GROWTHEKO_OPS_SESSION_SECRET || '');
 }
 
+export function isLocalDevelopmentRequest(req, env = process.env) {
+  if (env.VERCEL_ENV && env.VERCEL_ENV !== 'development') return false;
+  if (!env.VERCEL_ENV && env.NODE_ENV === 'production') return false;
+  const rawHost = String(req.headers?.['x-forwarded-host'] || req.headers?.host || '');
+  try {
+    const hostname = new URL(`http://${rawHost}`).hostname;
+    return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+  } catch {
+    return false;
+  }
+}
+
 function sign(payload) {
   return createHmac('sha256', secret()).update(payload).digest('base64url');
 }
@@ -23,16 +35,17 @@ function cookieValue() {
   return `${payload}.${sign(payload)}`;
 }
 
-export function createOpsCookie() {
+export function createOpsCookie({ secure = true } = {}) {
   if (secret().length < 32) throw new Error('GROWTHEKO_OPS_SESSION_SECRET is not configured');
-  return [
+  const parts = [
     `${COOKIE_NAME}=${cookieValue()}`,
     'Path=/',
     'HttpOnly',
-    'Secure',
     'SameSite=Strict',
     `Max-Age=${MAX_AGE_SECONDS}`
-  ].join('; ');
+  ];
+  if (secure) parts.splice(3, 0, 'Secure');
+  return parts.join('; ');
 }
 
 export function hasOpsSession(cookieHeader = '') {

@@ -6,7 +6,7 @@ export default function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (!hasOpsSession(req.headers.cookie)) {
     res.statusCode = 302;
-    res.setHeader('Location', '/ops-login?next=/crm');
+    res.setHeader('Location', '/ops-login?next=/ops');
     return res.end();
   }
 

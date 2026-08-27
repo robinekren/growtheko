@@ -16,10 +16,11 @@ Customer-facing navigation:
 
 Internal navigation:
 
-- `/crm` is the single operator surface.
-- `/ops` permanently redirects to `/crm`.
-- Demo people are prohibited.
-- Source records remain customers, applications and interactions. The UI may aggregate them but does not create a second customer truth.
+- `/ops` is the single operator surface.
+- `/crm` temporarily redirects to `/ops` for backwards compatibility.
+- Invented people are prohibited in production. Explicitly labelled localhost-only scenario fixtures may be used for operator QA when no CRM source is configured.
+- Customers and applications remain the identity source. Each commercial offer has its own durable opportunity, so one person can move through the $7 entry and later $97, $1,997, $4,997 or $14,997 offers without replacing earlier history.
+- Every operational change is attached to the append-only audit ledger. The UI may aggregate this evidence but does not create a second customer truth.
 
 ## Offer ladder and promise boundary
 
@@ -130,6 +131,8 @@ After those gates, transcript segments may be attached to the customer timeline 
 ## Decision queue
 
 Only open decisions appear by default. Every decision contains verified context, three mutually exclusive choices, one recommendation, owner, deadline and exact approval gate. Closed decisions remain searchable by date, customer, project and outcome; they do not remain in the active queue.
+
+An approval records authorization and returns the bounded task to Nora's command queue. It does not itself send a message, change access, charge money or perform another external action. Hold and reject record the stop decision and remove the task from the active execution queue.
 
 ## Prompt separation
 
