@@ -7,6 +7,7 @@ import {
   resolveOfferKey
 } from './lib/offer-registry.js';
 import { LAUNCH_TEMPLATES, buildLaunchWorkspace, launchArtifactSeeds, launchNextAction } from './lib/launch-system.js';
+import { customerProfileFromAnswers, customerProfileFromMessageMetadata, mergeCustomerProfiles } from './lib/customer-profile.js';
 
 const AUTONOMY_PHASES = Object.freeze([
   Object.freeze({
@@ -157,6 +158,14 @@ async function rows(base, key, path) {
   if (!response.ok) throw new Error(`CRM source unavailable: ${response.status}`);
   const payload = await response.json();
   return Array.isArray(payload) ? payload : [];
+}
+
+async function optionalRows(base, key, path) {
+  try {
+    return await rows(base, key, path);
+  } catch {
+    return [];
+  }
 }
 
 function normalizedEmail(value) {
@@ -478,8 +487,9 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
   const leads = [
     {
       is_scenario: true,
-      id: 'local-test-customer', name: 'Test customer · New application', email: 'test-customer@growtheko.local', company: 'Localhost QA',
+      id: 'local-test-customer', name: 'Test customer · New application', first_name: 'Mia', email: 'test-customer@growtheko.local', company: 'Localhost QA',
       stage: 'Diagnose', raw_stage: 'applied', offer: offer('digital_estate'),
+      profile_context: { birth_date: '2001-04-17', city: 'Vienna', current_job: 'AI consultant', timezone: 'Europe/Vienna', source: 'customer_provided' },
       primary_goal: 'Create one clear digital-estate launch path.',
       biggest_bottleneck: 'The smallest useful next scope has not been diagnosed.',
       submitted_at: at(-5), call_booked: false, call_time: null
@@ -557,7 +567,7 @@ export default async function handler(req, res) {
 
   try {
     const policy = autonomyPolicy();
-    const [customers, applications, messages, opportunityRows, auditRows, storedDecisionRows, billingEventRows, launchRows, launchArtifactRows, launchApprovalRows] = await Promise.all([
+    const [customers, applications, messages, opportunityRows, auditRows, storedDecisionRows, billingEventRows, launchRows, launchArtifactRows, launchApprovalRows, onboardingSessions, onboardingAnswers] = await Promise.all([
       rows(base, key, 'customers?select=id,email,name,company,tier,status,portal_status,onboarding_status,nora_status,amount_paid,currency,paid_at,last_activity_at,created_at,updated_at&order=created_at.desc&limit=500'),
       rows(base, key, 'applications?select=id,email,first_name,last_name,preferred_name,website,product_type,stage,status,selected_tier,goal,dream_outcome,biggest_challenge,holding_back,submitted_at,call_status,call_date,internal_notes,tags,created_at&order=created_at.desc&limit=500'),
       rows(base, key, 'messages?select=id,application_id,sender_type,sender_name,content,message_type,metadata,read_at,created_at&order=created_at.desc&limit=1000'),
@@ -567,7 +577,9 @@ export default async function handler(req, res) {
       rows(base, key, 'stripe_webhook_events?select=event_id,event_type,event_created_at,stripe_customer_id,offer_key,status,error,payload&order=event_created_at.desc&limit=2000'),
       rows(base, key, 'launch_workspaces?select=id,source_key,customer_id,onboarding_session_id,opportunity_id,template_key,traffic_mode,primary_cta,owns_existing_system,website_state,domain_mode,status,cta_destination,domain_value,business_snapshot,offer_snapshot,launch_config,review_required,created_at,updated_at&order=updated_at.desc&limit=1000'),
       rows(base, key, 'launch_artifacts?select=id,workspace_id,artifact_key,artifact_type,version,status,content,preview_url,checksum,generated_by,approved_by,approved_at,created_at,updated_at&order=updated_at.desc&limit=5000'),
-      rows(base, key, 'launch_approvals?select=id,approval_key,workspace_id,artifact_id,scope,decision,notes,decided_by,decided_at,metadata,created_at&order=decided_at.desc&limit=2000')
+      rows(base, key, 'launch_approvals?select=id,approval_key,workspace_id,artifact_id,scope,decision,notes,decided_by,decided_at,metadata,created_at&order=decided_at.desc&limit=2000'),
+      optionalRows(base, key, 'onboarding_sessions?select=id,customer_id,status,completed_at&order=completed_at.desc.nullslast&limit=2000'),
+      optionalRows(base, key, 'onboarding_answers?select=session_id,field_name,field_value&limit=10000')
     ]);
 
     const applicationsByEmail = new Map();
@@ -580,13 +592,34 @@ export default async function handler(req, res) {
 
     const customerEmails = new Set(customers.map(customer => normalizedEmail(customer.email)).filter(Boolean));
     const customerById = new Map(customers.map(customer => [String(customer.id), customer]));
+    const messageProfileByApplication = new Map();
+    for (const message of messages) {
+      const applicationId = clean(message.application_id, 140);
+      if (!applicationId) continue;
+      if (!messageProfileByApplication.has(applicationId)) messageProfileByApplication.set(applicationId, []);
+      messageProfileByApplication.get(applicationId).push(message);
+    }
+    const answersBySession = new Map();
+    for (const answer of onboardingAnswers) {
+      const sessionId = clean(answer.session_id, 140);
+      if (!answersBySession.has(sessionId)) answersBySession.set(sessionId, []);
+      answersBySession.get(sessionId).push(answer);
+    }
+    const profileByCustomer = new Map();
+    for (const session of onboardingSessions) {
+      const customerId = clean(session.customer_id, 140);
+      if (!customerId || profileByCustomer.has(customerId)) continue;
+      profileByCustomer.set(customerId, customerProfileFromAnswers(answersBySession.get(String(session.id)) || []));
+    }
     const people = customers.map(customer => {
       const application = applicationsByEmail.get(normalizedEmail(customer.email)) || null;
       const prescribed = offer(customer.tier || application?.selected_tier);
+      const fullName = clean(customer.name || application?.preferred_name || `${application?.first_name || ''} ${application?.last_name || ''}`.trim() || 'Customer', 160);
       return {
         id: clean(customer.id, 140),
         application_id: clean(application?.id, 140),
-        name: clean(customer.name || application?.preferred_name || `${application?.first_name || ''} ${application?.last_name || ''}`.trim() || 'Customer', 160),
+        name: fullName,
+        first_name: clean(application?.first_name || application?.preferred_name || fullName.split(/\s+/)[0], 80),
         email: normalizedEmail(customer.email),
         company: clean(customer.company || application?.website || application?.product_type, 200),
         status: clean(customer.status || 'unknown', 80),
@@ -602,6 +635,10 @@ export default async function handler(req, res) {
         offer: prescribed,
         primary_goal: clean(application?.goal || application?.dream_outcome, 1200),
         biggest_bottleneck: clean(application?.biggest_challenge || application?.holding_back, 1200),
+        profile_context: mergeCustomerProfiles(
+          profileByCustomer.get(String(customer.id)) || customerProfileFromAnswers([]),
+          customerProfileFromMessageMetadata(messageProfileByApplication.get(String(application?.id)) || [])
+        ),
         call_booked: ['booked', 'scheduled', 'confirmed'].includes(clean(application?.call_status, 40).toLowerCase()),
         call_time: application?.call_date || null
       };
@@ -610,6 +647,7 @@ export default async function handler(req, res) {
     const leads = applications.filter(application => !customerEmails.has(normalizedEmail(application.email))).map(application => ({
       id: clean(application.id, 140),
       name: clean(application.preferred_name || `${application.first_name || ''} ${application.last_name || ''}`.trim() || 'Applicant', 160),
+      first_name: clean(application.first_name || application.preferred_name, 80).split(/\s+/)[0] || 'Applicant',
       email: normalizedEmail(application.email),
       company: clean(application.website || application.product_type, 200),
       stage: stage(application.stage || application.status),
@@ -617,6 +655,7 @@ export default async function handler(req, res) {
       offer: offer(application.selected_tier),
       primary_goal: clean(application.goal || application.dream_outcome, 1200),
       biggest_bottleneck: clean(application.biggest_challenge || application.holding_back, 1200),
+      profile_context: customerProfileFromMessageMetadata(messageProfileByApplication.get(String(application.id)) || []),
       submitted_at: application.submitted_at || application.created_at || null,
       call_booked: ['booked', 'scheduled', 'confirmed'].includes(clean(application.call_status, 40).toLowerCase()),
       call_time: application.call_date || null

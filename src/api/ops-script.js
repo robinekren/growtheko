@@ -11,6 +11,7 @@ import {
   normalizeConversationScriptRequest
 } from './lib/conversation-scripts.js';
 import { attentionEmailSubject } from './lib/email-subject.js';
+import { customerProfileFromAnswers, customerProfileFromMessageMetadata, mergeCustomerProfiles } from './lib/customer-profile.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -34,13 +35,29 @@ function serviceHeaders(key) {
 
 async function canonicalSource(base, key, applicationId) {
   const [applicationResponse, messagesResponse] = await Promise.all([
-    fetch(`${base}/rest/v1/applications?id=eq.${encodeURIComponent(applicationId)}&select=id,first_name,last_name,preferred_name,website,product_type,stage,status,selected_tier,goal,dream_outcome,biggest_challenge,holding_back,call_status,call_date&limit=1`, { headers: serviceHeaders(key) }),
+    fetch(`${base}/rest/v1/applications?id=eq.${encodeURIComponent(applicationId)}&select=id,email,first_name,last_name,preferred_name,website,product_type,stage,status,selected_tier,goal,dream_outcome,biggest_challenge,holding_back,call_status,call_date&limit=1`, { headers: serviceHeaders(key) }),
     fetch(`${base}/rest/v1/messages?application_id=eq.${encodeURIComponent(applicationId)}&message_type=eq.text&select=sender_type,content,created_at,metadata&order=created_at.asc&limit=50`, { headers: serviceHeaders(key) })
   ]);
   if (!applicationResponse.ok || !messagesResponse.ok) throw new Error('Conversation source unavailable');
   const application = (await applicationResponse.json().catch(() => []))?.[0];
   if (!application) return null;
   const messages = await messagesResponse.json().catch(() => []);
+  let profileContext = customerProfileFromAnswers([]);
+  try {
+    const customerResponse = await fetch(`${base}/rest/v1/customers?email=eq.${encodeURIComponent(application.email || '')}&select=id&limit=1`, { headers: serviceHeaders(key) });
+    const customer = customerResponse.ok ? (await customerResponse.json().catch(() => []))?.[0] : null;
+    if (customer?.id) {
+      const sessionResponse = await fetch(`${base}/rest/v1/onboarding_sessions?customer_id=eq.${encodeURIComponent(customer.id)}&select=id,status,completed_at&order=completed_at.desc.nullslast&limit=1`, { headers: serviceHeaders(key) });
+      const session = sessionResponse.ok ? (await sessionResponse.json().catch(() => []))?.[0] : null;
+      if (session?.id) {
+        const answersResponse = await fetch(`${base}/rest/v1/onboarding_answers?session_id=eq.${encodeURIComponent(session.id)}&select=field_name,field_value`, { headers: serviceHeaders(key) });
+        if (answersResponse.ok) profileContext = customerProfileFromAnswers(await answersResponse.json().catch(() => []));
+      }
+    }
+  } catch {
+    profileContext = customerProfileFromAnswers([]);
+  }
+  application.profile_context = mergeCustomerProfiles(profileContext, customerProfileFromMessageMetadata(messages));
   const source = canonicalConversationSource(application, messages);
   const latestInbound = [...messages].reverse().find(message => message?.sender_type === 'customer');
   source.thread_subject = clean(latestInbound?.metadata?.subject, 300);
@@ -54,7 +71,8 @@ function localSource(applicationId) {
     product_type: 'AI consulting',
     stage: 'applied',
     goal: 'Build a clear first offer and a reliable path to the right customer.',
-    biggest_challenge: 'The offer and next step still feel too broad.'
+    biggest_challenge: 'The offer and next step still feel too broad.',
+    profile_context: { birth_date: '2001-04-17', city: 'Vienna', current_job: 'AI consultant', timezone: 'Europe/Vienna', source: 'customer_provided' }
   }, [
     { sender_type: 'team', content: 'thanks for sharing the context. what feels most urgent right now?', created_at: '2026-08-27T09:00:00.000Z' },
     { sender_type: 'customer', content: 'i want to start, but i am not sure which part to fix first.', created_at: '2026-08-27T09:05:00.000Z' }

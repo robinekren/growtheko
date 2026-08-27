@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
+import { profileAnswerFromReply } from './lib/customer-profile.js';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_WEBHOOK_BYTES = 2 * 1024 * 1024;
@@ -123,10 +124,29 @@ async function existingMessage(base, key, applicationId, resendEmailId) {
   return (await response.json().catch(() => []))?.[0] || null;
 }
 
-async function storeInbound({ base, key, application, sender, received, emailId, occurredAt }) {
+async function latestProfileContextStage(base, key, applicationId) {
+  const params = new URLSearchParams({
+    application_id: `eq.${applicationId}`,
+    sender_type: 'eq.team',
+    message_type: 'eq.text',
+    select: 'metadata,created_at',
+    order: 'created_at.desc',
+    limit: '1'
+  });
+  const response = await fetch(`${base}/rest/v1/messages?${params}`, { headers: serviceHeaders(key) });
+  if (!response.ok) return '';
+  const metadata = (await response.json().catch(() => []))?.[0]?.metadata;
+  const progress = metadata && typeof metadata === 'object' ? metadata.script_progress : null;
+  return progress?.path === 'profile_context' && ['location', 'work', 'birthday', 'timezone'].includes(progress.stage)
+    ? progress.stage
+    : '';
+}
+
+async function storeInbound({ base, key, application, sender, received, emailId, occurredAt, profileStage }) {
   const content = clean(received.text, 30000) || htmlToText(received.html) || '[email contained no text body]';
   const messageId = clean(received.message_id || header(received.headers, 'message-id'), 1000);
   const subject = clean(received.subject, 500);
+  const profileAnswer = profileAnswerFromReply(profileStage, content);
   const response = await fetch(`${base}/rest/v1/messages`, {
     method: 'POST',
     headers: serviceHeaders(key, { 'Content-Type': 'application/json', Prefer: 'return=representation' }),
@@ -145,7 +165,8 @@ async function storeInbound({ base, key, application, sender, received, emailId,
         in_reply_to: header(received.headers, 'in-reply-to') || null,
         references: header(received.headers, 'references') || null,
         sender_email: sender.email,
-        recipient: received.to || null
+        recipient: received.to || null,
+        profile_context_answer: profileAnswer ? { field: profileAnswer.field_name, value: profileAnswer.field_value, source: 'direct_customer_email_reply' } : null
       },
       read_at: null,
       created_at: occurredAt
@@ -225,7 +246,8 @@ export default async function handler(req, res) {
     if (duplicate) return res.status(200).json({ ok: true, duplicate: true, message_id: duplicate.id });
 
     const occurredAt = clean(event?.created_at || event?.data?.created_at, 100) || new Date().toISOString();
-    const stored = await storeInbound({ base, key, application, sender, received, emailId, occurredAt });
+    const profileStage = await latestProfileContextStage(base, key, application.id);
+    const stored = await storeInbound({ base, key, application, sender, received, emailId, occurredAt, profileStage });
     if (!stored?.id) throw new Error('Inbound message insert returned no source record');
     try {
       await recordInboundAudit({ base, key, applicationId: application.id, stored, emailId, occurredAt });

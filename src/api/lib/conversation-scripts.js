@@ -1,10 +1,12 @@
 import { createHash } from 'node:crypto';
+import { canonicalCustomerProfile } from './customer-profile.js';
 
 const MAX_DIRECTION_LENGTH = 800;
 const MAX_DRAFT_LENGTH = 5000;
 
 export const CONVERSATION_SCRIPT_PATHS = Object.freeze({
   freestyle: Object.freeze(['understand', 'help', 'next_step']),
+  profile_context: Object.freeze(['location', 'work', 'birthday', 'timezone']),
   start_to_sale: Object.freeze(['connect', 'context', 'diagnose', 'clarify', 'recommend', 'commit', 'follow_up']),
   follow_up: Object.freeze(['reopen', 'value', 'question', 'close_loop']),
   expansion: Object.freeze(['win', 'gap', 'fit', 'permission', 'next_step'])
@@ -84,7 +86,8 @@ export function canonicalConversationSource(application = {}, messages = []) {
       goal: clean(application.goal || application.dream_outcome, 1200),
       challenge: clean(application.biggest_challenge || application.holding_back, 1200),
       call_status: clean(application.call_status, 100),
-      call_date: clean(application.call_date, 100)
+      call_date: clean(application.call_date, 100),
+      profile_context: canonicalCustomerProfile(application.profile_context)
     },
     messages: orderedMessages
   };
@@ -94,11 +97,26 @@ function fallbackLine(source, request) {
   const name = source.application.first_name || 'there';
   const goal = verifiedValue(source.application.goal, 'the outcome you want');
   const challenge = verifiedValue(source.application.challenge, 'the main bottleneck');
+  const profile = canonicalCustomerProfile(source.application.profile_context);
   const lines = {
     freestyle: {
       understand: `hey ${name}, thanks for the context. i want to make sure i understand it correctly. what feels most important for me to understand first?`,
       help: `hey ${name}, i can help you think this through. what would make this conversation genuinely useful for you right now?`,
       next_step: `hey ${name}, the cleanest next step is to clarify the current situation and the result you want, then choose the smallest move that actually helps.`
+    },
+    profile_context: {
+      location: profile.city
+        ? `hey ${name}, i have you based in ${profile.city}. is that still correct?`
+        : `hey ${name}, one quick context question before we continue, which city are you based in right now?`,
+      work: profile.current_job
+        ? `i have your current work as ${profile.current_job}. is that still accurate?`
+        : `what do you currently do for work?`,
+      birthday: profile.birth_date
+        ? `i have your birthday saved as ${profile.birth_date}. is that still correct?`
+        : `one optional profile detail, would you like to share your date of birth so we can remember future milestones?`,
+      timezone: profile.timezone
+        ? `i have your time zone as ${profile.timezone}. is that the right one for messages and scheduling?`
+        : `what time zone should i use for messages and scheduling?`
     },
     start_to_sale: {
       connect: `hey ${name}, thanks for reaching out. before i suggest anything, i want to understand what you are building and where you are currently stuck.`,

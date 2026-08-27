@@ -431,6 +431,9 @@ const steps = [
     { key: 'company', label: 'Company Name', type: 'text', required: true },
     { key: 'website', label: 'Website', type: 'text' },
     { key: 'country', label: 'Country', type: 'country', required: true },
+    { key: 'city', label: 'City', type: 'text', placeholder: 'e.g. Vienna', required: true },
+    { key: 'current_job', label: 'Current Role / Job', type: 'text', placeholder: 'e.g. Founder, designer, student', required: true },
+    { key: 'date_of_birth', label: 'Birthday (Optional)', type: 'date', help: 'Used only for customer milestones. It does not affect eligibility or pricing.' },
     { key: 'business_age', label: 'Time in Business', type: 'pills', options: ['Not started','0-6 months','6-12 months','1-3 years','3+ years'], required: true }
   ]},
   { id: 'market', title: 'Your Market', subtitle: 'Where you play and who you serve.', type: 'market' },
@@ -460,7 +463,7 @@ const steps = [
     { key: 'vat_registered', label: 'VAT Registered?', type: 'pills', options: ['Yes','No','Not sure'], required: true },
     { key: 'support_email', label: 'Support Email', type: 'text' },
     { key: 'brand_voice', label: 'Brand Voice', type: 'pills', options: ['Professional','Casual & friendly','Bold & direct','Luxury & exclusive','Educational'], required: true },
-    { key: 'timezone', label: 'Timezone', type: 'select', options: ['CET (Europe)','GMT (UK)','EST (US East)','PST (US West)','Other'], required: true },
+    { key: 'timezone', label: 'Timezone', type: 'select', options: ['Europe/Vienna','Europe/Berlin','Europe/London','America/New_York','America/Los_Angeles','Asia/Dubai','Asia/Singapore','Australia/Sydney','Other'], required: true },
     { key: 'referral_source', label: 'How Did You Find Us?', type: 'select', options: ['Instagram','TikTok','YouTube','Referral','Google','DM/Outreach','Other'] },
     { key: 'additional_notes', label: 'Anything Else?', type: 'textarea' }
   ]},
@@ -675,12 +678,12 @@ function renderFormStep(c, step) {
   for (const f of step.fields) {
     const val = customerData[f.key] || '';
     const req = f.required ? '<span class="required">*</span>' : '';
-    if (f.type === 'text' || f.type === 'email') {
+    if (f.type === 'text' || f.type === 'email' || f.type === 'date') {
       const hasPh = PLACEHOLDERS[f.key];
       if (hasPh) {
         html += '<div class="field"><label>' + f.label + req + '</label><div class="input-wrap"><input type="text" data-key="' + f.key + '" value="' + escapeAttr(val) + '" ' + (f.required ? 'required' : '') + '><span class="cycle-ph" id="ph_' + f.key + '"></span></div></div>';
       } else {
-        html += '<div class="field"><label>' + f.label + req + '</label><input type="text" data-key="' + f.key + '" value="' + escapeAttr(val) + '" placeholder="' + (f.placeholder || '') + '" ' + (f.required ? 'required' : '') + '></div>';
+        html += '<div class="field"><label>' + f.label + req + '</label><input type="' + (f.type === 'date' ? 'date' : 'text') + '" data-key="' + f.key + '" value="' + escapeAttr(val) + '" placeholder="' + (f.placeholder || '') + '" ' + (f.required ? 'required' : '') + '>' + (f.help ? '<p style="margin:7px 0 0;color:#888;font-size:12px;line-height:1.45">' + escapeHtml(f.help) + '</p>' : '') + '</div>';
       }
     } else if (f.type === 'textarea') {
       const hasPh = PLACEHOLDERS[f.key];
@@ -1220,7 +1223,7 @@ function selectCompanySize(el) {
 // REVIEW STEP
 // ============================
 const _reviewSections = [
-  { title: 'About You', keys: ['name','company','email','website','country','business_age'], stepIdx: 1 },
+  { title: 'About You', keys: ['name','company','email','website','country','city','current_job','date_of_birth','business_age'], stepIdx: 1 },
   { title: 'Market', keys: ['market','sub_market','niche','blue_ocean','ideal_customer'], stepIdx: 2 },
   { title: 'Audience', keys: ['primary_geo_market','additional_markets','company_size'], stepIdx: 3 },
   { title: 'Product', keys: ['product_type','product_description','product_price','delivery_method'], stepIdx: 4 },
@@ -1231,7 +1234,7 @@ const _reviewSections = [
   { title: 'Business & Brand', keys: ['legal_entity_type','tax_id','vat_registered','brand_voice','timezone'], stepIdx: 9 }
 ];
 const _labelMap = {
-  name:'Name', company:'Company', email:'Email', website:'Website', country:'Country',
+  name:'Name', company:'Company', email:'Email', website:'Website', country:'Country', city:'City', current_job:'Current Role / Job', date_of_birth:'Birthday',
   business_age:'Time in Business', market:'Market', sub_market:'Sub-Market', niche:'Niche',
   blue_ocean:'Blue Ocean', ideal_customer:'Ideal Customer',
   primary_geo_market:'Primary Market', additional_markets:'Additional Markets', company_size:'Company Size',

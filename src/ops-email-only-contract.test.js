@@ -37,6 +37,8 @@ test('inbound email is resolved, normalized and stored as a customer email', () 
   assert.match(inboundEndpoint, /https:\/\/api\.resend\.com\/emails\/receiving/);
   assert.match(inboundEndpoint, /sender_type: 'customer'/);
   assert.match(inboundEndpoint, /channel: 'email'/);
+  assert.match(inboundEndpoint, /latestProfileContextStage/);
+  assert.match(inboundEndpoint, /profile_context_answer/);
   assert.match(inboundEndpoint, /ops_audit_events/);
   assert.match(inboundEndpoint, /bodyParser: false/);
 });
@@ -58,6 +60,16 @@ test('Nora scripts are draft-only, lowercase and reject fabricated commercial pr
   assert.match(draftEndpoint, /auto_sent: false/);
   assert.match(draftEndpoint, /email_subject: emailSubject/);
   assert.doesNotMatch(draftEndpoint, /https:\/\/api\.resend\.com\/emails/);
+});
+
+test('Nora remains the disclosed sender while using verified profile context', () => {
+  const request = normalizeConversationScriptRequest({ path: 'profile_context', stage: 'birthday', format: 'text' });
+  const source = canonicalConversationSource({ preferred_name: 'Mia', profile_context: {} }, []);
+  const draft = deterministicConversationDraft(source, request);
+  assert.match(draft, /optional profile detail/);
+  assert.match(draft, /would you like to share/);
+  assert.doesNotMatch(draft, /robin wrote|from robin|i am robin/i);
+  assert.match(draftEndpoint, /draft_only: true/);
 });
 
 test('scheduled emails use the same email-only message ledger', () => {
