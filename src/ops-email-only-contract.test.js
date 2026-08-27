@@ -46,7 +46,14 @@ test('Nora scripts are draft-only, lowercase and reject fabricated commercial pr
   const source = canonicalConversationSource({ preferred_name: 'Mia', biggest_challenge: 'Offer clarity' }, []);
   const draft = deterministicConversationDraft(source, request);
   assert.equal(draft, draft.toLowerCase());
+  assert.doesNotMatch(draft, /[—–]/);
+  assert.equal(normalizeConversationDraft('hey mia — what changed?', source), 'hey mia, what changed?');
   assert.equal(normalizeConversationDraft('only 2 spots left — act now', source), null);
+  const contextDraft = deterministicConversationDraft(
+    canonicalConversationSource({ preferred_name: 'Mia', goal: 'Build a clear first offer.' }, []),
+    normalizeConversationScriptRequest({ path: 'start_to_sale', stage: 'context', format: 'text' })
+  );
+  assert.doesNotMatch(contextDraft, /\.\./);
   assert.match(draftEndpoint, /draft_only: true/);
   assert.match(draftEndpoint, /auto_sent: false/);
   assert.doesNotMatch(draftEndpoint, /https:\/\/api\.resend\.com\/emails/);

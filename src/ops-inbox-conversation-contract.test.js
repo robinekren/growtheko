@@ -3,6 +3,8 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import {
+  canonicalAttentionSubject,
+  canonicalNoraPunctuation,
   canonicalOperatorEmailHtml,
   canonicalOpsMessageEscapeHtml
 } from './api/ops-message.js';
@@ -48,11 +50,21 @@ test('operator email route is session-bound and resolves the recipient from the 
 test('operator notification email escapes user-authored content', () => {
   assert.equal(canonicalOpsMessageEscapeHtml('<script>&"\''), '&lt;script&gt;&amp;&quot;&#039;');
   const html = canonicalOperatorEmailHtml({ name: 'Mia', content: '<b>Private</b>' });
-  assert.match(html, /Hey Mia/);
+  assert.match(html, /hey mia,/);
   assert.match(html, /&lt;b&gt;Private&lt;\/b&gt;/);
   assert.doesNotMatch(html, /<b>Private<\/b>/);
+  assert.doesNotMatch(html, />GROWTHEKO</);
   assert.match(html, /Reply directly to this email/);
   assert.doesNotMatch(html, /https:\/\/www\.growtheko\.com\/portal/);
+});
+
+test('Nora email copy uses honest attention and comma punctuation', () => {
+  assert.equal(canonicalNoraPunctuation('hey robin — picking this back up'), 'hey robin, picking this back up');
+  assert.equal(canonicalNoraPunctuation('hey robin - one quick thing'), 'hey robin, one quick thing');
+  assert.equal(canonicalAttentionSubject({ name: 'Robin', content: 'picking this back up without pressure' }), 'robin, should i close this?');
+  assert.equal(canonicalAttentionSubject({ name: 'Robin', content: 'the cleanest next step is this' }), 'robin, your cleanest next move');
+  assert.equal(canonicalAttentionSubject({ name: 'Robin', content: 'is this still relevant?' }), 'robin, should i close this?');
+  assert.equal(canonicalAttentionSubject({ name: 'Robin', content: 'hello', threadSubject: 'Existing conversation' }), 'Re: Existing conversation');
 });
 
 test('Inbox has the minimal email status and collapsible Nora script workspace', () => {
@@ -60,8 +72,12 @@ test('Inbox has the minimal email status and collapsible Nora script workspace',
   assert.match(template, /class="delivery-check"/);
   assert.match(template, /data-script-toggle/);
   assert.match(template, /class="script-grip"/);
+  assert.match(template, /script-toggle-label">Script/);
   assert.match(template, /data-script-stage/);
   assert.match(template, /data-script-use/);
   assert.match(template, /data-script-complete/);
+  assert.match(template, /sent_after_operator_review/);
+  assert.match(template, /data-open-customer360/);
+  assert.match(template, /data-back-conversation/);
   assert.doesNotMatch(template, /Stored in portal · email notification included/);
 });

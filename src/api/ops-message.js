@@ -33,9 +33,15 @@ function escapeHtml(value) {
 }
 
 function operatorEmailHtml({ name, content }) {
-  const firstName = clean(name, 120).split(/\s+/)[0] || 'there';
-  const greeting = /^hey\b/i.test(clean(content, 80)) ? '' : `<p style="font-size:15px;line-height:1.7;margin:0 0 18px">Hey ${escapeHtml(firstName)},</p>`;
-  return `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:42px 22px;color:#101528"><div style="font-family:Georgia,serif;font-size:18px;font-weight:700;letter-spacing:.16em;margin-bottom:30px">GROWTHEKO</div>${greeting}<div style="font-size:15px;line-height:1.75;white-space:pre-wrap">${escapeHtml(content)}</div><p style="margin:28px 0 0;color:#6e788b;font-size:12px;line-height:1.6">Reply directly to this email to keep the conversation in one thread.</p></div>`;
+  const firstName = (clean(name, 120).split(/\s+/)[0] || 'there').toLowerCase();
+  const greeting = /^hey\b/i.test(clean(content, 80)) ? '' : `<p style="font-size:15px;line-height:1.7;margin:0 0 18px">hey ${escapeHtml(firstName)},</p>`;
+  return `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:32px 22px;color:#101528">${greeting}<div style="font-size:15px;line-height:1.75;white-space:pre-wrap">${escapeHtml(content)}</div><p style="margin:28px 0 0;color:#6e788b;font-size:12px;line-height:1.6">Reply directly to this email to keep the conversation in one thread.</p></div>`;
+}
+
+function noraPunctuation(value) {
+  return clean(value, MAX_MESSAGE_LENGTH)
+    .replace(/\s*[—–]\s*/g, ', ')
+    .replace(/^(hey\s+[^,\n]{1,80})\s+-\s+/i, '$1, ');
 }
 
 function completedScriptProgress(value, content, now) {
@@ -109,6 +115,17 @@ function replySubject(value) {
   return /^re:/i.test(subject) ? subject : `Re: ${subject}`;
 }
 
+function attentionSubject({ name, content, threadSubject }) {
+  const existing = safeHeader(threadSubject, 300);
+  if (existing) return replySubject(existing);
+  const firstName = (safeHeader(name, 120).split(/\s+/)[0] || 'there').toLowerCase();
+  const message = clean(content, 1200).toLowerCase();
+  if (/\b(?:following up|picking this back up|still relevant)\b/.test(message)) return `${firstName}, should i close this?`;
+  if (/\b(?:next step|move forward)\b/.test(message)) return `${firstName}, your cleanest next move`;
+  if (message.includes('?')) return `${firstName}, one thing before we continue`;
+  return `${firstName}, a quick update`;
+}
+
 function replyHeaders(thread = {}) {
   const messageId = safeHeader(thread.message_id, 500);
   if (!messageId) return undefined;
@@ -116,7 +133,7 @@ function replyHeaders(thread = {}) {
   return { 'In-Reply-To': messageId, References: [references, messageId].filter(Boolean).join(' ') };
 }
 
-async function sendEmailNotification({ email, name, content, messageId, thread }) {
+async function sendEmailNotification({ email, name, content, messageId, subject, thread }) {
   const apiKey = clean(process.env.RESEND_API_KEY, 10000);
   const replyTo = clean(process.env.GROWTHEKO_INBOUND_EMAIL, 320).toLowerCase();
   if (!apiKey || !EMAIL.test(email)) return { status: 'not_configured', id: null };
@@ -136,7 +153,7 @@ async function sendEmailNotification({ email, name, content, messageId, thread }
     body: JSON.stringify({
       from,
       to: [email],
-      subject: replySubject(thread?.subject),
+      subject,
       html: operatorEmailHtml({ name, content }),
       ...(EMAIL.test(replyTo) ? { reply_to: replyTo } : {}),
       headers: replyHeaders(thread)
@@ -228,7 +245,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, error: 'Conversation source is invalid.' });
   }
 
-  const content = clean(body.content, MAX_MESSAGE_LENGTH);
+  const content = noraPunctuation(body.content);
   if (action === 'send' && (!content || content.length > MAX_MESSAGE_LENGTH)) {
     return res.status(400).json({ ok: false, error: 'Write a message before sending.' });
   }
@@ -280,6 +297,7 @@ export default async function handler(req, res) {
 
     const email = clean(application.email, 320).toLowerCase();
     const customerName = clean(application.preferred_name || `${application.first_name || ''} ${application.last_name || ''}`.trim() || 'Customer', 160);
+    const subject = attentionSubject({ name: customerName, content, threadSubject: inboundThread.subject });
     const insertResponse = await fetch(`${base}/rest/v1/messages`, {
       method: 'POST',
       headers: serviceHeaders(key, { 'Content-Type': 'application/json', Prefer: 'return=representation' }),
@@ -295,7 +313,7 @@ export default async function handler(req, res) {
           notification_type: 'support_reply',
           delivery_email: 'pending',
           reply_to_message_id: safeHeader(inboundThread.message_id, 500) || null,
-          subject: replySubject(inboundThread.subject),
+          subject,
           script_progress: scriptProgress,
           auto_sent: false
         }
@@ -306,7 +324,7 @@ export default async function handler(req, res) {
     const stored = Array.isArray(inserted) ? inserted[0] : inserted;
     if (!stored?.id) throw new Error('Message insert returned no source record');
 
-    const emailDelivery = await sendEmailNotification({ email, name: customerName, content, messageId: stored.id, thread: inboundThread });
+    const emailDelivery = await sendEmailNotification({ email, name: customerName, content, messageId: stored.id, subject, thread: inboundThread });
     const metadata = {
       ...(stored.metadata && typeof stored.metadata === 'object' ? stored.metadata : {}),
       delivery_email: emailDelivery.status,
@@ -342,6 +360,8 @@ export default async function handler(req, res) {
 
 export {
   completedScriptProgress as canonicalCompletedScriptProgress,
+  attentionSubject as canonicalAttentionSubject,
+  noraPunctuation as canonicalNoraPunctuation,
   escapeHtml as canonicalOpsMessageEscapeHtml,
   operatorEmailHtml as canonicalOperatorEmailHtml,
   replyHeaders as canonicalReplyHeaders,
