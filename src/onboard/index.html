@@ -121,6 +121,25 @@
     .pill:hover { border-color: #5A8AE6; color: #5A8AE6; }
     .pill.selected { background: linear-gradient(135deg, #6B9EF7, #5A8AE6); color: #fff; border-color: transparent; }
 
+    /* Launch direction — two systems, one source of truth */
+    .launch-group { margin-bottom: 22px; }
+    .launch-label { display: block; font-size: 13px; font-weight: 700; color: #4b5568; margin-bottom: 8px; }
+    .launch-label small { display: block; margin-top: 3px; color: #939baa; font-size: 12px; font-weight: 400; line-height: 1.45; }
+    .launch-templates { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .launch-template {
+      position: relative; text-align: left; padding: 0; border: 1px solid rgba(200,210,235,.72);
+      border-radius: 14px; background: rgba(255,255,255,.88); color: #4f596c; cursor: pointer;
+      transition: border-color .18s, box-shadow .18s, transform .18s;
+    }
+    .launch-template:hover { border-color: #78A2F0; transform: translateY(-1px); }
+    .launch-template.selected { border-color: #5A8AE6; box-shadow: 0 0 0 3px rgba(90,138,230,.11); }
+    .launch-template button { display: block; width: 100%; padding: 16px 16px 8px; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+    .launch-template strong { display: block; color: #182039; font-size: 14px; margin-bottom: 5px; }
+    .launch-template span { display: block; font-size: 12px; line-height: 1.45; }
+    .launch-template a { display: inline-block; margin: 2px 16px 14px; color: #4F7FD7; font-size: 12px; font-weight: 700; text-decoration: none; }
+    .launch-template.selected::after { content: 'Selected'; position: absolute; top: 10px; right: 10px; color: #4F7FD7; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+    .launch-note { padding: 13px 15px; border-radius: 12px; background: rgba(90,138,230,.07); border: 1px solid rgba(90,138,230,.16); color: #667086; font-size: 12px; line-height: 1.5; margin-bottom: 22px; }
+
     /* Market pills (bigger) */
     .market-pill-group { display: flex; gap: 10px; margin-bottom: 4px; }
     .market-pill {
@@ -295,6 +314,7 @@
       .review-value { text-align: left; max-width: 100%; }
       .market-pill-group { flex-direction: column; }
       .market-pill { padding: 14px; }
+      .launch-templates { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -405,6 +425,7 @@ const steps = [
   { id: 'market', title: 'Your Market', subtitle: 'Where you play and who you serve.', type: 'market' },
   { id: 'audience', title: 'Your Audience', subtitle: 'Geographic reach and company profile.', type: 'audience' },
   { id: 'product', title: 'Your Product', subtitle: 'What you sell and how you deliver.', type: 'product' },
+  { id: 'launch', title: 'Your Launch Path', subtitle: 'Choose the direction once. We build the connected system.', type: 'launch' },
   { id: 'status', title: 'Where You Are Now', subtitle: 'Current numbers so we know where to focus.', fields: [
     { key: 'monthly_revenue', label: 'Monthly Revenue', type: 'pills', options: ['$0','$1-1K','$1K-5K','$5K-10K','$10K-25K','$25K-50K','$50K+'], required: true },
     { key: 'customer_count', label: 'Active Customers/Clients', type: 'text', required: true },
@@ -468,6 +489,17 @@ const VISION_SAMPLE_DATA = {
   current_tools: 'Notion, Stripe, Calendly, Gmail, Google Sheets, ChatGPT, Make.',
   email_list_size: '100-1,000',
   social_media: 'Instagram 12K, YouTube 2K, TikTok 8K.',
+  website_state: 'needs_rebuild',
+  launch_template: 'authority_product',
+  primary_cta: 'application',
+  cta_destination: 'Secure application route to be confirmed before publish',
+  traffic_mode: 'organic',
+  domain_mode: 'existing',
+  domain_value: 'https://growthlab.ai',
+  asset_state: 'needs_support',
+  email_platform: 'No connected platform yet',
+  legal_owner: 'customer',
+  legal_links: 'Imprint, privacy and terms require final customer review before publish.',
   legal_entity_type: 'GmbH',
   tax_id: 'Yes',
   vat_registered: 'Yes',
@@ -538,6 +570,7 @@ function renderStep() {
   else if (step.type === 'market') { renderMarketStep(c, step); return; }
   else if (step.type === 'audience') renderAudienceStep(c, step);
   else if (step.type === 'product') renderProductStep(c, step);
+  else if (step.type === 'launch') renderLaunchStep(c, step);
   else if (step.type === 'review') renderReviewStep(c, step);
   else renderFormStep(c, step);
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1035,6 +1068,57 @@ function renderProductStep(c, step) {
   });
 }
 
+// ============================
+// LAUNCH STEP — one decision surface, no duplicated intake
+// ============================
+const LAUNCH_OPTIONS = {
+  website_state: [['live','Website is live'],['needs_rebuild','Needs a rebuild'],['no_website','No website yet']],
+  primary_cta: [['checkout','Checkout'],['application','Application'],['book_call','Book a call'],['lead_form','Lead form'],['phone','Phone'],['whatsapp','WhatsApp']],
+  traffic_mode: [['organic','Organic first'],['paid','Paid ads'],['hybrid','Hybrid'],['undecided','Recommend it for me']],
+  domain_mode: [['existing','Use existing domain'],['new','Use a new domain'],['subdomain','Use a subdomain'],['undecided','Recommend it for me']],
+  asset_state: [['ready','Logo and images ready'],['partial','Some assets ready'],['needs_support','Create the missing assets']]
+};
+
+function launchPills(key) {
+  const value = customerData[key] || '';
+  return '<div class="pill-group">' + LAUNCH_OPTIONS[key].map(function(option) {
+    return '<div class="pill ' + (value === option[0] ? 'selected' : '') + '" data-key="' + key + '" data-value="' + option[0] + '">' + option[1] + '</div>';
+  }).join('') + '</div>';
+}
+
+function selectLaunchTemplate(key) {
+  customerData.launch_template = key;
+  if (!customerData.primary_cta) customerData.primary_cta = key === 'local_service' ? 'phone' : 'application';
+  renderLaunchStep(document.getElementById('stepContainer'), steps[currentStep]);
+}
+
+function renderLaunchStep(c, step) {
+  const selected = customerData.launch_template || '';
+  c.innerHTML = '<div class="step-card"><h2 class="step-title">' + step.title + '</h2><p class="step-subtitle">' + step.subtitle + '</p>' +
+    '<div class="launch-note">Your answers create one versioned Launch Workspace: page, copy, assets, emails, tracking, legal checklist and traffic plan. Nothing is published and no ads run from onboarding.</div>' +
+    '<div class="launch-group"><span class="launch-label">Current website situation *</span>' + launchPills('website_state') + '</div>' +
+    '<div class="launch-group"><span class="launch-label">Page system *<small>Open a preview if you want to compare the structure. Sample CTAs do nothing.</small></span><div class="launch-templates">' +
+      '<div class="launch-template ' + (selected === 'authority_product' ? 'selected' : '') + '"><button type="button" onclick="selectLaunchTemplate(\'authority_product\')"><strong>Authority Product</strong><span>For digital products, experts, education, applications and checkout.</span></button><a href="/launch-preview?template=authority_product&mode=guide" target="_blank" rel="noopener">Open guided preview ↗</a></div>' +
+      '<div class="launch-template ' + (selected === 'local_service' ? 'selected' : '') + '"><button type="button" onclick="selectLaunchTemplate(\'local_service\')"><strong>Local Service</strong><span>For trust, calls, WhatsApp, forms and appointments.</span></button><a href="/launch-preview?template=local_service&mode=guide" target="_blank" rel="noopener">Open guided preview ↗</a></div>' +
+    '</div></div>' +
+    '<div class="launch-group"><span class="launch-label">Primary action *<small>Only one action becomes visually dominant on the page.</small></span>' + launchPills('primary_cta') + '</div>' +
+    '<div class="field"><label>Action destination</label><input type="text" data-key="cta_destination" value="' + escapeAttr(customerData.cta_destination || '') + '" placeholder="Checkout, calendar, form, phone number or WhatsApp link"></div>' +
+    '<div class="launch-group"><span class="launch-label">Traffic direction *</span>' + launchPills('traffic_mode') + '</div>' +
+    '<div class="launch-group"><span class="launch-label">Domain plan *</span>' + launchPills('domain_mode') + '</div>' +
+    '<div class="field"><label>Domain or desired name</label><input type="text" data-key="domain_value" value="' + escapeAttr(customerData.domain_value || customerData.website || '') + '" placeholder="example.com or the name you want"></div>' +
+    '<div class="launch-group"><span class="launch-label">Brand assets *</span>' + launchPills('asset_state') + '</div>' +
+    '<div class="field"><label>Email platform</label><input type="text" data-key="email_platform" value="' + escapeAttr(customerData.email_platform || '') + '" placeholder="None, Mailchimp, Klaviyo, HubSpot, etc."></div>' +
+    '<div class="field"><label>Existing legal-page links</label><textarea data-key="legal_links" placeholder="Imprint, privacy, terms, refund policy — or write: not ready">' + escapeHtml(customerData.legal_links || '') + '</textarea></div>' +
+    '<div class="field"><label>Anything that must not appear</label><textarea data-key="launch_notes" placeholder="Claims, visuals, channels or wording to avoid">' + escapeHtml(customerData.launch_notes || '') + '</textarea></div>' +
+    '<div class="wizard-nav"><button class="btn btn-back" onclick="goBack()">Back</button><button class="btn btn-next" onclick="goNext()">Continue</button></div></div>';
+  c.querySelectorAll('.pill').forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      c.querySelectorAll('.pill[data-key="' + pill.dataset.key + '"]').forEach(function(item) { item.classList.remove('selected'); });
+      pill.classList.add('selected'); customerData[pill.dataset.key] = pill.dataset.value;
+    });
+  });
+}
+
 const GEO_MARKETS = ['North America','Europe','Asia-Pacific','Latin America','Middle East and Africa','India','Japan','Korea'];
 const COMPANY_SIZES = ['1-50','51-200','201-1,000','1,001-5,000','5,000+'];
 
@@ -1098,10 +1182,11 @@ const _reviewSections = [
   { title: 'Market', keys: ['market','sub_market','niche','blue_ocean','ideal_customer'], stepIdx: 2 },
   { title: 'Audience', keys: ['primary_geo_market','additional_markets','company_size'], stepIdx: 3 },
   { title: 'Product', keys: ['product_type','product_description','product_price','delivery_method'], stepIdx: 4 },
-  { title: 'Business Status', keys: ['monthly_revenue','customer_count','acquisition_channels','biggest_problem'], stepIdx: 5 },
-  { title: 'Goals', keys: ['primary_goal','revenue_target','hours_available','ai_experience'], stepIdx: 6 },
-  { title: 'Tech & Tools', keys: ['current_tools','email_list_size','social_media'], stepIdx: 7 },
-  { title: 'Business & Brand', keys: ['legal_entity_type','tax_id','vat_registered','brand_voice','timezone'], stepIdx: 8 }
+  { title: 'Launch Path', keys: ['website_state','launch_template','primary_cta','cta_destination','traffic_mode','domain_mode','domain_value','asset_state','email_platform','legal_links'], stepIdx: 5 },
+  { title: 'Business Status', keys: ['monthly_revenue','customer_count','acquisition_channels','biggest_problem'], stepIdx: 6 },
+  { title: 'Goals', keys: ['primary_goal','revenue_target','hours_available','ai_experience'], stepIdx: 7 },
+  { title: 'Tech & Tools', keys: ['current_tools','email_list_size','social_media'], stepIdx: 8 },
+  { title: 'Business & Brand', keys: ['legal_entity_type','tax_id','vat_registered','brand_voice','timezone'], stepIdx: 9 }
 ];
 const _labelMap = {
   name:'Name', company:'Company', email:'Email', website:'Website', country:'Country',
@@ -1109,6 +1194,8 @@ const _labelMap = {
   blue_ocean:'Blue Ocean', ideal_customer:'Ideal Customer',
   primary_geo_market:'Primary Market', additional_markets:'Additional Markets', company_size:'Company Size',
   product_type:'Product Type', product_description:'Description', product_price:'Price', delivery_method:'Delivery',
+  website_state:'Website State', launch_template:'Page System', primary_cta:'Primary Action', cta_destination:'Action Destination',
+  traffic_mode:'Traffic', domain_mode:'Domain Plan', domain_value:'Domain', asset_state:'Assets', email_platform:'Email Platform', legal_links:'Legal Pages',
   monthly_revenue:'Revenue', customer_count:'Customers', acquisition_channels:'Acquisition',
   biggest_problem:'Biggest Problem', primary_goal:'Goal', revenue_target:'Revenue Target',
   hours_available:'Hours/Week', ai_experience:'AI Level', current_tools:'Tools',
@@ -1286,6 +1373,9 @@ function validateCurrentStep() {
     if (!customerData.delivery_method) return false;
     return true;
   }
+  if (step.type === 'launch') {
+    return Boolean(customerData.website_state && customerData.launch_template && customerData.primary_cta && customerData.traffic_mode && customerData.domain_mode && customerData.asset_state);
+  }
   if (!step.fields) return true;
   for (const f of step.fields) {
     if (f.required) {
@@ -1312,6 +1402,11 @@ function goNext() {
     }
     if (step.type === 'product') {
       if (!customerData.product_type) { const pg = c.querySelector('#productTypePills'); if (pg) { pg.style.outline = '2px solid #E53E3E'; pg.style.borderRadius = '12px'; setTimeout(function() { pg.style.outline = 'none'; }, 2000); } }
+      return;
+    }
+    if (step.type === 'launch') {
+      c.querySelector('.launch-note').style.outline = '2px solid #E53E3E';
+      setTimeout(function() { const note = c.querySelector('.launch-note'); if (note) note.style.outline = 'none'; }, 2000);
       return;
     }
     if (step.fields) {

@@ -27,6 +27,66 @@ function decisionKey(taskId) {
   return `ops:${createHash('sha256').update(taskId).digest('hex')}`;
 }
 
+function launchScope(playbook) {
+  if (playbook === 'launch-template-approval') return 'template';
+  if (playbook === 'launch-publish-approval') return 'publish';
+  if (playbook === 'launch-paid-traffic-approval') return 'paid_traffic';
+  return null;
+}
+
+async function writeLaunchApproval({ base, key, workspaceId, playbook, status, taskId, notes, now }) {
+  const scope = launchScope(playbook);
+  if (!workspaceId || !scope) return null;
+  const decision = status === 'rejected' ? 'changes_requested' : status;
+  const approvalKey = `launch:${createHash('sha256').update(`${workspaceId}:${scope}:${taskId}`).digest('hex')}`;
+  const approvalResponse = await fetch(`${base}/rest/v1/launch_approvals?on_conflict=approval_key`, {
+    method: 'POST',
+    headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=representation' },
+    body: JSON.stringify({ approval_key: approvalKey, workspace_id: workspaceId, scope, decision, notes, decided_by: 'robin', decided_at: now, metadata: { task_id: taskId, external_execution_performed: false } })
+  });
+  if (!approvalResponse.ok) throw new Error(`Launch approval rejected: ${approvalResponse.status}`);
+
+  if (status === 'approved') {
+    const workspaceResponse = await fetch(`${base}/rest/v1/launch_workspaces?id=eq.${workspaceId}&select=id,status,customer_id,opportunity_id,launch_config`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` }
+    });
+    if (!workspaceResponse.ok) throw new Error(`Launch workspace unavailable: ${workspaceResponse.status}`);
+    const workspace = (await workspaceResponse.json())?.[0];
+    if (!workspace) throw new Error('Launch workspace not found');
+    const launchConfig = workspace.launch_config && typeof workspace.launch_config === 'object' ? workspace.launch_config : {};
+    const gates = launchConfig.gates && typeof launchConfig.gates === 'object' ? launchConfig.gates : {};
+    const gateKey = scope === 'template' ? 'template_approval' : scope === 'publish' ? 'publish_approval' : 'paid_traffic_approval';
+    gates[gateKey] = true;
+    const nextStatus = scope === 'template' ? 'template_approved' : scope === 'publish' ? 'approved_to_publish' : workspace.status;
+    const updateResponse = await fetch(`${base}/rest/v1/launch_workspaces?id=eq.${workspaceId}`, {
+      method: 'PATCH',
+      headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify({ status: nextStatus, launch_config: { ...launchConfig, gates }, updated_at: now })
+    });
+    if (!updateResponse.ok) throw new Error(`Launch workspace update rejected: ${updateResponse.status}`);
+  }
+
+  const launchSourceResponse = await fetch(`${base}/rest/v1/launch_workspaces?id=eq.${workspaceId}&select=customer_id,opportunity_id&limit=1`, {
+    headers: { apikey: key, Authorization: `Bearer ${key}` }
+  });
+  if (!launchSourceResponse.ok) throw new Error(`Launch source unavailable: ${launchSourceResponse.status}`);
+  const launchSource = (await launchSourceResponse.json())?.[0] || {};
+  const auditResponse = await fetch(`${base}/rest/v1/ops_audit_events?on_conflict=event_key`, {
+    method: 'POST',
+    headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=minimal' },
+    body: JSON.stringify({
+      event_key: `launch-approval:${approvalKey}:${status}`,
+      actor_type: 'robin', event_type: `launch_${scope}_${status}`, entity_type: 'launch_workspace', entity_id: workspaceId,
+      customer_id: launchSource.customer_id || null, opportunity_id: launchSource.opportunity_id || null,
+      source_table: 'launch_approvals', source_record_id: approvalKey, channel: 'ops',
+      summary: `${scope.replaceAll('_', ' ')} ${status}; no external execution performed`,
+      metadata: { task_id: taskId, scope, decision, external_execution_performed: false }, occurred_at: now
+    })
+  });
+  if (!auditResponse.ok) throw new Error(`Launch audit rejected: ${auditResponse.status}`);
+  return { scope, decision };
+}
+
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -43,6 +103,8 @@ export default async function handler(req, res) {
   const entityType = clean(body.entity_type, 20).toLowerCase();
   const entityId = sourceId(body.entity_id);
   const opportunityId = sourceId(body.opportunity_id);
+  const launchWorkspaceId = sourceId(body.launch_workspace_id);
+  const playbook = clean(body.playbook, 100);
   if (!taskId || !RESOLUTIONS.has(status) || !entityId || !['customer', 'lead'].includes(entityType)) {
     return res.status(400).json({ ok: false, error: 'Decision source is invalid.' });
   }
@@ -73,7 +135,8 @@ export default async function handler(req, res) {
     metadata: {
       priority: clean(body.priority, 10),
       deadline: clean(body.deadline, 80) || null,
-      playbook: clean(body.playbook, 100),
+      playbook,
+      launch_workspace_id: launchWorkspaceId,
       after_confirmation: clean(body.after_confirmation, 1200),
       external_execution_performed: false
     },
@@ -93,7 +156,11 @@ export default async function handler(req, res) {
     });
     if (!response.ok) throw new Error(`Decision ledger rejected: ${response.status}`);
     const rows = await response.json();
-    return res.status(200).json({ ok: true, decision: Array.isArray(rows) ? rows[0] : null, external_execution_performed: false });
+    const launchApproval = await writeLaunchApproval({
+      base, key, workspaceId: launchWorkspaceId, playbook, status, taskId,
+      notes: clean(body.feedback || body.resolution, 1200), now
+    });
+    return res.status(200).json({ ok: true, decision: Array.isArray(rows) ? rows[0] : null, launch_approval: launchApproval, external_execution_performed: false });
   } catch (error) {
     console.error('ops-decision:', error?.message || error);
     return res.status(503).json({ ok: false, error: 'Decision could not be recorded.' });

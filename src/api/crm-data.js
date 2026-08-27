@@ -6,6 +6,7 @@ import {
   resolveEcosystemEntryKey,
   resolveOfferKey
 } from './lib/offer-registry.js';
+import { LAUNCH_TEMPLATES, buildLaunchWorkspace, launchArtifactSeeds, launchNextAction } from './lib/launch-system.js';
 
 const AUTONOMY_PHASES = Object.freeze([
   Object.freeze({
@@ -412,13 +413,62 @@ function decisionQueue(queue = []) {
     offer: task.offer,
     priority: task.priority,
     deadline: task.deadline,
-    gate: task.approval_reason ? 'Autonomy phase gate' : 'Verified exception',
+    gate: task.launch_gate || (task.approval_reason ? 'Autonomy phase gate' : 'Verified exception'),
     playbook: task.playbook,
     happened: task.approval_reason || task.reason,
     verified_facts: task.facts,
     recommendation: task.recommendation,
-    after_confirmation: task.after_confirmation
+    after_confirmation: task.after_confirmation,
+    launch_workspace_id: task.launch_workspace_id || null
   }));
+}
+
+function applyLaunchTask(task, workspace) {
+  if (!workspace || !['first-win-evidence', 'expansion-diagnosis'].includes(task.playbook)) return task;
+  const next = workspace.next_action;
+  if (!next) return task;
+  const approval = ['launch-template-approval', 'launch-publish-approval', 'launch-paid-traffic-approval'].includes(next.key);
+  const template = LAUNCH_TEMPLATES[workspace.template_key];
+  const facts = [
+    `Template: ${template?.name || workspace.template_key}`,
+    `Primary action: ${String(workspace.primary_cta || 'not captured').replaceAll('_', ' ')}`,
+    `Traffic: ${workspace.traffic_mode || 'undecided'}`,
+    `Artifacts: ${workspace.artifact_summary?.ready || 0}/${workspace.artifact_summary?.total || 0} ready for review`
+  ];
+  return {
+    ...task,
+    id: `${task.entity_type}:${task.entity_id}:${task.opportunity_id || 'record'}:${next.key}`,
+    priority: approval ? 'P1' : 'P2',
+    base_execution_mode: approval ? 'approval' : 'nora',
+    execution_mode: approval ? 'approval' : 'nora',
+    playbook: next.key,
+    action: next.action,
+    reason: approval
+      ? 'The Launch Workspace reached one of the three explicit Robin gates.'
+      : 'The next internal launch step is ready from verified onboarding data.',
+    channel: 'Internal',
+    next_status: next.key.replaceAll('-', ' '),
+    stop_condition: approval
+      ? 'No public release or ad spend occurs from this approval click.'
+      : 'Stop if a required fact is missing; never invent legal text, proof, results or customer claims.',
+    facts,
+    launch_gate: next.gate,
+    launch_workspace_id: workspace.id,
+    recommendation: approval
+      ? next.key === 'launch-template-approval'
+        ? `Approve ${template?.name || 'this template'} only after the guided preview matches the customer’s buying path.`
+        : next.key === 'launch-paid-traffic-approval'
+          ? 'Approve only a bounded test after page, CTA, legal, tracking and budget evidence are verified.'
+          : 'Approve only after the complete preview passes desktop, mobile, CTA, legal and tracking checks.'
+      : 'Continue with the bounded workspace artifact and log the resulting version.',
+    after_confirmation: approval
+      ? next.key === 'launch-template-approval'
+        ? 'Nora drafts the seven connected artifacts. Nothing is published.'
+        : next.key === 'launch-paid-traffic-approval'
+          ? 'Nora queues the approved test parameters. No spend is created by this click.'
+          : 'Nora queues the approved release. This click itself does not publish.'
+      : 'Nora records a new artifact version and advances only when its acceptance criteria pass.'
+  };
 }
 
 function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
@@ -447,6 +497,19 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
     submitted_at: leads[0].submitted_at, created_at: leads[0].submitted_at,
     call_booked: false, call_time: null, review_required: false
   }];
+  const launchBase = buildLaunchWorkspace({
+    name: leads[0].name, company: leads[0].company, launch_template: 'authority_product',
+    website_state: 'no_website', primary_cta: 'application', traffic_mode: 'organic',
+    domain_mode: 'undecided', asset_state: 'needs_support'
+  });
+  const launchArtifacts = launchArtifactSeeds({ launch_template: 'authority_product', traffic_mode: 'organic', primary_cta: 'application' })
+    .map((artifact, index) => ({ id: `local-launch-artifact-${index + 1}`, workspace_id: 'local-launch-workspace', ...artifact, updated_at: at(-2) }));
+  const launchWorkspaces = [{
+    id: 'local-launch-workspace', opportunity_id: opportunities[0].id, customer_id: null,
+    ...launchBase, artifacts: launchArtifacts, approvals: [],
+    artifact_summary: { total: launchArtifacts.length, ready: 0, approved: 0, published: 0 },
+    next_action: launchNextAction(launchBase, launchArtifacts), updated_at: at(-2)
+  }];
   const activityEvents = [
     { id: 'local-test-application-event', event_type: 'application_submitted', entity_type: 'application', entity_id: 'local-test-customer', application_id: 'local-test-customer', opportunity_id: 'local-test-opportunity', email: leads[0].email, actor_type: 'customer', actor_name: 'Customer', channel: 'web', summary: 'Application submitted', detail: 'A new application entered the verified intake.', occurred_at: at(-5), source_table: 'applications' },
     { id: 'local-test-message-event', event_type: 'message_stored', entity_type: 'message', entity_id: 'local-test-message', application_id: 'local-test-customer', opportunity_id: 'local-test-opportunity', email: leads[0].email, actor_type: 'nora', actor_name: 'Nora', channel: 'portal_inbox', summary: 'Communication stored', detail: interactions[0].content, occurred_at: at(-5), source_table: 'messages' }
@@ -461,6 +524,7 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
     people,
     leads,
     opportunities,
+    launch_workspaces: launchWorkspaces,
     interactions,
     activity_events: activityEvents,
     command_queue: queue,
@@ -490,14 +554,17 @@ export default async function handler(req, res) {
 
   try {
     const policy = autonomyPolicy();
-    const [customers, applications, messages, opportunityRows, auditRows, storedDecisionRows, billingEventRows] = await Promise.all([
+    const [customers, applications, messages, opportunityRows, auditRows, storedDecisionRows, billingEventRows, launchRows, launchArtifactRows, launchApprovalRows] = await Promise.all([
       rows(base, key, 'customers?select=id,email,name,company,tier,status,portal_status,onboarding_status,nora_status,amount_paid,currency,paid_at,last_activity_at,created_at,updated_at&order=created_at.desc&limit=500'),
       rows(base, key, 'applications?select=id,email,first_name,last_name,preferred_name,website,product_type,stage,status,selected_tier,goal,dream_outcome,biggest_challenge,holding_back,submitted_at,call_status,call_date,internal_notes,tags,created_at&order=created_at.desc&limit=500'),
       rows(base, key, 'messages?select=id,application_id,sender_type,sender_name,content,message_type,metadata,read_at,created_at&order=created_at.desc&limit=1000'),
       rows(base, key, 'opportunities?select=id,source_key,customer_id,application_id,offer_key,source_offer_key,offer_source,stage,status,amount_recorded,amount_unit,currency,review_required,evidence,opened_at,paid_at,closed_at,created_at,updated_at&order=updated_at.desc&limit=1000'),
       rows(base, key, 'ops_audit_events?select=id,event_key,actor_type,actor_id,event_type,entity_type,entity_id,customer_id,application_id,opportunity_id,source_table,source_record_id,channel,summary,metadata,occurred_at,created_at&order=occurred_at.desc&limit=5000'),
       rows(base, key, 'ops_decisions?select=id,decision_key,task_id,customer_id,application_id,opportunity_id,status,gate,question,recommendation,verified_facts,requested_by,requested_at,resolution,resolved_by,resolved_at,metadata,created_at,updated_at&order=requested_at.desc&limit=1000'),
-      rows(base, key, 'stripe_webhook_events?select=event_id,event_type,event_created_at,stripe_customer_id,offer_key,status,error,payload&order=event_created_at.desc&limit=2000')
+      rows(base, key, 'stripe_webhook_events?select=event_id,event_type,event_created_at,stripe_customer_id,offer_key,status,error,payload&order=event_created_at.desc&limit=2000'),
+      rows(base, key, 'launch_workspaces?select=id,source_key,customer_id,onboarding_session_id,opportunity_id,template_key,traffic_mode,primary_cta,website_state,domain_mode,status,cta_destination,domain_value,business_snapshot,offer_snapshot,launch_config,review_required,created_at,updated_at&order=updated_at.desc&limit=1000'),
+      rows(base, key, 'launch_artifacts?select=id,workspace_id,artifact_key,artifact_type,version,status,content,preview_url,checksum,generated_by,approved_by,approved_at,created_at,updated_at&order=updated_at.desc&limit=5000'),
+      rows(base, key, 'launch_approvals?select=id,approval_key,workspace_id,artifact_id,scope,decision,notes,decided_by,decided_at,metadata,created_at&order=decided_at.desc&limit=2000')
     ]);
 
     const applicationsByEmail = new Map();
@@ -566,6 +633,66 @@ export default async function handler(req, res) {
         read_at: message.read_at || null,
         created_at: message.created_at || null
       };
+    });
+
+    const artifactsByWorkspace = new Map();
+    for (const artifact of launchArtifactRows) {
+      const workspaceId = clean(artifact.workspace_id, 140);
+      if (!artifactsByWorkspace.has(workspaceId)) artifactsByWorkspace.set(workspaceId, []);
+      artifactsByWorkspace.get(workspaceId).push({
+        id: clean(artifact.id, 140),
+        artifact_key: clean(artifact.artifact_key, 100),
+        artifact_type: clean(artifact.artifact_type, 100),
+        version: Number(artifact.version) || 1,
+        status: clean(artifact.status, 80),
+        content: artifact.content && typeof artifact.content === 'object' ? artifact.content : {},
+        preview_url: clean(artifact.preview_url, 1000),
+        generated_by: clean(artifact.generated_by, 120),
+        approved_by: clean(artifact.approved_by, 120),
+        approved_at: artifact.approved_at || null,
+        updated_at: artifact.updated_at || artifact.created_at || null
+      });
+    }
+    const approvalsByWorkspace = new Map();
+    for (const approval of launchApprovalRows) {
+      const workspaceId = clean(approval.workspace_id, 140);
+      if (!approvalsByWorkspace.has(workspaceId)) approvalsByWorkspace.set(workspaceId, []);
+      approvalsByWorkspace.get(workspaceId).push({
+        id: clean(approval.id, 140), scope: clean(approval.scope, 80), decision: clean(approval.decision, 80),
+        notes: clean(approval.notes, 1200), decided_by: clean(approval.decided_by, 120), decided_at: approval.decided_at || null
+      });
+    }
+    const launchWorkspaces = launchRows.map(record => {
+      const artifacts = artifactsByWorkspace.get(String(record.id)) || [];
+      const approvals = approvalsByWorkspace.get(String(record.id)) || [];
+      const workspace = {
+        id: clean(record.id, 140),
+        customer_id: clean(record.customer_id, 140),
+        opportunity_id: clean(record.opportunity_id, 140) || null,
+        template_key: clean(record.template_key, 80),
+        traffic_mode: clean(record.traffic_mode, 80),
+        primary_cta: clean(record.primary_cta, 80),
+        website_state: clean(record.website_state, 80),
+        domain_mode: clean(record.domain_mode, 80),
+        status: clean(record.status, 80),
+        cta_destination: clean(record.cta_destination, 1000),
+        domain_value: clean(record.domain_value, 500),
+        business_snapshot: record.business_snapshot && typeof record.business_snapshot === 'object' ? record.business_snapshot : {},
+        offer_snapshot: record.offer_snapshot && typeof record.offer_snapshot === 'object' ? record.offer_snapshot : {},
+        launch_config: record.launch_config && typeof record.launch_config === 'object' ? record.launch_config : {},
+        review_required: Boolean(record.review_required),
+        artifacts,
+        approvals,
+        artifact_summary: {
+          total: artifacts.length,
+          ready: artifacts.filter(item => ['ready_for_review', 'approved', 'published'].includes(item.status)).length,
+          approved: artifacts.filter(item => ['approved', 'published'].includes(item.status)).length,
+          published: artifacts.filter(item => item.status === 'published').length
+        },
+        updated_at: record.updated_at || record.created_at || null
+      };
+      workspace.next_action = launchNextAction(workspace, artifacts);
+      return workspace;
     });
 
     const peopleById = new Map(people.map(person => [String(person.id), person]));
@@ -672,7 +799,10 @@ export default async function handler(req, res) {
     const activityEvents = [...auditActivity, ...billingActivity]
       .sort((a, b) => new Date(b.occurred_at || 0) - new Date(a.occurred_at || 0));
 
-    const generatedQueue = commandQueue(people, leads, interactions, new Date(), policy.active_phase, opportunities);
+    const launchByOpportunity = new Map(launchWorkspaces.filter(item => item.opportunity_id).map(item => [item.opportunity_id, item]));
+    const launchByCustomer = new Map(launchWorkspaces.filter(item => item.customer_id).map(item => [item.customer_id, item]));
+    const generatedQueue = commandQueue(people, leads, interactions, new Date(), policy.active_phase, opportunities)
+      .map(task => applyLaunchTask(task, launchByOpportunity.get(task.opportunity_id) || launchByCustomer.get(task.entity_type === 'customer' ? task.entity_id : '')));
     const storedDecisionByTask = new Map();
     for (const item of storedDecisionRows) {
       const taskId = clean(item.task_id, 500);
@@ -710,7 +840,8 @@ export default async function handler(req, res) {
       happened: clean(item.question, 1200),
       verified_facts: Array.isArray(item.verified_facts) ? item.verified_facts.map(value => clean(value, 1200)) : [],
       recommendation: clean(item.recommendation, 1200),
-      after_confirmation: clean(item.metadata?.after_confirmation, 1200)
+      after_confirmation: clean(item.metadata?.after_confirmation, 1200),
+      launch_workspace_id: clean(item.metadata?.launch_workspace_id, 140) || null
     }));
     const generatedTaskIds = new Set(generatedDecisions.map(item => item.task_id));
     const decisions = [...generatedDecisions, ...openStoredDecisions.filter(item => !generatedTaskIds.has(item.task_id))];
@@ -732,6 +863,7 @@ export default async function handler(req, res) {
       people,
       leads,
       opportunities,
+      launch_workspaces: launchWorkspaces,
       interactions,
       activity_events: activityEvents,
       command_queue: queue,
@@ -742,6 +874,7 @@ export default async function handler(req, res) {
         source: 'append_only_ledger',
         event_count: activityEvents.length,
         opportunity_count: opportunities.length,
+        launch_workspace_count: launchWorkspaces.length,
         durable_billing_events: billingEventRows.length
       }
     });

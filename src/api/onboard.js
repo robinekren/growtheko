@@ -7,6 +7,7 @@ import { createHash, randomBytes } from 'crypto';
 import { GROWTHEKO_NOTIFY_EMAIL, GROWTHEKO_PUBLIC_EMAIL, sender } from './_mail-config.js';
 import { verifyOnboardingToken } from './lib/onboarding-token.js';
 import { resolveOfferKey } from './lib/offer-registry.js';
+import { buildLaunchWorkspace, launchArtifactSeeds } from './lib/launch-system.js';
 
 // ========================================
 // PASSWORD HELPERS — matches portal-auth Edge Function exactly
@@ -379,13 +380,87 @@ export default async function handler(req, res) {
       }
 
       // Create blueprint placeholder
-      if (customerId && sessionId) {
+      if (customerId && sessionId && ['sprint', 'architect'].includes(normalizedVerifiedTier)) {
         await supabaseFetch(SUPABASE_URL, SUPABASE_KEY, 'blueprints', 'POST', {
           customer_id: customerId,
           session_id: sessionId,
           tier: normalizedVerifiedTier,
           blueprint_data: data
         }, { onConflict: 'session_id' });
+      }
+
+      // Create one canonical Launch Workspace from the same intake. This is an
+      // internal draft only: no page is published, no message is sent and no
+      // traffic is activated from this database write.
+      if (customerId && sessionId) {
+        const launch = buildLaunchWorkspace(data);
+        const opportunityRows = await supabaseRead(
+          SUPABASE_URL,
+          SUPABASE_KEY,
+          `opportunities?customer_id=eq.${encodeURIComponent(customerId)}&select=id&order=updated_at.desc&limit=1`
+        );
+        const launchPayload = {
+          source_key: `onboarding:${sessionId}`,
+          customer_id: customerId,
+          onboarding_session_id: sessionId,
+          opportunity_id: opportunityRows[0]?.id || null,
+          template_key: launch.template_key,
+          traffic_mode: launch.traffic_mode,
+          primary_cta: launch.primary_cta,
+          website_state: launch.website_state,
+          domain_mode: launch.domain_mode,
+          status: launch.status,
+          cta_destination: launch.cta_destination || null,
+          domain_value: launch.domain_value || null,
+          business_snapshot: launch.business_snapshot,
+          offer_snapshot: launch.offer_snapshot,
+          launch_config: launch.launch_config,
+          review_required: true
+        };
+        const createdWorkspaces = await supabaseFetch(
+          SUPABASE_URL,
+          SUPABASE_KEY,
+          'launch_workspaces',
+          'POST',
+          launchPayload,
+          { onConflict: 'source_key', conflictResolution: 'ignore-duplicates' }
+        );
+        let workspaceId = createdWorkspaces?.[0]?.id || null;
+        if (!workspaceId) {
+          const existingWorkspaces = await supabaseRead(
+            SUPABASE_URL,
+            SUPABASE_KEY,
+            `launch_workspaces?source_key=eq.${encodeURIComponent(`onboarding:${sessionId}`)}&select=id&limit=1`
+          );
+          workspaceId = existingWorkspaces[0]?.id || null;
+        }
+        if (!workspaceId) throw new Error('Launch workspace could not be persisted');
+
+        const artifacts = launchArtifactSeeds(data).map(artifact => ({ workspace_id: workspaceId, ...artifact }));
+        await supabaseFetch(SUPABASE_URL, SUPABASE_KEY, 'launch_artifacts', 'POST', artifacts, {
+          onConflict: 'workspace_id,artifact_key,version',
+          conflictResolution: 'ignore-duplicates'
+        });
+        await supabaseFetch(SUPABASE_URL, SUPABASE_KEY, 'ops_audit_events', 'POST', {
+          event_key: `launch-workspace:${workspaceId}:created`,
+          actor_type: 'system',
+          event_type: 'launch_workspace_created',
+          entity_type: 'launch_workspace',
+          entity_id: workspaceId,
+          customer_id: customerId,
+          opportunity_id: opportunityRows[0]?.id || null,
+          source_table: 'launch_workspaces',
+          source_record_id: workspaceId,
+          channel: 'onboarding',
+          summary: 'Launch Workspace created from verified onboarding',
+          metadata: {
+            template_key: launch.template_key,
+            traffic_mode: launch.traffic_mode,
+            primary_cta: launch.primary_cta,
+            approval_gates: ['template', 'publish', 'paid_traffic']
+          },
+          occurred_at: new Date().toISOString()
+        }, { onConflict: 'event_key', conflictResolution: 'ignore-duplicates' });
       }
     }
 
@@ -668,6 +743,18 @@ function generateClientBrief(data, tier, completedAt) {
         <tr><td style="padding: 6px 0; color: #888;">Delivery:</td><td>${data.delivery_method || '—'}</td></tr>
       </table>
 
+      <h2 style="font-size: 18px; color: #5A8AE6; margin-top: 24px;">Launch Workspace</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <tr><td style="padding: 6px 0; color: #888; width: 140px;">Website:</td><td>${data.website_state || '—'}</td></tr>
+        <tr><td style="padding: 6px 0; color: #888;">Template:</td><td><strong>${data.launch_template || '—'}</strong></td></tr>
+        <tr><td style="padding: 6px 0; color: #888;">Primary CTA:</td><td>${data.primary_cta || '—'} → ${data.cta_destination || 'destination missing'}</td></tr>
+        <tr><td style="padding: 6px 0; color: #888;">Traffic:</td><td>${data.traffic_mode || '—'}</td></tr>
+        <tr><td style="padding: 6px 0; color: #888;">Domain:</td><td>${data.domain_mode || '—'} · ${data.domain_value || 'not selected'}</td></tr>
+        <tr><td style="padding: 6px 0; color: #888;">Assets:</td><td>${data.asset_state || '—'}</td></tr>
+        <tr><td style="padding: 6px 0; color: #888;">Email:</td><td>${data.email_platform || 'not connected'}</td></tr>
+        <tr><td style="padding: 6px 0; color: #888;">Legal:</td><td>${data.legal_links || 'not ready'}</td></tr>
+      </table>
+
       <h2 style="font-size: 18px; color: #5A8AE6; margin-top: 24px;">Status</h2>
       <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
         <tr><td style="padding: 6px 0; color: #888; width: 140px;">Revenue:</td><td><strong>${data.monthly_revenue || '—'}</strong>/mo</td></tr>
@@ -734,6 +821,9 @@ function safeEmailHeader(value) {
 function generateFoundationPrompt(data, tier) {
   if (tier === 'audit' || tier === 'membership') {
     return generateLockedOfferPrompt(data, tier);
+  }
+  if (tier === 'sprint' || tier === 'architect') {
+    return generateLaunchWorkspacePrompt(data, tier);
   }
 
   const tierConfig = {
@@ -1224,6 +1314,65 @@ ${isAIBeginner ? '- ⚡ AI BEGINNER — Quick Start AI Guide activated' : '- ✅
 START NOW. Phase 0, Task 0.1. Go.`;
 
   return prompt;
+}
+
+function generateLaunchWorkspacePrompt(data, tier) {
+  const d = (field, fallback = 'Not captured') => String(data[field] || fallback).trim();
+  const templateName = d('launch_template', 'authority_product') === 'local_service' ? 'Local Service' : 'Authority Product';
+  const scope = tier === 'architect'
+    ? 'Architect: operate the signed systems in sequence. This run completes one launch path before another begins.'
+    : 'Sprint: one bounded launch path with one acceptance test. Do not expand the signed System Unit.';
+  return `# GrowthEko Launch Workspace — ${d('company', d('name', 'Customer'))}
+
+You are Nora, Robin Ekren's internal operator. Build from verified facts only. Never invent proof, legal text, performance, availability, credentials or customer claims. If a required fact is missing, mark the exact gate and continue every safe internal task. Do not publish, message a customer, connect a domain, activate tracking or spend money from this prompt.
+
+## Scope
+${scope}
+
+## Verified input
+- Owner: ${d('name')}
+- Company: ${d('company')}
+- Website state: ${d('website_state', data.website ? 'live' : 'no_website')}
+- Existing website/domain: ${d('domain_value', d('website'))}
+- Market / niche: ${d('market')} / ${d('niche')}
+- Ideal customer: ${d('ideal_customer')}
+- Offer: ${d('product_description')} · ${d('product_price')} · ${d('delivery_method')}
+- Primary goal: ${d('primary_goal')}
+- Page system: ${templateName} (${d('launch_template', 'authority_product')})
+- Primary CTA: ${d('primary_cta')} → ${d('cta_destination')}
+- Traffic direction: ${d('traffic_mode', 'undecided')}
+- Assets: ${d('asset_state', 'needs_support')}
+- Email platform: ${d('email_platform', 'none')}
+- Existing legal pages: ${d('legal_links')}
+- Brand voice: ${d('brand_voice')}
+- Exclusions / notes: ${d('launch_notes', 'None captured')}
+
+## One operating sequence
+1. Confirm the chosen template direction against the buying path. Stop at Robin's template gate.
+2. Create exactly seven versioned artifacts from the same source facts:
+   - page-copy.md
+   - page-build.html
+   - asset-pack.md
+   - email-sequence.md
+   - tracking-plan.md
+   - legal-checklist.md
+   - traffic-plan.md
+3. Keep two page modes in the same build: Robin Guide and Live Preview. Guide copy speaks in Robin's first person and explains what belongs in each section. Live Preview uses only verified customer facts.
+4. Use one dominant CTA. Every secondary link must support that path or be removed.
+5. Produce the responsive preview. Test desktop, mobile, keyboard flow, overflow, CTA destinations, forms, error states and reduced motion.
+6. Stop at Robin's publish gate with a concise change log and acceptance evidence.
+7. After an approved release is actually published, verify analytics consent, event names and end-to-end conversion evidence.
+8. If paid or hybrid traffic was selected, prepare a bounded test plan and stop at the separate paid-traffic gate. Never create spend from this prompt.
+
+## Acceptance rules
+- Product → funnel → traffic remains one connected path.
+- One source of truth; no duplicate intake, portal or CRM module.
+- Missing facts remain visibly missing. No placeholders may appear in the live customer-facing mode.
+- Email copy uses the same promise, customer language and CTA as the page.
+- Legal output is a checklist for qualified customer/legal review, not legal advice.
+- Tracking is consent-aware and contains no real test-customer data.
+- Every artifact records version, source facts, status and next approval.
+- Return only: current status, files created or changed, failed acceptance checks, and the single next action.`;
 }
 
 function generateLockedOfferPrompt(data, tier) {
