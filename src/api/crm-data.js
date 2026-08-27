@@ -8,6 +8,7 @@ import {
 } from './lib/offer-registry.js';
 import { LAUNCH_TEMPLATES, buildLaunchWorkspace, launchArtifactSeeds, launchNextAction } from './lib/launch-system.js';
 import { customerProfileFromAnswers, customerProfileFromMessageMetadata, mergeCustomerProfiles } from './lib/customer-profile.js';
+import { applyCustomerLevels } from './lib/customer-level.js';
 
 const AUTONOMY_PHASES = Object.freeze([
   Object.freeze({
@@ -223,6 +224,7 @@ function taskBase(entity, definition) {
     application_id: entity.application_id || (entity.entity_type === 'lead' ? entity.id : ''),
     person_name: entity.name,
     email: entity.email,
+    customer_level: entity.customer_level,
     offer: entity.offer,
     stage: entity.stage,
     priority: definition.priority,
@@ -508,6 +510,7 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
     submitted_at: leads[0].submitted_at, created_at: leads[0].submitted_at,
     call_booked: false, call_time: null, review_required: false
   }];
+  applyCustomerLevels(people, leads, opportunities, []);
   const launchBase = buildLaunchWorkspace({
     name: leads[0].name, company: leads[0].company, launch_template: 'authority_product',
     existing_system_owner: 'no',
@@ -567,7 +570,7 @@ export default async function handler(req, res) {
 
   try {
     const policy = autonomyPolicy();
-    const [customers, applications, messages, opportunityRows, auditRows, storedDecisionRows, billingEventRows, launchRows, launchArtifactRows, launchApprovalRows, onboardingSessions, onboardingAnswers] = await Promise.all([
+    const [customers, applications, messages, opportunityRows, auditRows, storedDecisionRows, billingEventRows, launchRows, launchArtifactRows, launchApprovalRows, onboardingSessions, onboardingAnswers, entitlementRows] = await Promise.all([
       rows(base, key, 'customers?select=id,email,name,company,tier,status,portal_status,onboarding_status,nora_status,amount_paid,currency,paid_at,last_activity_at,created_at,updated_at&order=created_at.desc&limit=500'),
       rows(base, key, 'applications?select=id,email,first_name,last_name,preferred_name,website,product_type,stage,status,selected_tier,goal,dream_outcome,biggest_challenge,holding_back,submitted_at,call_status,call_date,internal_notes,tags,created_at&order=created_at.desc&limit=500'),
       rows(base, key, 'messages?select=id,application_id,sender_type,sender_name,content,message_type,metadata,read_at,created_at&order=created_at.desc&limit=1000'),
@@ -579,7 +582,8 @@ export default async function handler(req, res) {
       rows(base, key, 'launch_artifacts?select=id,workspace_id,artifact_key,artifact_type,version,status,content,preview_url,checksum,generated_by,approved_by,approved_at,created_at,updated_at&order=updated_at.desc&limit=5000'),
       rows(base, key, 'launch_approvals?select=id,approval_key,workspace_id,artifact_id,scope,decision,notes,decided_by,decided_at,metadata,created_at&order=decided_at.desc&limit=2000'),
       optionalRows(base, key, 'onboarding_sessions?select=id,customer_id,status,completed_at&order=completed_at.desc.nullslast&limit=2000'),
-      optionalRows(base, key, 'onboarding_answers?select=session_id,field_name,field_value&limit=10000')
+      optionalRows(base, key, 'onboarding_answers?select=session_id,field_name,field_value&limit=10000'),
+      optionalRows(base, key, 'stripe_billing_entitlements?select=stripe_customer_id,entitlement_key,email,status,source_event_created_at,updated_at&order=updated_at.desc&limit=5000')
     ]);
 
     const applicationsByEmail = new Map();
@@ -784,6 +788,7 @@ export default async function handler(req, res) {
         evidence: record.evidence && typeof record.evidence === 'object' ? record.evidence : {}
       };
     });
+    applyCustomerLevels(people, leads, opportunities, entitlementRows);
 
     const auditActivity = auditRows.map(event => {
       const customer = customerById.get(String(event.customer_id)) || null;

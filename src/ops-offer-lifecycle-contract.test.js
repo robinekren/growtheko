@@ -170,6 +170,8 @@ test('localhost scenario source exposes exactly one labelled test customer at th
   assert.equal(records[0].is_scenario, true);
   assert.equal(records[0].name, 'Test customer · New application');
   assert.equal(records[0].stage, 'Diagnose');
+  assert.equal(records[0].customer_level.tag, '⏳ Lead');
+  assert.equal(data.opportunities[0].customer_level.tag, '⏳ Lead');
   assert.equal(data.command_queue[0].playbook, 'customer-message-response');
   assert.deepEqual(data.offer_lifecycle.map(step => step.records), [1, 0, 0, 0, 0]);
 });
