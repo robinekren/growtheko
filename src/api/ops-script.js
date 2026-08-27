@@ -8,7 +8,8 @@ import {
   deterministicConversationDraft,
   draftHash,
   normalizeConversationDraft,
-  normalizeConversationScriptRequest
+  normalizeConversationScriptRequest,
+  recommendConversationMove
 } from './lib/conversation-scripts.js';
 import { attentionEmailSubject } from './lib/email-subject.js';
 import { customerProfileFromAnswers, customerProfileFromMessageMetadata, mergeCustomerProfiles } from './lib/customer-profile.js';
@@ -122,9 +123,10 @@ export default async function handler(req, res) {
 
   const body = parseBody(req.body);
   const applicationId = clean(body.application_id, 140);
+  const recommendationOnly = clean(body.action, 40).toLowerCase() === 'recommend';
   const request = normalizeConversationScriptRequest(body);
   const isLocal = isLocalDevelopmentRequest(req);
-  if (!request || (!UUID.test(applicationId) && !(isLocal && applicationId === 'local-test-customer'))) {
+  if ((!recommendationOnly && !request) || (!UUID.test(applicationId) && !(isLocal && applicationId === 'local-test-customer'))) {
     return res.status(400).json({ ok: false, error: 'Script source is invalid.' });
   }
 
@@ -142,6 +144,16 @@ export default async function handler(req, res) {
       return res.status(503).json({ ok: false, error: 'Conversation source unavailable.' });
     }
     if (!source) return res.status(404).json({ ok: false, error: 'Customer conversation was not found.' });
+  }
+
+  const recommendation = recommendConversationMove(source);
+  if (recommendationOnly) {
+    return res.status(200).json({
+      ok: true,
+      recommendation,
+      customer_channel: 'email',
+      auto_sent: false
+    });
   }
 
   const fallback = deterministicConversationDraft(source, request);
@@ -181,6 +193,7 @@ export default async function handler(req, res) {
     draft,
     email_subject: emailSubject,
     script_progress: progress,
+    recommendation,
     source: isLocal ? 'local_deterministic_scenario' : 'canonical_application_messages',
     verified_message_count: source.messages.length,
     customer_channel: 'email',

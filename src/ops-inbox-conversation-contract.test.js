@@ -33,6 +33,15 @@ test('conversation visually separates the customer from Nora', () => {
   assert.match(template, /Email thread/);
 });
 
+test('customer avatar ring exposes the six revenue levels from the top clockwise', () => {
+  assert.match(template, /customerAvatar\(level=\{rank:0\}\)/);
+  assert.match(template, /Array\.from\(\{length:6\}/);
+  assert.match(template, /conic-gradient\(from -90deg/);
+  assert.match(template, /'#32363f','#b79a3b','#dda238','#e67f36','#84b94f','#20a96b'/);
+  assert.match(template, /customerAvatar\(level\)/);
+  assert.match(template, /\.customer-avatar\{[^}]*--customer-ring/);
+});
+
 test('operator email route is session-bound and resolves the recipient from the application', () => {
   assert.match(endpoint, /hasOpsSession/);
   assert.match(endpoint, /isSameOrigin/);
@@ -83,5 +92,11 @@ test('Inbox has the minimal email status and collapsible Nora script workspace',
   assert.match(template, /sent_after_operator_review/);
   assert.match(template, /data-open-customer360/);
   assert.match(template, /data-back-conversation/);
+  assert.match(template, /requestScriptRecommendation/);
+  assert.match(template, /action:'recommend'/);
+  assert.match(template, /Used before · available again/);
+  assert.match(template, /requestScriptDraft\(thread,true\)/);
+  assert.doesNotMatch(template, /aria-disabled="\$\{sent\}"/);
+  assert.doesNotMatch(template, /\$\{sent\?'disabled':''\}/);
   assert.doesNotMatch(template, /Stored in portal · email notification included/);
 });

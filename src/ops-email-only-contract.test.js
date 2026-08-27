@@ -9,10 +9,12 @@ import {
   verifyResendWebhook
 } from './api/resend-inbound.js';
 import {
+  START_TO_SALE_ORCHESTRATION,
   canonicalConversationSource,
   deterministicConversationDraft,
   normalizeConversationDraft,
-  normalizeConversationScriptRequest
+  normalizeConversationScriptRequest,
+  recommendConversationMove
 } from './api/lib/conversation-scripts.js';
 
 const inboundEndpoint = readFileSync(new URL('./api/resend-inbound.js', import.meta.url), 'utf8');
@@ -60,6 +62,49 @@ test('Nora scripts are draft-only, lowercase and reject fabricated commercial pr
   assert.match(draftEndpoint, /auto_sent: false/);
   assert.match(draftEndpoint, /email_subject: emailSubject/);
   assert.doesNotMatch(draftEndpoint, /https:\/\/api\.resend\.com\/emails/);
+});
+
+test('the seven start-to-sale phases are explicit gates, not a blind send sequence', () => {
+  assert.deepEqual(Object.keys(START_TO_SALE_ORCHESTRATION), [
+    'connect', 'context', 'diagnose', 'clarify', 'recommend', 'commit', 'follow_up'
+  ]);
+  assert.deepEqual(Object.values(START_TO_SALE_ORCHESTRATION).map(item => item.order), [1, 2, 3, 4, 5, 6, 7]);
+  assert.match(START_TO_SALE_ORCHESTRATION.commit.link_gate, /checkout.*Apply.*Onboarding/i);
+  assert.match(START_TO_SALE_ORCHESTRATION.follow_up.send_gate, /Never follow up immediately/i);
+});
+
+test('Nora routes each reply from the current thread and offer state', () => {
+  assert.equal(recommendConversationMove(canonicalConversationSource({ preferred_name: 'Mia' }, [])).stage, 'connect');
+
+  const waiting = recommendConversationMove(canonicalConversationSource({ goal: 'Launch' }, [
+    { sender_type: 'team', content: 'what feels most urgent?', created_at: '2026-08-28T10:00:00.000Z' }
+  ]), new Date('2026-08-29T09:00:00.000Z'));
+  assert.equal(waiting.action, 'wait');
+
+  const followUp = recommendConversationMove(canonicalConversationSource({ goal: 'Launch' }, [
+    { sender_type: 'team', content: 'what feels most urgent?', created_at: '2026-08-25T10:00:00.000Z' }
+  ]), new Date('2026-08-28T10:01:00.000Z'));
+  assert.deepEqual([followUp.path, followUp.stage], ['follow_up', 'reopen']);
+
+  const checkout = recommendConversationMove(canonicalConversationSource({
+    goal: 'Launch', biggest_challenge: 'Clarity', selected_tier: 'digital_estate'
+  }, [{ sender_type: 'customer', content: 'send me the link, i am ready to pay', created_at: '2026-08-28T10:00:00.000Z' }]));
+  assert.deepEqual([checkout.action, checkout.stage], ['reply_now', 'commit']);
+
+  const blockedOffer = recommendConversationMove(canonicalConversationSource({
+    goal: 'Launch', biggest_challenge: 'Clarity', selected_tier: 'audit'
+  }, [{ sender_type: 'customer', content: 'send me the checkout link', created_at: '2026-08-28T10:00:00.000Z' }]));
+  assert.equal(blockedOffer.action, 'escalate');
+
+  const risk = recommendConversationMove(canonicalConversationSource({ goal: 'Launch' }, [
+    { sender_type: 'customer', content: 'i need a refund', created_at: '2026-08-28T10:00:00.000Z' }
+  ]));
+  assert.deepEqual([risk.action, risk.path], ['escalate', 'freestyle']);
+
+  const optOut = recommendConversationMove(canonicalConversationSource({ goal: 'Launch' }, [
+    { sender_type: 'customer', content: 'stop emailing me', created_at: '2026-08-28T10:00:00.000Z' }
+  ]));
+  assert.equal(optOut.action, 'stop');
 });
 
 test('Nora remains the disclosed sender while using verified profile context', () => {
