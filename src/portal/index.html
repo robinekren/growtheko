@@ -5175,6 +5175,7 @@ WEEKLY DATA:
     // ===== AUTH GUARD =====
     const SUPABASE_URL = 'https://wwwxnxufhxmarcnhnoni.supabase.co';
     const AUTH_BASE = `${SUPABASE_URL}/functions/v1/portal-auth`;
+    const FOUNDER_QA_ACCESS_BASE = '/api/founder-qa-access';
     const LOCAL_PORTAL_PREVIEW_KEY = 'growtheko_portal_local_preview_v1';
     const LOCAL_PORTAL_PREVIEW_EMAIL = 'robinekrenn@gmail.com';
     const LOCAL_PORTAL_PREVIEW_CUSTOMER = 'local-robin-ekren';
@@ -5246,6 +5247,23 @@ WEEKLY DATA:
       } catch (err) {
         console.error(`[API ERROR] ${action}:`, err);
         return { error: 'Connection failed' };
+      }
+    }
+
+    async function loadFounderQaAccess() {
+      if (isLocalPortalPreview()) return null;
+      try {
+        const res = await fetch(FOUNDER_QA_ACCESS_BASE, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_token: getToken() })
+        });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data?.access?.active === true ? data.access : null;
+      } catch {
+        return null;
       }
     }
 
@@ -5961,6 +5979,7 @@ WEEKLY DATA:
       fullName: '',
       company: '',
       tier: '',
+      accessLabel: '',
       startDate: '',
     };
 
@@ -7661,12 +7680,25 @@ WEEKLY DATA:
           CUSTOMER.fullName = data.customer.name || '';
           CUSTOMER.company = data.customer.company || '';
         }
+
+        const founderQaAccess = await loadFounderQaAccess();
+        if (
+          founderQaAccess?.access_class === 'founder_qa' &&
+          founderQaAccess?.target_offer_id === 'audit' &&
+          founderQaAccess?.commercial_order === false &&
+          founderQaAccess?.paid === false &&
+          Number(founderQaAccess?.amount_paid) === 0 &&
+          Number(founderQaAccess?.revenue_recognized) === 0
+        ) {
+          CUSTOMER.tier = 'GrowthEko AI Operator Audit';
+          CUSTOMER.accessLabel = 'Founder QA · $0 paid';
+        }
       }
 
       getCustomerFromURL();
       document.getElementById('welcomeTitle').textContent = `Welcome, ${CUSTOMER.name}.`;
       const tierBadge = document.getElementById('tierBadge');
-      if (tierBadge) tierBadge.textContent = CUSTOMER.tier;
+      if (tierBadge) tierBadge.textContent = [CUSTOMER.tier, CUSTOMER.accessLabel].filter(Boolean).join(' · ');
       renderPhases();
       updateProgress();
       renderPortalCalendar();

@@ -4,19 +4,14 @@ const SOURCE_OFFER_KEY = 'onetime_1997';
 const FOUNDER_QA_EMAIL = 'robinekrenn@gmail.com';
 
 export const FOUNDER_QA_ACCESS_ARCHITECTURE = Object.freeze({
-  compatible_now: false,
-  decision: 'blocked_until_separate_noncommercial_authorization_exists',
-  blockers: Object.freeze([
-    'Production portal authentication and data loading are implemented in remote Supabase Edge Functions whose source is not present in this repository.',
-    'The durable billing entitlement ledger accepts commercial Stripe states and has no separate founder_qa authorization class.',
-    'Onboarding authorization requires a paid entitlement, or the legacy paid/active customer mirror; using either would misclassify this QA assignment.',
-    'The portal currently derives the visible task set from customer.tier after authenticated loading, so changing the tier alone would be an authorization bypass rather than a source-backed QA grant.'
-  ]),
+  compatible_now: true,
+  decision: 'separate_noncommercial_authorization_implemented',
+  blockers: Object.freeze([]),
   required_contract: Object.freeze([
-    'A separate, revocable founder_qa access-grant source keyed to the verified account email.',
-    'Portal-auth and portal-api must return that grant independently from billing entitlement and customer tier.',
-    'The portal may map the verified grant to the audit view and tasks, while billing, revenue and customer-level resolvers continue to ignore it.',
-    'Grant creation, expiry, revocation and use must be auditable before production activation.'
+    'The existing portal session must be verified before any founder_qa lookup.',
+    'The latest append-only founder_qa access event independently grants or revokes the audit view.',
+    'Billing entitlement, customer tier, paid state, customer level and revenue remain unchanged.',
+    'Only the exact verified founder identity may receive the zero-value audit overlay.'
   ])
 });
 
@@ -76,7 +71,7 @@ export function prepareFounderQaAuditAssignment({ currentGrowthEkoRevenue = 0 } 
       target_offer_id: resolved.offerId,
       target_view: 'GrowthEko AI Operator Audit',
       target_tasks: 'audit_scope_only',
-      authorization_state: 'prepared_not_granted',
+      authorization_state: 'requires_active_audited_grant',
       can_unlock_with_current_architecture: FOUNDER_QA_ACCESS_ARCHITECTURE.compatible_now,
       architecture_decision: FOUNDER_QA_ACCESS_ARCHITECTURE.decision,
       blockers: FOUNDER_QA_ACCESS_ARCHITECTURE.blockers,

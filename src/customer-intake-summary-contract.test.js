@@ -154,10 +154,10 @@ test('Founder-QA audit is a prepared $1,997 contract at $0 revenue with no paid 
   assert.equal(assignment.test_access.amount_paid, 0);
   assert.equal(assignment.test_access.revenue_recognized, 0);
   assert.equal(assignment.test_access.target_offer_id, 'audit');
-  assert.equal(assignment.test_access.can_unlock_with_current_architecture, false);
-  assert.equal(assignment.test_access.authorization_state, 'prepared_not_granted');
-  assert.equal(FOUNDER_QA_ACCESS_ARCHITECTURE.compatible_now, false);
-  assert.ok(assignment.test_access.blockers.length >= 4);
+  assert.equal(assignment.test_access.can_unlock_with_current_architecture, true);
+  assert.equal(assignment.test_access.authorization_state, 'requires_active_audited_grant');
+  assert.equal(FOUNDER_QA_ACCESS_ARCHITECTURE.compatible_now, true);
+  assert.equal(assignment.test_access.blockers.length, 0);
   assert.equal(assignment.execution.database_write, false);
   assert.equal(assignment.execution.email_send, false);
   assert.equal(assignment.execution.checkout_created, false);
@@ -178,14 +178,20 @@ test('Founder-QA audit is a prepared $1,997 contract at $0 revenue with no paid 
   assert.equal(level.amount, '$0');
 });
 
-test('current portal architecture has no source-backed noncommercial founder authorization path', () => {
+test('portal architecture exposes a source-backed noncommercial founder authorization path', () => {
   const portal = readFileSync(new URL('./portal/index.html', import.meta.url), 'utf8');
+  const accessApi = readFileSync(new URL('./api/founder-qa-access.js', import.meta.url), 'utf8');
   const onboarding = readFileSync(new URL('./api/onboard.js', import.meta.url), 'utf8');
   const billingMigration = readFileSync(new URL('./supabase/migrations/20260827_stripe_billing_ledger.sql', import.meta.url), 'utf8');
 
   assert.match(portal, /functions\/v1\/portal-auth/);
   assert.match(portal, /const TIER_PHASE_MAP =/);
-  assert.doesNotMatch(portal, /founder_qa/);
+  assert.match(portal, /FOUNDER_QA_ACCESS_BASE = '\/api\/founder-qa-access'/);
+  assert.match(portal, /Founder QA · \$0 paid/);
+  assert.match(accessApi, /founder_qa_access_granted/);
+  assert.match(accessApi, /founder_qa_access_revoked/);
+  assert.match(accessApi, /commercial_order: false/);
+  assert.match(accessApi, /revenue_recognized: 0/);
   assert.match(onboarding, /No active paid entitlement matches this onboarding link/);
   assert.match(billingMigration, /check \(status in \('paid', 'manual_review', 'past_due', 'paused', 'canceled', 'refunded', 'disputed'\)\)/);
   assert.doesNotMatch(billingMigration, /founder_qa/);
