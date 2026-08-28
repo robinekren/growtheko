@@ -18,7 +18,7 @@ test('GrowthEko Terms exclude the retired USD 7 scorecard', () => {
 
   assert.doesNotMatch(terms, /Revenue Leak Scorecard/i);
   assert.doesNotMatch(terms, /\$7\s+USD/i);
-  assert.match(terms, /Version 1\.2/);
+  assert.match(terms, /Version 1\.3/);
 });
 
 test('application consumes canonical offer links and routes current direct offers to checkout', () => {

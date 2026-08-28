@@ -87,9 +87,9 @@ test('public surfaces use canonical routes and current Terms evidence', () => {
   const terms = read('./terms/index.html');
   const billingPolicy = read('./api/lib/billing-event-policy.js');
 
-  assert.equal(BILLING_TERMS_VERSION, '2026-08-23-v1.2');
-  assert.match(start, /termsVersion: '2026-08-23-v1\.2'/);
-  assert.match(terms, /Effective date: 23 August 2026 · Version 1\.2/);
+  assert.equal(BILLING_TERMS_VERSION, '2026-08-28-v1.3');
+  assert.match(start, /termsVersion: '2026-08-28-v1\.3'/);
+  assert.match(terms, /Effective date: 28 August 2026 · Version 1\.3/);
   assert.match(billingPolicy, /metadata\.terms_version !== BILLING_TERMS_VERSION/);
   assert.match(offer, /href:'\/calculator'/);
   assert.match(offer, /href:'\/start\?checkout=monthly_97'/);

@@ -1,5 +1,5 @@
 export const OFFER_REGISTRY_VERSION = '2026-08-23.3';
-export const BILLING_TERMS_VERSION = '2026-08-23-v1.2';
+export const BILLING_TERMS_VERSION = '2026-08-28-v1.3';
 
 export const OFFER_REGISTRY = Object.freeze({
   starter: Object.freeze({

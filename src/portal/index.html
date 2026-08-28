@@ -3906,8 +3906,13 @@
     .task-item:hover:not(.complete):not(.locked) {
       border-color: rgba(100,150,230,0.5);
     }
-    .task-item.complete { opacity: 0.55; }
-    .task-item.locked { opacity: 0.35; pointer-events: none; }
+    .task-item.complete { opacity: 0.62; }
+    .task-item.locked { opacity: 0.46; cursor: default; }
+    .task-item.current-task {
+      border-color: rgba(23,105,232,0.38);
+      background: rgba(255,255,255,0.82);
+      box-shadow: 0 10px 30px rgba(52,93,166,0.08);
+    }
 
     .task-checkbox {
       width: 26px; height: 26px; border: 2px solid rgba(100,150,230,0.5);
@@ -3931,7 +3936,7 @@
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       font-weight: 600; font-size: 15px; color: #111; margin-bottom: 4px;
     }
-    .task-item.complete .task-name { text-decoration: line-through; color: rgba(0,0,0,0.35); }
+    .task-item.complete .task-name { color: rgba(0,0,0,0.38); }
     .task-description {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       font-size: 13px; color: rgba(0,0,0,0.45); line-height: 1.5;
@@ -3978,6 +3983,24 @@
     }
     .task-disclosure {
       transition: transform 180ms ease, color 180ms ease;
+    }
+    .task-state-label {
+      flex: 0 0 auto;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.055);
+      color: rgba(15,23,42,0.42);
+      font: 700 9px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .task-item.current-task .task-state-label {
+      background: rgba(23,105,232,0.1);
+      color: #1769e8;
+    }
+    .task-item.complete .task-state-label {
+      background: rgba(16,185,129,0.1);
+      color: #07865f;
     }
 
     /* ===== INLINE TASK DETAIL ===== */
@@ -4055,6 +4078,174 @@
       pointer-events: none;
     }
     .task-detail-card > * { position: relative; z-index: 1; }
+
+    .task-run-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    .task-run-step {
+      flex: 0 0 auto;
+      min-width: 52px;
+      padding: 7px 9px;
+      border: 1px solid rgba(23,105,232,0.16);
+      border-radius: 999px;
+      background: rgba(23,105,232,0.07);
+      color: #1769e8;
+      text-align: center;
+      font: 800 10px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+      letter-spacing: .06em;
+    }
+    .task-outcome {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border: 1px solid rgba(15,23,42,0.07);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.66);
+      color: #2f3b51;
+      font: 550 13px/1.55 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    }
+    .task-outcome strong { display: block; margin-bottom: 3px; color: #111827; }
+
+    .profile-review {
+      margin: 18px 0;
+      border: 1px solid rgba(15,23,42,0.08);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.72);
+      overflow: hidden;
+    }
+    .profile-review-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px 16px;
+      border-bottom: 1px solid rgba(15,23,42,0.07);
+    }
+    .profile-review-head strong { display: block; font-size: 13px; }
+    .profile-review-head small { color: #7a8497; font-size: 10px; }
+    .profile-review-count {
+      flex: 0 0 auto;
+      color: #1769e8;
+      font: 750 10px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    }
+    .profile-review-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .profile-field {
+      min-width: 0;
+      padding: 13px 14px;
+      border-bottom: 1px solid rgba(15,23,42,0.055);
+    }
+    .profile-field:nth-child(odd) { border-right: 1px solid rgba(15,23,42,0.055); }
+    .profile-field-view { display: grid; grid-template-columns: minmax(0,1fr) 30px; gap: 8px; align-items: start; }
+    .profile-field-label {
+      display: block;
+      margin-bottom: 3px;
+      color: #7a8497;
+      font: 750 9px/1.2 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .profile-field-value {
+      color: #1f2937;
+      font: 600 12px/1.45 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+      overflow-wrap: anywhere;
+    }
+    .profile-field-value.is-missing { color: #9aa2b1; font-weight: 500; }
+    .profile-edit-button {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 9px;
+      background: rgba(15,23,42,0.045);
+      color: #64748b;
+      cursor: pointer;
+    }
+    .profile-edit-button:hover { background: rgba(23,105,232,0.09); color: #1769e8; }
+    .profile-field-editor { display: none; margin-top: 9px; }
+    .profile-field.is-editing .profile-field-editor { display: block; }
+    .profile-field.is-editing .profile-field-view { display: none; }
+    .profile-field-editor textarea {
+      width: 100%;
+      min-height: 82px;
+      resize: vertical;
+      border: 1px solid rgba(23,105,232,0.24);
+      border-radius: 11px;
+      padding: 10px 11px;
+      background: #fff;
+      color: #1f2937;
+      font: 550 12px/1.45 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+      outline: none;
+    }
+    .profile-field-editor textarea:focus { border-color: #1769e8; box-shadow: 0 0 0 3px rgba(23,105,232,0.08); }
+    .profile-editor-actions { display: flex; justify-content: flex-end; gap: 7px; margin-top: 7px; }
+    .profile-editor-actions button {
+      padding: 8px 11px;
+      border-radius: 9px;
+      border: 1px solid rgba(15,23,42,0.1);
+      background: #fff;
+      color: #475569;
+      font: 750 10px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+      cursor: pointer;
+    }
+    .profile-editor-actions .profile-save { border-color: #1769e8; background: #1769e8; color: #fff; }
+
+    .task-ai-card {
+      margin: 18px 0 0;
+      border: 1px solid rgba(23,105,232,0.16);
+      border-radius: 16px;
+      background: #f6f9ff;
+      overflow: hidden;
+    }
+    .task-ai-summary {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 15px;
+      border: 0;
+      background: transparent;
+      color: #172033;
+      text-align: left;
+      cursor: pointer;
+    }
+    .task-ai-summary strong { display: block; font-size: 12px; }
+    .task-ai-summary small { display: block; margin-top: 3px; color: #748096; font-size: 10px; }
+    .task-ai-body { display: none; padding: 0 14px 14px; }
+    .task-ai-card.open .task-ai-body { display: block; }
+    .task-ai-prompt {
+      max-height: 310px;
+      overflow: auto;
+      margin: 0;
+      padding: 14px;
+      border-radius: 12px;
+      background: #111827;
+      color: #e9eef8;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font: 500 10px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .task-ai-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .task-ai-copy, .task-kit-download {
+      flex: 1 1 0;
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 11px;
+      background: #1769e8;
+      color: #fff;
+      text-decoration: none;
+      font: 800 11px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+      cursor: pointer;
+    }
+    .task-kit-download { border: 1px solid rgba(23,105,232,0.18); background: #fff; color: #1769e8; }
+    .task-log-note { margin: 12px 0 0; color: #7a8497; font-size: 10px; text-align: center; }
 
     .task-detail-label {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
@@ -4502,6 +4693,10 @@
       .detail-card { padding: 32px 24px; }
       .task-detail-card { padding: 32px 24px; }
       .task-detail-view.inline .task-detail-card { padding: 16px 12px; }
+      .profile-review-grid { grid-template-columns: 1fr; }
+      .profile-field:nth-child(odd) { border-right: 0; }
+      .task-run-header { gap: 10px; }
+      .task-ai-actions { flex-direction: column; }
       .task-detail-view.inline .doc-content table th,
       .task-detail-view.inline .doc-content table td {
         padding: 9px 7px;
@@ -5176,6 +5371,7 @@ WEEKLY DATA:
     const SUPABASE_URL = 'https://wwwxnxufhxmarcnhnoni.supabase.co';
     const AUTH_BASE = `${SUPABASE_URL}/functions/v1/portal-auth`;
     const FOUNDER_QA_ACCESS_BASE = '/api/founder-qa-access';
+    const PORTAL_TASK_CONTEXT_BASE = '/api/portal-task-context';
     const LOCAL_PORTAL_PREVIEW_KEY = 'growtheko_portal_local_preview_v1';
     const LOCAL_PORTAL_PREVIEW_EMAIL = 'robinekrenn@gmail.com';
     const LOCAL_PORTAL_PREVIEW_CUSTOMER = 'local-robin-ekren';
@@ -5262,6 +5458,23 @@ WEEKLY DATA:
         if (!res.ok) return null;
         const data = await res.json();
         return data?.access?.active === true ? data.access : null;
+      } catch {
+        return null;
+      }
+    }
+
+    async function loadPortalTaskContext() {
+      if (isLocalPortalPreview()) return null;
+      try {
+        const res = await fetch(PORTAL_TASK_CONTEXT_BASE, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'load', session_token: getToken() })
+        });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data?.context?.format === 'numbered_48' ? data : null;
       } catch {
         return null;
       }
@@ -5944,7 +6157,7 @@ WEEKLY DATA:
     }
 
     async function syncToggleTask(taskId, phaseId, complete) {
-      apiCall('toggle-task', { task_id: taskId, phase_id: phaseId, complete });
+      return apiCall('toggle-task', { task_id: taskId, phase_id: phaseId, complete });
     }
 
     async function syncSaveChanges(taskId, phaseId, changeText) {
@@ -5981,6 +6194,8 @@ WEEKLY DATA:
       tier: '',
       accessLabel: '',
       startDate: '',
+      taskContext: null,
+      onboarding: null,
     };
 
     const PHASES = [
@@ -6416,24 +6631,24 @@ WEEKLY DATA:
         id: 'delivery-setup', number: 'Phase 1', title: 'Setup & Evidence',
         description: 'Confirm the real customer context before any diagnosis or recommendation.',
         tasks: [
-          { id: 'setup-profile', name: 'Confirm your customer profile', desc: 'Check the name, business, offer, primary objective and contact details connected to your account.', sop: '<strong>Review the information connected to this portal.</strong><br><br>If a material fact is missing or wrong, open Support and submit the correction before continuing.' },
-          { id: 'setup-evidence', name: 'Submit current evidence', desc: 'Provide the links, screenshots and numbers needed to evaluate the current system.', sop: '<strong>Open Support and attach the evidence that exists today.</strong><br><br>Include the current offer, traffic source, conversion path, recent numbers and the bottleneck you believe is most important. Missing information stays marked as missing.' }
+          { id: 'setup-profile', name: 'Confirm your profile & set up your AI workspace', desc: 'Review every onboarding answer, correct anything outdated, then give your AI one clean project context.', outcome: 'Your verified profile is correct and your AI has one project-local operating workspace without duplicate or invented context.', sop: '<strong>Start with the profile below.</strong><br><br>Edit any missing or outdated answer in place. Then copy the AI prompt and run it inside the project you will use for this engagement. Do not place business secrets in global AI instructions.' },
+          { id: 'setup-evidence', name: 'Add your current evidence', desc: 'Collect the real links, screenshots and numbers needed to evaluate the current system.', outcome: 'One evidence index shows what exists, what is verified and what is still missing.', sop: '<strong>Keep this inside the same project.</strong><br><br>Use the prompt below to inventory your current offer, traffic source, conversion path, channel profiles, recent numbers and suspected bottleneck. Missing information stays visibly missing.' }
         ]
       },
       {
         id: 'delivery-diagnosis', number: 'Phase 2', title: 'Diagnosis',
         description: 'Separate verified facts from assumptions and identify the highest-leverage bottleneck.',
         tasks: [
-          { id: 'diagnosis-prepare', name: 'Prepare for diagnosis', desc: 'Bring the objective, evidence and the decisions that cannot be delegated.', sop: '<strong>Prepare one concise current-state view.</strong><br><br>Bring the objective, the primary metric, the current numbers, the largest known drop-off and any constraints that affect the decision.' },
-          { id: 'diagnosis-review', name: 'Review the verified findings', desc: 'Confirm that the diagnosis reflects the evidence before accepting the roadmap.', sop: '<strong>Review the findings delivered through your GrowthEko engagement.</strong><br><br>Check every material fact, flag missing evidence through Support and mark complete only after the stated bottleneck and next move are clear.' }
+          { id: 'diagnosis-prepare', name: 'Prepare your diagnosis', desc: 'Turn the objective and evidence into one concise current-state view.', outcome: 'One measurable bottleneck and the decision boundaries are ready for review.', sop: '<strong>Use facts before ideas.</strong><br><br>Prepare the objective, primary metric, current numbers, largest known drop-off and constraints that affect the decision.' },
+          { id: 'diagnosis-review', name: 'Review the verified findings', desc: 'Confirm the diagnosis before accepting the roadmap.', outcome: 'The bottleneck, supporting evidence and next move are accepted or corrected.', sop: '<strong>Review the findings delivered through your GrowthEko engagement.</strong><br><br>Check every material fact, flag missing evidence through Support and complete this task only when the stated bottleneck and next move are clear.' }
         ]
       },
       {
         id: 'delivery-scope', number: 'Phase 3', title: 'Scope & Ownership',
         description: 'Define one bounded result, its owner and the acceptance test before implementation.',
         tasks: [
-          { id: 'scope-unit', name: 'Approve the System Unit', desc: 'Confirm the agreed input, process, output, owner and boundary.', sop: '<strong>Review the written scope.</strong><br><br>Confirm the input, process, output, accountable owner, dependencies, exclusions and acceptance test. Do not approve an undefined or open-ended build.' },
-          { id: 'scope-launch-direction', name: 'Confirm your Launch Workspace direction', desc: 'Check the page system, one primary action, domain and traffic direction selected during onboarding.', sop: '<strong>Review the direction before Nora drafts the connected package.</strong><br><br>Compare the <a href="/launch-preview?template=authority_product&mode=guide" target="_blank" rel="noopener">Digital Estate</a> and <a href="/launch-preview?template=local_service&mode=guide" target="_blank" rel="noopener">AI Service</a> guide if needed. Confirm only the direction here. The finished page, seven artifacts and release evidence are reviewed again before anything is published.' },
+          { id: 'scope-unit', name: 'Approve the System Unit', desc: 'Confirm the agreed input, process, output, owner and boundary.', outcome: 'One bounded System Unit has a named owner and a pass/fail acceptance test.', sop: '<strong>Review the written scope.</strong><br><br>Confirm the input, process, output, accountable owner, dependencies, exclusions and acceptance test. Do not approve an undefined or open-ended build.' },
+          { id: 'scope-launch-direction', name: 'Confirm your Launch Workspace direction', desc: 'Check the page system, one primary action, domain and traffic direction selected during onboarding.', outcome: 'One page direction, one primary action and one traffic path are selected.', sop: '<strong>Review the two inline examples and choose one direction.</strong><br><br>The finished page, connected copy and release evidence will be reviewed again before anything is published. A new tab is used only when a full interactive preview cannot be represented safely inside this task.' },
           { id: 'scope-access', name: 'Provide approved access', desc: 'Make only the access and source material in the signed scope available.', sop: '<strong>Provide the minimum required access.</strong><br><br>Use secure channels, never paste credentials into Support, and remove access after handoff when it is no longer required.' }
         ]
       },
@@ -6441,16 +6656,17 @@ WEEKLY DATA:
         id: 'delivery-implementation', number: 'Phase 4', title: 'Implementation & Acceptance',
         description: 'Build, test and hand off only the approved scope.',
         tasks: [
-          { id: 'implementation-review', name: 'Review the implemented workflow', desc: 'Test the agreed user journey and report evidence of any failed acceptance criterion.', sop: '<strong>Run the agreed acceptance test from beginning to end.</strong><br><br>Report the exact step, expected result, actual result and evidence for anything that does not pass.' },
-          { id: 'implementation-handoff', name: 'Accept the handoff', desc: 'Confirm ownership, SOP access and remaining known limitations.', sop: '<strong>Complete the handoff review.</strong><br><br>Confirm the owner, SOP, access, known limitations and next review date. Mark complete only when the written acceptance criteria pass.' }
+          { id: 'implementation-channel-copy', name: 'Review your conversion copy', desc: 'Check the page message, social bios, link path, email and ad copy that belong to the approved scope.', outcome: 'Every active channel says who this is for, what changes and where to go next—with one clear action.', sop: '<strong>Review only the channels your customer actually uses.</strong><br><br>The system creates concise Instagram or LinkedIn bios, link architecture, landing-page copy, email and ad variants when they belong to the approved scope. It never invents authority or copies another creator’s wording.' },
+          { id: 'implementation-review', name: 'Review the implemented workflow', desc: 'Test the agreed user journey and report evidence of any failed acceptance criterion.', outcome: 'The full user journey passes the written acceptance test or has one precise defect report.', sop: '<strong>Run the agreed acceptance test from beginning to end.</strong><br><br>Report the exact step, expected result, actual result and evidence for anything that does not pass.' },
+          { id: 'implementation-handoff', name: 'Accept the handoff', desc: 'Confirm ownership, SOP access and remaining known limitations.', outcome: 'Ownership, SOP, access, limitations and next review date are explicit.', sop: '<strong>Complete the handoff review.</strong><br><br>Confirm the owner, SOP, access, known limitations and next review date. Complete only when the written acceptance criteria pass.' }
         ]
       },
       {
         id: 'delivery-operate', number: 'Phase 5', title: 'Weekly Operating Loop',
         description: 'Use real numbers to choose one next move each week.',
         tasks: [
-          { id: 'operate-review', name: 'Complete your Weekly Operator Review', desc: 'Record the objective, primary metric, winner, bottleneck and one next move.', sop: '<strong>Review the last seven days.</strong><br><br>Record what improved, what declined, the evidence behind the bottleneck and one decision: double down, fix, switch or stop.' },
-          { id: 'operate-support', name: 'Bring the bottleneck to Growth Support', desc: 'Use the structured Support form or the Friday member clinic when another perspective is needed.', sop: '<strong>Submit one focused request.</strong><br><br>Include the current state, desired outcome, evidence, what you already tried and the exact decision or help required.' }
+          { id: 'operate-review', name: 'Complete your Weekly Operator Review', desc: 'Record the objective, primary metric, winner, bottleneck and one next move.', outcome: 'One evidence-backed decision—double down, fix, switch or stop—is ready for the next seven days.', sop: '<strong>Review the last seven days.</strong><br><br>Record what improved, what declined, the evidence behind the bottleneck and one decision: double down, fix, switch or stop.' },
+          { id: 'operate-support', name: 'Bring the bottleneck to Growth Support', desc: 'Use the structured Support form or the Friday member clinic when another perspective is needed.', outcome: 'Growth Support receives one focused question with enough evidence to answer it.', sop: '<strong>Submit one focused request.</strong><br><br>Include the current state, desired outcome, evidence, what you already tried and the exact decision or help required.' }
         ]
       }
     );
@@ -6488,6 +6704,8 @@ WEEKLY DATA:
     let currentPhaseIndex = 0;
     let currentDetailTaskId = null;
     let currentTaskDetailMode = 'task';
+    let taskCompletionPending = false;
+    let profileSavePending = false;
 
     // ===== URL PARAMS =====
     function getCustomerFromURL() {
@@ -7681,7 +7899,14 @@ WEEKLY DATA:
           CUSTOMER.company = data.customer.company || '';
         }
 
-        const founderQaAccess = await loadFounderQaAccess();
+        const [founderQaAccess, taskContextData] = await Promise.all([
+          loadFounderQaAccess(),
+          loadPortalTaskContext()
+        ]);
+        if (taskContextData?.context) {
+          CUSTOMER.taskContext = taskContextData.context;
+          CUSTOMER.onboarding = taskContextData.onboarding || null;
+        }
         if (
           founderQaAccess?.access_class === 'founder_qa' &&
           founderQaAccess?.target_offer_id === 'audit' &&
@@ -7721,7 +7946,15 @@ WEEKLY DATA:
       const requestedPhase = requestedTask
         ? findPhaseForTask(requestedTaskId)
         : PHASES.find(phase => phase.id === requestedPhaseId);
-      if (!requestedPhase || !getVisiblePhases().includes(requestedPhase)) return;
+      if (!requestedPhase || !getVisiblePhases().includes(requestedPhase)) {
+        const active = getActiveTask();
+        if (active) {
+          currentDetailTaskId = active.task.id;
+          selectPhase(PHASES.indexOf(active.phase), false);
+          updateTaskRoute(active.phase.id, active.task.id);
+        }
+        return;
+      }
 
       const phaseIndex = PHASES.indexOf(requestedPhase);
       const currentVisibleIndex = getVisiblePhaseIndex(getCurrentPhaseIndex());
@@ -7729,7 +7962,7 @@ WEEKLY DATA:
       selectPhase(phaseIndex, false);
 
       if (requestedTask && !isTaskLocked(requestedTaskId)) {
-        openTaskDetail(requestedTaskId, false);
+        if (currentDetailTaskId !== requestedTaskId) openTaskDetail(requestedTaskId, false);
         if (params.get('view') === 'document' && requestedTask.docContent) {
           openDocument(requestedTaskId, false);
         }
@@ -7764,7 +7997,7 @@ WEEKLY DATA:
         const curIdx = getCurrentPhaseIndex();
         const curVisible = getVisiblePhaseIndex(curIdx);
         const isCurrent = vi === curVisible;
-        const isLocked = vi > curVisible + 1;
+        const isLocked = vi > curVisible;
         const card = document.createElement('div');
         card.className = `phase-card${isComplete ? ' complete' : ''}${isLocked ? ' locked' : ''}${isCurrent ? ' current' : ''}`;
         card.dataset.origIndex = origIdx;
@@ -7822,6 +8055,11 @@ WEEKLY DATA:
         currentDetailTaskId = null;
         currentTaskDetailMode = 'task';
       }
+      const active = getActiveTask();
+      if (!currentDetailTaskId && active?.phase === phase) {
+        currentDetailTaskId = active.task.id;
+        currentTaskDetailMode = 'task';
+      }
       document.getElementById('detailPhaseLabel').textContent = phase.number;
       document.getElementById('detailTitle').textContent = phase.title;
       document.getElementById('detailDesc').textContent = phase.description;
@@ -7838,38 +8076,184 @@ WEEKLY DATA:
       if (updateUrl) updateTaskRoute(phase.id, currentDetailTaskId, currentTaskDetailMode);
     }
 
+    const TASK_AI_WORK = {
+      'setup-profile': 'Inspect the existing project before changing anything. Create or update one minimal project-local workspace with AGENTS.md, PROJECT_CONTEXT.md, DECISIONS.md, EVIDENCE.md and TASKS.md. Preserve existing files and user work. Put durable operating rules in AGENTS.md and verified business facts in PROJECT_CONTEXT.md. Do not place this business context in global Custom Instructions. Ask only for a missing fact that blocks the current setup.',
+      'setup-evidence': 'Inventory the current website, offer, funnel, social profiles, email path, traffic sources, analytics and recent performance evidence. Create or update EVIDENCE.md. Label each item VERIFIED, CUSTOMER-CLAIMED, MISSING or NOT APPLICABLE. Do not estimate missing numbers.',
+      'diagnosis-prepare': 'Use the verified evidence to create a concise current-state diagnosis. Identify the primary objective, primary metric, biggest measurable drop-off, constraints and decisions that require the customer. Keep hypotheses separate from facts.',
+      'diagnosis-review': 'Compare the delivered diagnosis against the evidence index. Produce a correction list for any unsupported statement. If it is supported, record one bottleneck and one recommended next move in DECISIONS.md.',
+      'scope-unit': 'Define exactly one System Unit with input, process, output, accountable owner, dependencies, exclusions and a binary acceptance test. Reject an open-ended scope.',
+      'scope-launch-direction': 'Use the onboarding page-system, primary action, destination, domain and traffic answers to recommend exactly one launch direction. Explain the choice briefly and define what must be visible above the fold. Do not publish anything.',
+      'scope-access': 'Create a minimum-access checklist for the approved System Unit. Never request a password or secret in chat. Name the secure handoff method, purpose, owner and removal condition for each access item.',
+      'implementation-channel-copy': 'Create or audit the conversion copy only for channels that exist or are explicitly in scope. For each active Instagram or LinkedIn profile, write a concise bio with: clear identity or category, specific audience outcome, truthful authority or mechanism, and one CTA to the canonical link. Then align the landing-page hook, CTA, email and ad variants to the same promise. Use the strategic clarity seen in strong founder profiles, but never copy another creator’s wording, claims or identity. If the customer manages influencers, generate separate brand and talent bio structures; otherwise do not create an influencer-management module.',
+      'implementation-review': 'Run the written acceptance test from entry point to final outcome. Record each step, expected result, actual result and evidence. Make no claim of success when any criterion lacks evidence.',
+      'implementation-handoff': 'Create the final handoff index: owner, canonical files, SOP, access-removal list, known limitations, rollback path and next review date. Confirm that the customer can operate the agreed System Unit without hidden knowledge.',
+      'operate-review': 'Review the last seven days against the objective and primary metric. Identify one winner and one bottleneck, then choose exactly one action: DOUBLE DOWN, FIX, SWITCH or STOP. Record the evidence and next review date.',
+      'operate-support': 'Prepare one focused Growth Support request with current state, desired outcome, evidence, what was tried and the exact decision or help needed. Do not include credentials or unrelated context.'
+    };
+
+    function getActiveTask() {
+      for (const phase of getVisiblePhases()) {
+        for (const task of phase.tasks) {
+          if (!completedTasks.has(task.id)) return { task, phase };
+        }
+      }
+      return null;
+    }
+
+    function getTaskOrdinal(taskId) {
+      const tasks = getVisiblePhases().flatMap(phase => phase.tasks);
+      const index = tasks.findIndex(task => task.id === taskId);
+      return { current: Math.max(1, index + 1), total: tasks.length };
+    }
+
+    function getTierAiBoundary() {
+      if (['GrowthEko AI Empire Architect', 'architect', 'done_for_you_14997'].includes(CUSTOMER.tier)) {
+        return 'This is the Architect delivery. Maintain a reusable AI Operator workspace and complete the current task end to end, while keeping publishing, payments, credentials, legal acceptance and irreversible external actions behind explicit customer approval.';
+      }
+      if (['GrowthEko AI System Sprint', 'sprint', 'done_with_you_4997'].includes(CUSTOMER.tier)) {
+        return 'This is the Sprint delivery. Work only on the one approved System Unit and its acceptance test. Do not expand into an open-ended business transformation.';
+      }
+      if (['GrowthEko Operator Membership', 'membership', 'monthly_97'].includes(CUSTOMER.tier)) {
+        return 'This is the Membership delivery. Help the customer make one evidence-backed operating move; do not imply custom implementation is included.';
+      }
+      return 'This is the Audit delivery. Diagnose and prepare the agreed roadmap; do not imply that implementation outside the active task is included.';
+    }
+
+    function getSafeAiContextText() {
+      const items = Array.isArray(CUSTOMER.taskContext?.items) ? CUSTOMER.taskContext.items : [];
+      const excluded = new Set(['date_of_birth', 'tax_id']);
+      const lines = items
+        .filter(item => !excluded.has(item?.key))
+        .map(item => item?.unknown
+          ? `${item.number}. ${item.label}: Unknown [${item.unknown_reason || 'not_captured'}]`
+          : `${item.number}. ${item.label}: ${item.value}`);
+      return lines.length
+        ? lines.join('\n')
+        : 'No verified onboarding context was available. Ask only for information that blocks this task and mark everything else as unknown.';
+    }
+
+    function buildTaskPrompt(task, phase) {
+      const work = TASK_AI_WORK[task.id] || `Complete this task using only verified project evidence: ${task.name}.`;
+      const outcome = task.outcome || task.desc;
+      return `You are the customer's GrowthEko execution copilot inside their own project workspace.
+
+CURRENT TASK
+${phase.number}: ${phase.title}
+Task: ${task.name}
+Outcome: ${outcome}
+
+DELIVERY BOUNDARY
+${getTierAiBoundary()}
+
+VERIFIED ONBOARDING CONTEXT
+${getSafeAiContextText()}
+
+WORK
+${work}
+
+OPERATING RULES
+1. Work from top to bottom and complete only this task.
+2. Inspect existing files and context before creating or changing anything.
+3. Preserve existing customer work. Do not create duplicate systems, folders or facts.
+4. Keep verified facts, customer claims, assumptions and missing evidence visibly separate.
+5. Never invent proof, results, numbers, credentials, scarcity, guarantees or legal claims.
+6. Keep the primary action and canonical destination consistent across every relevant asset.
+7. Use the current page or project whenever possible. Open a new tab only when the task cannot be completed safely inline.
+8. Stop before publishing, spending money, sending messages, changing billing, accepting legal terms, exposing secrets or making an irreversible external change unless the customer explicitly approves that exact action.
+
+SUCCESS CRITERIA
+- The stated outcome exists as a usable project artifact.
+- Every material statement is supported by the onboarding context or project evidence.
+- Missing blockers are explicit and no unsupported completion claim is made.
+- The artifact has one owner, one next action and a simple validation check.
+
+FINAL RESPONSE
+Return: completed artifact, files changed, validation performed, remaining blocker (if any), and the exact item the customer should verify in GrowthEko.
+Only when every success criterion passes, end with: "This task is complete. Return to the GrowthEko portal and complete this task to open the next one."
+If blocked, ask for the single smallest missing input and do not claim completion.`;
+    }
+
+    function buildProfileReviewHTML() {
+      const items = Array.isArray(CUSTOMER.taskContext?.items) ? CUSTOMER.taskContext.items : [];
+      if (!items.length) {
+        return `<div class="profile-review"><div class="profile-review-head"><div><strong>Your onboarding profile</strong><small>We could not load the saved answers.</small></div><span class="profile-review-count">Unavailable</span></div><div class="profile-field"><span class="profile-field-value is-missing">Refresh once. If this remains empty, open Support before completing this task.</span></div></div>`;
+      }
+      const known = items.filter(item => !item.unknown).length;
+      const rows = items.map(item => {
+        const field = escapeHTML(item.key || '');
+        const label = escapeHTML(item.label || item.key || 'Answer');
+        const value = item.unknown ? '' : String(item.value || '');
+        return `<div class="profile-field" id="profileField-${field}" data-profile-field="${field}">
+          <div class="profile-field-view">
+            <div><span class="profile-field-label">${escapeHTML(item.number)} · ${label}</span><div class="profile-field-value${item.unknown ? ' is-missing' : ''}">${item.unknown ? 'Not provided' : escapeHTML(value)}</div></div>
+            <button class="profile-edit-button" type="button" onclick="startProfileEdit('${field}')" aria-label="Edit ${label}">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            </button>
+          </div>
+          <div class="profile-field-editor">
+            <span class="profile-field-label">${label}</span>
+            <textarea id="profileInput-${field}" maxlength="4000">${escapeHTML(value)}</textarea>
+            <div class="profile-editor-actions"><button type="button" onclick="cancelProfileEdit('${field}')">Cancel</button><button class="profile-save" id="profileSave-${field}" type="button" onclick="saveProfileField('${field}')">Save</button></div>
+          </div>
+        </div>`;
+      }).join('');
+      return `<section class="profile-review" aria-label="Your onboarding profile">
+        <div class="profile-review-head"><div><strong>Your onboarding profile</strong><small>Edit any answer inline. Saves become the new verified portal context.</small></div><span class="profile-review-count">${known}/48 complete</span></div>
+        <div class="profile-review-grid">${rows}</div>
+      </section>`;
+    }
+
+    function buildTaskAiHTML(task, phase) {
+      const prompt = buildTaskPrompt(task, phase);
+      const isArchitectSetup = task.id === 'setup-profile' && ['GrowthEko AI Empire Architect', 'architect', 'done_for_you_14997'].includes(CUSTOMER.tier);
+      return `<section class="task-ai-card open" id="taskAiCard-${escapeHTML(task.id)}">
+        <button class="task-ai-summary" type="button" onclick="toggleTaskAiPrompt('${escapeHTML(task.id)}')" aria-expanded="true">
+          <span><strong>Run this task with your AI</strong><small>Personalized from your saved onboarding context.</small></span><span aria-hidden="true">⌄</span>
+        </button>
+        <div class="task-ai-body">
+          <pre class="task-ai-prompt">${escapeHTML(prompt)}</pre>
+          <div class="task-ai-actions">
+            <button class="task-ai-copy" id="taskAiCopy-${escapeHTML(task.id)}" type="button" onclick="copyTaskPrompt('${escapeHTML(task.id)}')">Copy prompt</button>
+            ${isArchitectSetup ? '<a class="task-kit-download" href="/portal/assets/growtheko-ai-operator-kit.zip" download>Download AI workspace</a>' : ''}
+          </div>
+        </div>
+      </section>`;
+    }
+
     // ===== RENDER TASKS =====
     function renderTasks(phase) {
       const list = document.getElementById('tasksList');
       list.innerHTML = '';
+      const active = getActiveTask();
       phase.tasks.forEach((task, i) => {
         const isComplete = completedTasks.has(task.id);
-        const prevComplete = i === 0 || completedTasks.has(phase.tasks[i-1].id);
-        const isLocked = !isComplete && !prevComplete;
+        const isCurrent = active?.task?.id === task.id;
+        const isLocked = !isCurrent;
         const isOpen = currentDetailTaskId === task.id;
         const entry = document.createElement('div');
         entry.className = `task-entry${isOpen ? ' is-open' : ''}`;
         entry.dataset.taskId = task.id;
         const item = document.createElement('div');
-        item.className = `task-item${isComplete ? ' complete' : ''}${isLocked ? ' locked' : ''}`;
-        item.setAttribute('role', 'button');
-        item.setAttribute('tabindex', isLocked ? '-1' : '0');
+        item.className = `task-item${isComplete ? ' complete' : ''}${isLocked ? ' locked' : ''}${isCurrent ? ' current-task' : ''}`;
+        item.setAttribute('role', isCurrent ? 'button' : 'group');
+        item.setAttribute('tabindex', isCurrent ? '0' : '-1');
         item.setAttribute('aria-expanded', String(isOpen));
-        item.onclick = () => { if (!isLocked) openTaskDetail(task.id); };
+        item.setAttribute('aria-disabled', String(!isCurrent));
+        item.onclick = () => { if (isCurrent) openTaskDetail(task.id); };
         item.onkeydown = (event) => {
-          if (!isLocked && (event.key === 'Enter' || event.key === ' ')) {
+          if (isCurrent && (event.key === 'Enter' || event.key === ' ')) {
             event.preventDefault();
             openTaskDetail(task.id);
           }
         };
         item.innerHTML = `
-          <div class="task-checkbox" onclick="${isLocked ? '' : `event.stopPropagation();toggleTask('${task.id}')`}"></div>
-          <div class="task-content" style="cursor:${isLocked ? 'default' : 'pointer'}">
+          <div class="task-checkbox" aria-hidden="true"></div>
+          <div class="task-content" style="cursor:${isCurrent ? 'pointer' : 'default'}">
             <div class="task-name">${task.name}</div>
             <div class="task-description">${task.desc}</div>
           </div>
-          ${!isLocked ? `<span class="task-disclosure" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>` : ''}
-          ${isLocked ? '<div class="task-action" style="color:rgba(0,0,0,0.2);cursor:not-allowed;border-color:rgba(0,0,0,0.06);background:rgba(0,0,0,0.02);">Locked \uD83D\uDD12</div>' : ''}`;
+          <span class="task-state-label">${isComplete ? 'Done' : (isCurrent ? 'Now' : 'Next')}</span>
+          ${isCurrent ? `<span class="task-disclosure" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span>` : ''}`;
         entry.appendChild(item);
         if (isOpen) entry.insertAdjacentHTML('beforeend', buildInlineTaskDetail(task, phase, isComplete));
         list.appendChild(entry);
@@ -7878,6 +8262,7 @@ WEEKLY DATA:
 
     function buildTaskSopHTML(task) {
       let html = task.sop;
+      if (task.id === 'setup-profile') html += buildProfileReviewHTML();
       if (task.docContent && task.fileName) {
         const documentOpen = currentTaskDetailMode === 'document';
         html += `
@@ -7894,6 +8279,8 @@ WEEKLY DATA:
             </div>
           </div>`;
       }
+      const phase = findPhaseForTask(task.id);
+      html += buildTaskAiHTML(task, phase);
       return html;
     }
 
@@ -7916,7 +8303,7 @@ WEEKLY DATA:
             </button>
             <button class="btn btn-save" id="btnSave" onclick="saveChanges()">Save</button>
             <button class="btn btn-primary" id="btnDocComplete" onclick="markCompleteFromDoc()">
-              ${isComplete ? 'Undo Complete' : 'Mark as Complete'}
+              ${isComplete ? 'Completed' : 'Complete task & continue'}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
           </div>
@@ -7925,6 +8312,7 @@ WEEKLY DATA:
 
     function buildInlineTaskDetail(task, phase, isComplete) {
       const documentHTML = buildInlineDocument(task, phase, isComplete);
+      const ordinal = getTaskOrdinal(task.id);
       return `
         <div class="task-detail-view inline open" id="taskDetailView">
           <button class="task-back" type="button" onclick="backToPortal()">
@@ -7932,66 +8320,78 @@ WEEKLY DATA:
             Close
           </button>
           <div class="task-detail-card">
-            <div class="task-detail-label" id="taskDetailLabel">${phase.number}</div>
-            <div class="task-detail-title" id="taskDetailTitle">${task.name}</div>
+            <div class="task-run-header">
+              <div><div class="task-detail-label" id="taskDetailLabel">${phase.number}</div><div class="task-detail-title" id="taskDetailTitle">${task.name}</div></div>
+              <span class="task-run-step">${ordinal.current}/${ordinal.total}</span>
+            </div>
+            <div class="task-outcome"><strong>Done when</strong>${escapeHTML(task.outcome || task.desc)}</div>
             <div class="task-detail-content" id="taskDetailContent">${buildTaskSopHTML(task)}</div>
             ${documentHTML}
             ${currentTaskDetailMode === 'document' ? '' : `
               <div class="task-detail-actions">
-                <button class="btn btn-primary" id="btnMarkComplete" onclick="markCompleteFromDetail()">
-                  ${isComplete ? 'Undo Complete' : 'Mark as Complete'}
+                <button class="btn btn-primary" id="btnMarkComplete" onclick="markCompleteFromDetail()" ${taskCompletionPending ? 'disabled' : ''}>
+                  ${taskCompletionPending ? 'Saving...' : 'Complete task & continue'}
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </button>
-              </div>`}
+              </div><p class="task-log-note">Completion is saved to your delivery history before the next task opens.</p>`}
           </div>
         </div>`;
     }
 
-    // ===== TOGGLE CHECKBOX (on/off) =====
-    function toggleTask(taskId) {
+    // ===== COMPLETE CURRENT TASK =====
+    async function completeTask(taskId) {
+      if (taskCompletionPending || completedTasks.has(taskId) || isTaskLocked(taskId)) return false;
       const phaseInfo = findPhaseForTask(taskId);
-      const phaseIndex = PHASES.indexOf(phaseInfo);
-      if (completedTasks.has(taskId)) {
-        // Uncheck
-        completedTasks.delete(taskId);
-        syncToggleTask(taskId, phaseInfo.id, false);
-        renderPhases();
-        selectPhase(phaseIndex);
-        updateProgress();
-        showToast('Task unchecked');
-      } else {
-        // Check — trigger email only on FIRST completion
-        completedTasks.add(taskId);
-        syncToggleTask(taskId, phaseInfo.id, true);
-        if (!emailsSent.has(taskId)) {
-          emailsSent.add(taskId);
-          triggerEmail('task_complete', taskId);
-        }
-        triggerEmailMilestones();
-        const phaseComplete = phaseInfo.tasks.every(t => completedTasks.has(t.id));
-        renderPhases();
-        if (phaseComplete) {
-          const visible = getVisiblePhases();
-          const visibleIndex = visible.indexOf(phaseInfo);
-          const nextPhase = visible[visibleIndex + 1];
-          if (nextPhase) selectPhase(PHASES.indexOf(nextPhase));
-        } else {
-          selectPhase(phaseIndex);
-        }
-        updateProgress();
-        showToast('Task completed!');
-        // Phase completion check
-        const phase = phaseInfo;
-        if (phaseComplete) {
-          triggerConfetti();
-          const phaseKey = 'phase_complete_' + phase.id;
-          if (!emailsSent.has(phaseKey)) {
-            emailsSent.add(phaseKey);
-            triggerEmail('phase_complete', phase.id);
-          }
-          setTimeout(() => showToast(`${phase.title} — Phase Complete!`), 800);
+      taskCompletionPending = true;
+      const detailButton = document.getElementById('btnMarkComplete');
+      const documentButton = document.getElementById('btnDocComplete');
+      [detailButton, documentButton].forEach(button => {
+        if (!button) return;
+        button.disabled = true;
+        button.textContent = 'Saving...';
+      });
+
+      const result = await syncToggleTask(taskId, phaseInfo.id, true);
+      if (result?.error) {
+        taskCompletionPending = false;
+        showToast('Task was not saved. Please try again.');
+        renderTasks(phaseInfo);
+        return false;
+      }
+
+      completedTasks.add(taskId);
+      if (!emailsSent.has(taskId)) {
+        emailsSent.add(taskId);
+        triggerEmail('task_complete', taskId);
+      }
+      triggerEmailMilestones();
+      const phaseComplete = phaseInfo.tasks.every(task => completedTasks.has(task.id));
+      if (phaseComplete) {
+        triggerConfetti();
+        const phaseKey = `phase_complete_${phaseInfo.id}`;
+        if (!emailsSent.has(phaseKey)) {
+          emailsSent.add(phaseKey);
+          triggerEmail('phase_complete', phaseInfo.id);
         }
       }
+
+      const next = getActiveTask();
+      currentDetailTaskId = next?.task?.id || null;
+      currentTaskDetailMode = 'task';
+      taskCompletionPending = false;
+      renderPhases();
+      updateProgress();
+
+      if (next) {
+        selectPhase(PHASES.indexOf(next.phase), false);
+        updateTaskRoute(next.phase.id, next.task.id);
+        showToast('Saved. Your next task is open.');
+      } else {
+        updateTaskRoute();
+        showToast('All tasks complete.');
+      }
+      if (phaseComplete) setTimeout(() => showToast(`${phaseInfo.title} complete.`), 800);
+      return true;
     }
 
     // ===== INLINE TASK + DOCUMENT ACCORDION =====
@@ -8049,6 +8449,102 @@ WEEKLY DATA:
       if (updateUrl) updateTaskRoute(phaseInfo.id, currentDetailTaskId);
     }
 
+    function toggleTaskAiPrompt(taskId) {
+      const card = document.getElementById(`taskAiCard-${taskId}`);
+      if (!card) return;
+      const open = card.classList.toggle('open');
+      card.querySelector('.task-ai-summary')?.setAttribute('aria-expanded', String(open));
+    }
+
+    async function copyTaskPrompt(taskId) {
+      const task = findTask(taskId);
+      const phase = findPhaseForTask(taskId);
+      if (!task || !phase) return;
+      const button = document.getElementById(`taskAiCopy-${taskId}`);
+      try {
+        await navigator.clipboard.writeText(buildTaskPrompt(task, phase));
+        if (button) button.textContent = 'Copied';
+        showToast('Prompt copied.');
+        if (!isLocalPortalPreview()) {
+          fetch('/api/portal-support', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'event',
+              session_token: getToken(),
+              event_name: 'task_prompt_copied',
+              event_label: taskId
+            })
+          }).catch(() => {});
+        }
+      } catch {
+        showToast('Prompt could not be copied.');
+      } finally {
+        setTimeout(() => { if (button) button.textContent = 'Copy prompt'; }, 1400);
+      }
+    }
+
+    function startProfileEdit(fieldName) {
+      document.querySelectorAll('.profile-field.is-editing').forEach(field => field.classList.remove('is-editing'));
+      const field = document.getElementById(`profileField-${fieldName}`);
+      if (!field) return;
+      field.classList.add('is-editing');
+      document.getElementById(`profileInput-${fieldName}`)?.focus();
+    }
+
+    function cancelProfileEdit(fieldName) {
+      document.getElementById(`profileField-${fieldName}`)?.classList.remove('is-editing');
+    }
+
+    async function saveProfileField(fieldName) {
+      if (profileSavePending) return;
+      if (isLocalPortalPreview()) {
+        showToast('Local preview is read-only.');
+        return;
+      }
+      const input = document.getElementById(`profileInput-${fieldName}`);
+      const button = document.getElementById(`profileSave-${fieldName}`);
+      if (!input || !button) return;
+      profileSavePending = true;
+      button.disabled = true;
+      button.textContent = 'Saving...';
+      try {
+        const res = await fetch(PORTAL_TASK_CONTEXT_BASE, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'update',
+            session_token: getToken(),
+            field_name: fieldName,
+            field_value: input.value
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.error || data?.context?.format !== 'numbered_48') {
+          throw new Error(data.error || 'Profile update failed');
+        }
+        CUSTOMER.taskContext = data.context;
+        CUSTOMER.onboarding = data.onboarding || CUSTOMER.onboarding;
+        const updatedName = data.context.items?.find(item => item.key === 'name' && !item.unknown)?.value;
+        const updatedCompany = data.context.items?.find(item => item.key === 'company' && !item.unknown)?.value;
+        if (updatedName) {
+          CUSTOMER.fullName = String(updatedName);
+          CUSTOMER.name = String(updatedName).split(' ')[0] || CUSTOMER.name;
+          document.getElementById('welcomeTitle').textContent = `Welcome, ${CUSTOMER.name}.`;
+        }
+        if (updatedCompany) CUSTOMER.company = String(updatedCompany);
+        renderTasks(findPhaseForTask('setup-profile'));
+        showToast('Profile answer saved.');
+      } catch {
+        button.disabled = false;
+        button.textContent = 'Save';
+        showToast('Answer was not saved. Please try again.');
+      } finally {
+        profileSavePending = false;
+      }
+    }
+
     function toggleEdit() {
       const editSection = document.getElementById('editSection');
       const btnSave = document.getElementById('btnSave');
@@ -8076,36 +8572,20 @@ WEEKLY DATA:
       showToast('Changes saved');
     }
 
-    function markCompleteFromDoc() {
+    async function markCompleteFromDoc() {
       if (!currentDetailTaskId) return;
-      const wasComplete = completedTasks.has(currentDetailTaskId);
-      toggleTask(currentDetailTaskId);
-      if (!wasComplete) {
-        // Just completed → redirect to portal
-        backToPortal();
-      } else {
-        // Just unchecked → stay on doc view, update button text
-        updateCompleteButtons(false);
-      }
+      await completeTask(currentDetailTaskId);
     }
 
-    function markCompleteFromDetail() {
+    async function markCompleteFromDetail() {
       if (!currentDetailTaskId) return;
-      const wasComplete = completedTasks.has(currentDetailTaskId);
-      toggleTask(currentDetailTaskId);
-      if (!wasComplete) {
-        // Just completed → redirect to portal
-        backToPortal();
-      } else {
-        // Just unchecked → stay on detail view, update button text
-        updateCompleteButtons(false);
-      }
+      await completeTask(currentDetailTaskId);
     }
 
     function updateCompleteButtons(isComplete) {
       const detailBtn = document.getElementById('btnMarkComplete');
       const docBtn = document.getElementById('btnDocComplete');
-      const label = isComplete ? 'Undo Complete' : 'Mark as Complete';
+      const label = isComplete ? 'Completed' : 'Complete task & continue';
       if (detailBtn) detailBtn.textContent = label;
       if (docBtn) docBtn.textContent = label;
     }
@@ -8153,14 +8633,8 @@ WEEKLY DATA:
     }
 
     function isTaskLocked(taskId) {
-      const phase = findPhaseForTask(taskId);
-      const phaseIndex = PHASES.indexOf(phase);
-      const visiblePhaseIndex = getVisiblePhaseIndex(phaseIndex);
-      const currentVisibleIndex = getVisiblePhaseIndex(getCurrentPhaseIndex());
-      if (visiblePhaseIndex < 0 || visiblePhaseIndex > currentVisibleIndex + 1) return true;
-      const taskIndex = phase.tasks.findIndex(task => task.id === taskId);
-      if (taskIndex < 0 || completedTasks.has(taskId)) return taskIndex < 0;
-      return taskIndex > 0 && !completedTasks.has(phase.tasks[taskIndex - 1].id);
+      const active = getActiveTask();
+      return !active || active.task.id !== taskId;
     }
 
     function getCurrentPhaseIndex() {
