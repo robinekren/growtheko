@@ -529,6 +529,13 @@ const VISION_SAMPLE_DATA = {
 function enableVisionStepMode() {
   const visionStep = urlParams.get('visionStep');
   if (!visionStep) return;
+  const localPreviewHosts = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
+  if (!localPreviewHosts.has(window.location.hostname)) {
+    urlParams.delete('visionStep');
+    const cleanQuery = urlParams.toString();
+    history.replaceState({}, '', location.pathname + (cleanQuery ? '?' + cleanQuery : ''));
+    return;
+  }
   Object.assign(customerData, VISION_SAMPLE_DATA);
   verified = true;
   selectedMarket = customerData.market;

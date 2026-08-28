@@ -49,13 +49,22 @@
     footer { margin-bottom:18px; padding:30px 26px; border:1px solid rgba(255,255,255,.08); border-radius:28px; color:rgba(255,255,255,.58); background:linear-gradient(145deg,#0b1b13,#132d20); box-shadow:0 26px 80px rgba(15,52,35,.19); font-size:12px; }
     footer nav { display:flex; flex-wrap:wrap; gap:18px; margin-bottom:14px; }
     footer a { color:rgba(255,255,255,.82); }
-    dialog { width:min(590px,calc(100% - 28px)); padding:0; overflow:hidden; border:1px solid rgba(255,255,255,.8); border-radius:26px; color:var(--ink); background:linear-gradient(160deg,#fff,#f2f7f2); box-shadow:0 34px 110px rgba(0,0,0,.34); }
-    dialog::backdrop { background:rgba(7,19,13,.72); backdrop-filter:blur(8px); }
-    .modal { padding:30px; }
-    .modal-head { display:flex; justify-content:space-between; gap:20px; align-items:start; }
+    html.checkout-open,html.checkout-open body { overflow:hidden; overscroll-behavior:none; }
+    html.checkout-open body { position:fixed; inset-inline:0; width:100%; }
+    dialog { position:fixed; inset:0; width:min(590px,calc(100% - 28px)); max-height:calc(100vh - 28px); max-height:calc(100dvh - max(14px,env(safe-area-inset-top)) - max(14px,env(safe-area-inset-bottom))); margin:auto; padding:0; overflow:hidden; border:1px solid rgba(255,255,255,.8); border-radius:26px; color:var(--ink); background:linear-gradient(160deg,#fff,#f2f7f2); box-shadow:0 34px 110px rgba(0,0,0,.34); }
+    dialog[open] { display:block; }
+    dialog::backdrop { position:fixed; inset:0; background:rgba(7,19,13,.72); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+    .modal { max-height:inherit; display:flex; flex-direction:column; padding:0; overflow:hidden; }
+    .modal-head { flex:0 0 auto; display:flex; justify-content:space-between; gap:20px; align-items:start; padding:26px 30px 12px; }
     .modal-head h2 { margin:8px 0 0; letter-spacing:-.04em; }
     .close { width:38px; min-height:38px; margin:0; padding:0; border-radius:12px; color:#fff; background:var(--forest); box-shadow:none; }
+    .modal-scroll { min-height:0; padding:0 30px 22px; overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }
+    .modal-footer { position:sticky; z-index:2; bottom:0; flex:0 0 auto; padding:10px 30px calc(18px + env(safe-area-inset-bottom)); border-top:1px solid rgba(16,40,29,.1); background:linear-gradient(180deg,rgba(247,250,247,.96),#fff 24%); box-shadow:0 -12px 32px rgba(16,40,29,.08); }
+    .modal-footer button { width:100%; margin:0; }
     label { display:block; margin:16px 0 6px; font-size:12px; font-weight:800; }
+    .field-help,.consumer-route { margin:6px 0 0; color:var(--muted); font-size:12px; line-height:1.5; }
+    .consumer-route { padding:11px 12px; border:1px solid rgba(16,40,29,.1); border-radius:12px; background:rgba(255,255,255,.62); }
+    .consumer-route a { font-weight:800; }
     input,select { width:100%; padding:13px; border:1px solid rgba(16,40,29,.14); border-radius:12px; color:var(--ink); background:rgba(255,255,255,.85); font:inherit; outline:none; transition:border-color .2s ease,box-shadow .2s ease; }
     input:focus,select:focus { border-color:rgba(185,134,50,.64); box-shadow:0 0 0 4px rgba(220,179,95,.16); }
     .check { display:grid; grid-template-columns:20px 1fr; gap:10px; align-items:start; font-weight:500; }
@@ -63,7 +72,7 @@
     .status { min-height:24px; margin-top:14px; color:#8b651f; }
     .motion-ready .reveal-target { opacity:0; filter:blur(6px); transform:translate3d(0,28px,0); transition:opacity .72s ease var(--reveal-delay,0ms),filter .72s ease var(--reveal-delay,0ms),transform .82s cubic-bezier(.22,1,.36,1) var(--reveal-delay,0ms); }
     .motion-ready .reveal-target.is-revealed { opacity:1; filter:none; transform:none; }
-    @media (max-width:760px) { .wrap { width:min(100% - 24px,1120px); } header { top:8px; margin-top:8px; border-radius:15px; } main { padding-top:50px; } h1 { font-size:clamp(43px,13vw,58px); } .lead { font-size:16px; } .grid { grid-template-columns:1fr; gap:14px; } .card { padding:24px 20px; border-radius:23px; } .card:hover { transform:none; } .bridge .card:after { right:-36px; top:23px; } .section-title { margin-top:50px; font-size:21px; } footer { border-radius:23px; text-align:center; } footer nav { justify-content:center; } }
+    @media (max-width:760px) { .wrap { width:min(100% - 24px,1120px); } header { top:8px; margin-top:8px; border-radius:15px; } main { padding-top:50px; } h1 { font-size:clamp(43px,13vw,58px); } .lead { font-size:16px; } .grid { grid-template-columns:1fr; gap:14px; } .card { padding:24px 20px; border-radius:23px; } .card:hover { transform:none; } .bridge .card:after { right:-36px; top:23px; } .section-title { margin-top:50px; font-size:21px; } footer { border-radius:23px; text-align:center; } footer nav { justify-content:center; } dialog { width:calc(100% - 16px); max-height:calc(100vh - 16px); max-height:calc(100dvh - max(8px,env(safe-area-inset-top)) - max(8px,env(safe-area-inset-bottom))); border-radius:20px; } .modal-head { padding:18px 18px 10px; } .modal-head h2 { font-size:22px; line-height:1.15; } .modal-scroll { padding:0 18px 18px; } .modal-footer { padding:9px 18px calc(12px + env(safe-area-inset-bottom)); } }
     @media (prefers-reduced-motion:reduce) { * { scroll-behavior:auto!important; animation:none!important; transition:none!important; } }
   </style>
   <script src="/assets/growtheko-consent.js" defer></script>
@@ -142,15 +151,19 @@
   <dialog id="checkoutModal">
     <form class="modal" id="checkoutForm" method="dialog">
       <div class="modal-head"><div><div class="eyebrow">Business checkout</div><h2 id="checkoutSummary">Your selection</h2></div><button class="close" type="button" data-checkout-close aria-label="Close">×</button></div>
-      <label for="checkoutEmail">Business email</label><input id="checkoutEmail" name="email" type="email" autocomplete="email" required>
-      <label for="checkoutCompany">Legal business or professional name</label><input id="checkoutCompany" name="company" autocomplete="organization" required>
-      <label for="checkoutCountry">Billing country</label>
-      <select id="checkoutCountry" name="country" required><option value="">Select country</option><option value="AT">Austria</option><option value="DE">Germany</option><option value="OTHER">Another country</option></select>
-      <label class="check"><input id="checkoutBusiness" type="checkbox" required><span>I confirm that I am purchasing for business or professional purposes.</span></label>
-      <label class="check"><input id="checkoutTerms" type="checkbox" required><span>I accept the <a href="/terms" target="_blank" rel="noopener">Terms</a> and acknowledge the scope boundaries.</span></label>
-      <label class="check"><input id="checkoutInvoices" type="checkbox" required><span>I consent to electronic invoices and business communications for this purchase.</span></label>
-      <div class="status" id="checkoutStatus" role="status" aria-live="polite"></div>
-      <button id="checkoutSubmit" type="submit">Continue to secure checkout</button>
+      <div class="modal-scroll">
+        <label for="checkoutEmail">Business email</label><input id="checkoutEmail" name="email" type="email" autocomplete="email" required>
+        <label for="checkoutCompany">Legal business or professional name</label>
+        <p class="field-help" id="checkoutCompanyHelp">Self-employed professionals, sole traders and freelancers without a registered company can enter their full legal name.</p>
+        <input id="checkoutCompany" name="company" autocomplete="organization" aria-describedby="checkoutCompanyHelp" required>
+        <label for="checkoutCountry">Billing country</label>
+        <select id="checkoutCountry" name="country" required><option value="">Select country</option><option value="AT">Austria</option><option value="DE">Germany</option><option value="OTHER">Another country</option></select>
+        <label class="check"><input id="checkoutBusiness" type="checkbox" required><span>I confirm that I am ordering in the course of my trade, business, craft or profession—not for personal consumer use.</span></label>
+        <p class="consumer-route">Buying only for personal use? Do not confirm the business-purchase statement or continue to payment. GrowthEko's paid services are not available for consumer purchases. <a href="/start">Return to the offer overview</a> or <a href="/contact">contact GrowthEko</a> with a question.</p>
+        <label class="check"><input id="checkoutTerms" type="checkbox" required><span>I accept the <a href="/terms" target="_blank" rel="noopener">Terms</a> and acknowledge the scope boundaries.</span></label>
+        <label class="check"><input id="checkoutInvoices" type="checkbox" required><span>I consent to electronic invoices and business communications for this purchase.</span></label>
+      </div>
+      <div class="modal-footer"><div class="status" id="checkoutStatus" role="status" aria-live="polite"></div><button id="checkoutSubmit" type="submit">Continue to secure checkout</button></div>
     </form>
   </dialog>
 
@@ -190,21 +203,39 @@
       var status = document.getElementById('checkoutStatus');
       var submit = document.getElementById('checkoutSubmit');
       var country = document.getElementById('checkoutCountry');
+      var checkoutScrollY = 0;
 
       function requestId() {
         if (window.crypto && typeof window.crypto.randomUUID === 'function') return window.crypto.randomUUID();
         return 'ge-' + Date.now() + '-' + Math.random().toString(16).slice(2);
+      }
+      function lockPageScroll() {
+        if (document.documentElement.classList.contains('checkout-open')) return;
+        checkoutScrollY = window.scrollY || window.pageYOffset || 0;
+        document.documentElement.classList.add('checkout-open');
+        document.body.style.top = '-' + checkoutScrollY + 'px';
+      }
+      function unlockPageScroll() {
+        if (!document.documentElement.classList.contains('checkout-open')) return;
+        document.documentElement.classList.remove('checkout-open');
+        document.body.style.top = '';
+        window.scrollTo(0, checkoutScrollY);
       }
       function openCheckout(offerKey) {
         if (!offers[offerKey]) return;
         activeOfferKey = offerKey;
         document.getElementById('checkoutSummary').textContent = offers[offerKey].label;
         status.textContent = '';
-        modal.showModal();
+        if (!modal.open) modal.showModal();
+        lockPageScroll();
+        window.requestAnimationFrame(function () { document.getElementById('checkoutEmail').focus({ preventScroll:true }); });
       }
       function closeCheckout() { if (!submit.disabled) modal.close(); }
       document.querySelectorAll('[data-checkout-offer]').forEach(function (button) { button.addEventListener('click', function () { openCheckout(button.dataset.checkoutOffer); }); });
       document.querySelector('[data-checkout-close]').addEventListener('click', closeCheckout);
+      modal.addEventListener('close', unlockPageScroll);
+      modal.addEventListener('cancel', function (event) { if (submit.disabled) event.preventDefault(); });
+      modal.addEventListener('click', function (event) { if (event.target === modal) closeCheckout(); });
       var requestedOffer = new URLSearchParams(window.location.search).get('checkout');
       if (offers[requestedOffer]) openCheckout(requestedOffer);
       country.addEventListener('change', function () {

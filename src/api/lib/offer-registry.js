@@ -19,6 +19,7 @@ export const OFFER_REGISTRY = Object.freeze({
   audit: Object.freeze({
     id: 'audit', name: 'GrowthEko AI Operator Audit', publicName: 'AI Operator Audit',
     price: '$1,997 USD', cadence: 'one_time', route: '/start?checkout=onetime_1997', status: 'blocked_gate_a',
+    primaryCta: 'Start your AI Operator Audit',
     scope: 'Bounded diagnosis, opportunity map, prioritized implementation roadmap and handoff walkthrough.',
     finishLine: 'The documented roadmap is delivered and explained.',
     conditionalCapacity: 'Maximum 2 active audits and 4 starts per month.'

@@ -9,6 +9,7 @@ import {
 import { LAUNCH_TEMPLATES, buildLaunchWorkspace, launchArtifactSeeds, launchNextAction } from './lib/launch-system.js';
 import { customerProfileFromAnswers, customerProfileFromMessageMetadata, mergeCustomerProfiles } from './lib/customer-profile.js';
 import { applyCustomerLevels } from './lib/customer-level.js';
+import { canonicalCustomerIntakeSummary } from './lib/customer-intake-summary.js';
 
 const AUTONOMY_PHASES = Object.freeze([
   Object.freeze({
@@ -485,6 +486,13 @@ function applyLaunchTask(task, workspace) {
 function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
   const reference = Number.isNaN(new Date(now).getTime()) ? new Date() : new Date(now);
   const at = hours => new Date(reference.getTime() + (hours * 60 * 60 * 1000)).toISOString();
+  const scenarioIntakeSummary = canonicalCustomerIntakeSummary([
+    { session_id: 'local-test-onboarding', field_name: 'name', field_value: 'Mia' },
+    { session_id: 'local-test-onboarding', field_name: 'company', field_value: 'Localhost QA' },
+    { session_id: 'local-test-onboarding', field_name: 'launch_template', field_value: 'authority_product' },
+    { session_id: 'local-test-onboarding', field_name: 'traffic_mode', field_value: 'organic' },
+    { session_id: 'local-test-onboarding', field_name: 'primary_goal', field_value: 'Create one clear digital-estate launch path.' }
+  ], { sessionId: 'local-test-onboarding' });
   const people = [];
   const leads = [
     {
@@ -492,6 +500,7 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
       id: 'local-test-customer', name: 'Test customer · New application', first_name: 'Mia', email: 'test-customer@growtheko.local', company: 'Localhost QA',
       stage: 'Diagnose', raw_stage: 'applied', offer: offer('digital_estate'),
       profile_context: { birth_date: '2001-04-17', city: 'Vienna', current_job: 'AI consultant', timezone: 'Europe/Vienna', source: 'customer_provided' },
+      intake_summary: scenarioIntakeSummary,
       primary_goal: 'Create one clear digital-estate launch path.',
       biggest_bottleneck: 'The smallest useful next scope has not been diagnosed.',
       submitted_at: at(-5), call_booked: false, call_time: null
@@ -507,6 +516,7 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
     name: leads[0].name, email: leads[0].email, company: leads[0].company,
     stage: 'Diagnose', journey_stage: 'lead', offer: leads[0].offer,
     primary_goal: leads[0].primary_goal, biggest_bottleneck: leads[0].biggest_bottleneck,
+    intake_summary: leads[0].intake_summary,
     submitted_at: leads[0].submitted_at, created_at: leads[0].submitted_at,
     call_booked: false, call_time: null, review_required: false
   }];
@@ -610,10 +620,13 @@ export default async function handler(req, res) {
       answersBySession.get(sessionId).push(answer);
     }
     const profileByCustomer = new Map();
+    const intakeSummaryByCustomer = new Map();
     for (const session of onboardingSessions) {
       const customerId = clean(session.customer_id, 140);
       if (!customerId || profileByCustomer.has(customerId)) continue;
-      profileByCustomer.set(customerId, customerProfileFromAnswers(answersBySession.get(String(session.id)) || []));
+      const sessionAnswers = answersBySession.get(String(session.id)) || [];
+      profileByCustomer.set(customerId, customerProfileFromAnswers(sessionAnswers));
+      intakeSummaryByCustomer.set(customerId, canonicalCustomerIntakeSummary(sessionAnswers, { sessionId: session.id }));
     }
     const people = customers.map(customer => {
       const application = applicationsByEmail.get(normalizedEmail(customer.email)) || null;
@@ -643,6 +656,7 @@ export default async function handler(req, res) {
           profileByCustomer.get(String(customer.id)) || customerProfileFromAnswers([]),
           customerProfileFromMessageMetadata(messageProfileByApplication.get(String(application?.id)) || [])
         ),
+        intake_summary: intakeSummaryByCustomer.get(String(customer.id)) || null,
         call_booked: ['booked', 'scheduled', 'confirmed'].includes(clean(application?.call_status, 40).toLowerCase()),
         call_time: application?.call_date || null
       };
@@ -785,7 +799,8 @@ export default async function handler(req, res) {
         biggest_bottleneck: clean(application?.biggest_challenge || application?.holding_back, 1200),
         call_booked: ['booked', 'scheduled', 'confirmed'].includes(clean(application?.call_status, 40).toLowerCase()),
         call_time: application?.call_date || null,
-        evidence: record.evidence && typeof record.evidence === 'object' ? record.evidence : {}
+        evidence: record.evidence && typeof record.evidence === 'object' ? record.evidence : {},
+        intake_summary: person?.intake_summary || null
       };
     });
     applyCustomerLevels(people, leads, opportunities, entitlementRows);
