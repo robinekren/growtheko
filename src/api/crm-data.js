@@ -886,7 +886,7 @@ export default async function handler(req, res) {
       return [task];
     });
     const generatedDecisions = decisionQueue(queue);
-    const openStoredDecisions = storedDecisionRows.filter(item => item.status === 'open').map(item => ({
+    const openStoredDecisions = storedDecisionRows.filter(item => item.status === 'open' && item.metadata?.audience !== 'customer').map(item => ({
       id: `stored:${clean(item.id, 140)}`,
       decision_key: clean(item.decision_key, 240),
       task_id: clean(item.task_id, 240),
@@ -908,7 +908,7 @@ export default async function handler(req, res) {
     }));
     const generatedTaskIds = new Set(generatedDecisions.map(item => item.task_id));
     const decisions = [...generatedDecisions, ...openStoredDecisions.filter(item => !generatedTaskIds.has(item.task_id))];
-    const decisionHistory = storedDecisionRows.filter(item => item.status !== 'open').map(item => ({
+    const decisionHistory = storedDecisionRows.filter(item => item.status !== 'open' && item.metadata?.audience !== 'customer').map(item => ({
       id: clean(item.id, 140),
       person_name: peopleById.get(String(item.customer_id))?.name || applicationById.get(String(item.application_id))?.preferred_name || 'Nora Ops',
       project: 'GrowthEko OPS',

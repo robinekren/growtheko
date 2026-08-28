@@ -4293,6 +4293,177 @@
     .task-kit-download { border: 1px solid rgba(23,105,232,0.18); background: #fff; color: #1769e8; }
     .task-log-note { margin: 12px 0 0; color: #7a8497; font-size: 10px; text-align: center; }
 
+    .portal-decisions-shell {
+      width: min(760px, 100%);
+      margin: 0 auto;
+    }
+    .portal-decisions-head {
+      margin-bottom: 18px;
+    }
+    .portal-decisions-head span {
+      color: #1769e8;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .portal-decisions-head h1 {
+      margin: 8px 0 6px;
+      color: #111827;
+      font: 700 clamp(32px, 6vw, 52px)/1 Georgia, serif;
+      letter-spacing: -.04em;
+    }
+    .portal-decisions-head p {
+      max-width: 560px;
+      margin: 0;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .portal-decision-card,
+    .portal-decision-empty {
+      overflow: hidden;
+      border: 1px solid rgba(15,23,42,.09);
+      border-radius: 22px;
+      background: rgba(255,255,255,.86);
+      box-shadow: 0 18px 55px rgba(35,61,105,.08);
+    }
+    .portal-decision-main { padding: 22px; }
+    .portal-decision-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      color: #1769e8;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .portal-decision-count {
+      min-width: 26px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: #edf4ff;
+      text-align: center;
+    }
+    .portal-decision-question {
+      margin: 0;
+      color: #172033;
+      font-size: clamp(19px, 4vw, 27px);
+      line-height: 1.18;
+      letter-spacing: -.025em;
+    }
+    .portal-decision-why {
+      margin: 10px 0 0;
+      color: #6f7b90;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .portal-decision-facts {
+      margin-top: 14px;
+      border-top: 1px solid rgba(15,23,42,.07);
+      padding-top: 12px;
+    }
+    .portal-decision-facts summary {
+      color: #64748b;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .portal-decision-facts ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: #667085;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+    .portal-decision-options {
+      display: grid;
+      gap: 9px;
+      padding: 0 22px 18px;
+    }
+    .portal-decision-option {
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      padding: 14px;
+      border: 1px solid rgba(15,23,42,.09);
+      border-radius: 14px;
+      background: #fff;
+      color: #172033;
+      text-align: left;
+      cursor: pointer;
+    }
+    .portal-decision-option.is-selected {
+      border-color: rgba(23,105,232,.55);
+      background: #f5f9ff;
+      box-shadow: 0 0 0 3px rgba(23,105,232,.07);
+    }
+    .portal-decision-radio {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #b7c1d3;
+      border-radius: 50%;
+      background: #fff;
+    }
+    .portal-decision-option.is-selected .portal-decision-radio {
+      border: 5px solid #1769e8;
+    }
+    .portal-decision-option strong { display: block; font-size: 12px; }
+    .portal-decision-option small { display: block; margin-top: 3px; color: #7a8497; font-size: 10px; line-height: 1.4; }
+    .portal-decision-confirm {
+      width: calc(100% - 44px);
+      min-height: 44px;
+      margin: 0 22px 22px;
+      border: 0;
+      border-radius: 13px;
+      background: #1769e8;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+    .portal-decision-confirm:disabled { cursor: default; opacity: .42; }
+    .portal-decision-empty {
+      padding: 44px 24px;
+      text-align: center;
+    }
+    .portal-decision-empty-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: #eaf8f2;
+      color: #07865f;
+      font-weight: 900;
+    }
+    .portal-decision-empty strong { display: block; color: #172033; font-size: 15px; }
+    .portal-decision-empty span { display: block; margin-top: 5px; color: #7a8497; font-size: 11px; }
+    .portal-decision-history { margin-top: 14px; }
+    .portal-decision-history summary {
+      padding: 13px 4px;
+      color: #7a8497;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .portal-decision-history-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      padding: 12px 4px;
+      border-top: 1px solid rgba(15,23,42,.07);
+    }
+    .portal-decision-history-row strong { display: block; color: #273349; font-size: 11px; }
+    .portal-decision-history-row span { display: block; margin-top: 3px; color: #7a8497; font-size: 9px; }
+    .portal-decision-history-row time { color: #98a2b3; font-size: 9px; white-space: nowrap; }
+
     .task-detail-label {
       font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
@@ -4745,6 +4916,10 @@
       .profile-confirm-button { width: 100%; }
       .task-run-header { gap: 10px; }
       .task-ai-actions { flex-direction: column; }
+      .portal-decision-main { padding: 18px; }
+      .portal-decision-options { padding: 0 18px 16px; }
+      .portal-decision-confirm { width: calc(100% - 36px); margin: 0 18px 18px; }
+      .portal-decision-history-row { grid-template-columns: 1fr; }
       .task-detail-view.inline .doc-content table th,
       .task-detail-view.inline .doc-content table td {
         padding: 9px 7px;
@@ -4861,6 +5036,26 @@
                 <div class="detail-desc" id="detailDesc">Build the core elements of your digital business infrastructure.</div>
               </div>
               <div class="tasks-list" id="tasksList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-panel embedded-page-panel" id="portalPanelDecisions" data-portal-panel="decisions" hidden>
+      <div class="embedded-page-shell">
+        <div class="embedded-page-bar">
+          <span class="embedded-page-label">Decisions</span>
+        </div>
+        <div class="embedded-page-content">
+          <div class="portal-decisions-shell">
+            <div class="portal-decisions-head">
+              <span>Only when needed</span>
+              <h1>Your decision</h1>
+              <p>Choose only when your work needs your judgment. The saved answer becomes part of the next AI prompt.</p>
+            </div>
+            <div id="portalDecisionsContent" aria-live="polite">
+              <div class="portal-decision-empty"><div class="portal-decision-empty-mark">✓</div><strong>Nothing needs your decision.</strong><span>Continue with the next task.</span></div>
             </div>
           </div>
         </div>
@@ -5420,6 +5615,7 @@ WEEKLY DATA:
     const AUTH_BASE = `${SUPABASE_URL}/functions/v1/portal-auth`;
     const FOUNDER_QA_ACCESS_BASE = '/api/founder-qa-access';
     const PORTAL_TASK_CONTEXT_BASE = '/api/portal-task-context';
+    const PORTAL_DECISIONS_BASE = '/api/portal-decisions';
     const LOCAL_PORTAL_PREVIEW_KEY = 'growtheko_portal_local_preview_v1';
     const LOCAL_PORTAL_PREVIEW_EMAIL = 'robinekrenn@gmail.com';
     const LOCAL_PORTAL_PREVIEW_CUSTOMER = 'local-robin-ekren';
@@ -5528,6 +5724,25 @@ WEEKLY DATA:
       }
     }
 
+    async function loadPortalDecisions() {
+      if (isLocalPortalPreview()) return { decisions: { open: [], history: [] } };
+      try {
+        const res = await fetch(PORTAL_DECISIONS_BASE, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'load', session_token: getToken() })
+        });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data?.decisions && Array.isArray(data.decisions.open) && Array.isArray(data.decisions.history)
+          ? data
+          : null;
+      } catch {
+        return null;
+      }
+    }
+
     // ===== CUSTOMER CHAT =====
     let portalChatMessages = [];
     let portalChatLoadedFor = null;
@@ -5537,7 +5752,7 @@ WEEKLY DATA:
     const PORTAL_NOTIFICATION_TYPES = {
       support_reply: { title: 'New support reply', icon: '↗', target: 'chat' },
       support_received: { title: 'Support request received', icon: '✓', target: 'chat' },
-      approval_needed: { title: 'Your approval is needed', icon: '!', target: 'home' },
+      approval_needed: { title: 'Your decision is needed', icon: '!', target: 'decisions' },
       file_ready: { title: 'A new file is ready', icon: '↓', target: 'home' },
       task_update: { title: 'Your plan was updated', icon: '✓', target: 'home' },
       live_reminder: { title: 'Live session reminder', icon: '◉', target: 'calendar' },
@@ -5565,7 +5780,7 @@ WEEKLY DATA:
       const type = PORTAL_NOTIFICATION_TYPES[requestedType] ? requestedType : 'general';
       const defaults = PORTAL_NOTIFICATION_TYPES[type];
       const requestedTarget = String(metadata.notification_target || defaults.target);
-      const target = ['home', 'calendar', 'chat'].includes(requestedTarget) ? requestedTarget : defaults.target;
+      const target = ['home', 'decisions', 'calendar', 'chat'].includes(requestedTarget) ? requestedTarget : defaults.target;
       return {
         id: String(message.id || ''),
         type,
@@ -6245,6 +6460,8 @@ WEEKLY DATA:
       taskContext: null,
       onboarding: null,
       profileReview: null,
+      portalDecisions: { open: [], history: [] },
+      portalDecisionsAvailable: false,
     };
 
     const PHASES = [
@@ -6758,6 +6975,8 @@ WEEKLY DATA:
     let taskCompletionPending = false;
     let profileSavePending = false;
     let profileConfirmPending = false;
+    let portalDecisionPending = false;
+    let portalDecisionSelection = null;
 
     // ===== URL PARAMS =====
     function getCustomerFromURL() {
@@ -6767,10 +6986,11 @@ WEEKLY DATA:
     }
 
     // ===== PORTAL TABS =====
-    const PORTAL_TAB_ORDER = ['home', 'prompts', 'calendar', 'chat', 'listings'];
+    const PORTAL_TAB_ORDER = ['home', 'decisions', 'prompts', 'calendar', 'chat', 'listings'];
     const PORTAL_TABS = new Set(PORTAL_TAB_ORDER);
     const PORTAL_TAB_LABELS = {
       home: 'Tasks',
+      decisions: 'Decisions',
       prompts: 'Prompts',
       calendar: 'Calendar',
       chat: 'Support',
@@ -6807,6 +7027,122 @@ WEEKLY DATA:
           }
         });
       });
+    }
+
+    function portalDecisionDate(value) {
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString([], { dateStyle: 'medium' });
+    }
+
+    function getOpenPortalDecisions(taskId = null) {
+      const decisions = Array.isArray(CUSTOMER.portalDecisions?.open) ? CUSTOMER.portalDecisions.open : [];
+      return taskId ? decisions.filter(item => !item.task_id || item.task_id === taskId) : decisions;
+    }
+
+    function getResolvedPortalDecisions(taskId = null) {
+      const decisions = Array.isArray(CUSTOMER.portalDecisions?.history) ? CUSTOMER.portalDecisions.history : [];
+      return taskId ? decisions.filter(item => !item.task_id || item.task_id === taskId) : decisions;
+    }
+
+    function hasOpenPortalDecision(taskId) {
+      return getOpenPortalDecisions(taskId).length > 0;
+    }
+
+    function renderPortalDecisions() {
+      const root = document.getElementById('portalDecisionsContent');
+      if (!root) return;
+      if (!CUSTOMER.portalDecisionsAvailable) {
+        root.innerHTML = '<div class="portal-decision-empty"><div class="portal-decision-empty-mark">!</div><strong>Decisions are temporarily unavailable.</strong><span>Refresh before continuing so no required choice is missed.</span></div>';
+        return;
+      }
+      const open = getOpenPortalDecisions();
+      const history = getResolvedPortalDecisions();
+      const active = open[0] || null;
+      if (active && portalDecisionSelection?.decisionId !== active.id) portalDecisionSelection = null;
+
+      const historyHTML = history.length ? `<details class="portal-decision-history">
+        <summary>Previous decisions · ${history.length}</summary>
+        ${history.map(item => `<div class="portal-decision-history-row"><div><strong>${escapeHTML(item.question || 'Decision')}</strong><span>${escapeHTML(item.selected_option?.label || 'Recorded')}</span></div><time>${escapeHTML(portalDecisionDate(item.resolved_at))}</time></div>`).join('')}
+      </details>` : '';
+
+      if (!active) {
+        root.innerHTML = `<div class="portal-decision-empty"><div class="portal-decision-empty-mark">✓</div><strong>Nothing needs your decision.</strong><span>Continue with the next task.</span></div>${historyHTML}`;
+        return;
+      }
+
+      const selectedId = portalDecisionSelection?.decisionId === active.id ? portalDecisionSelection.optionId : '';
+      const facts = Array.isArray(active.verified_facts) ? active.verified_facts : [];
+      root.innerHTML = `<article class="portal-decision-card">
+        <div class="portal-decision-main">
+          <div class="portal-decision-kicker"><span>${escapeHTML(active.gate || 'Decision required')}</span><span class="portal-decision-count">${open.length}</span></div>
+          <h2 class="portal-decision-question">${escapeHTML(active.question || 'Choose the next direction.')}</h2>
+          ${active.recommendation ? `<p class="portal-decision-why"><strong>Nora recommends:</strong> ${escapeHTML(active.recommendation)}</p>` : ''}
+          ${facts.length ? `<details class="portal-decision-facts"><summary>Verified context</summary><ul>${facts.map(value => `<li>${escapeHTML(value)}</li>`).join('')}</ul></details>` : ''}
+        </div>
+        <div class="portal-decision-options" role="radiogroup" aria-label="Decision options">
+          ${active.options.map(option => `<button class="portal-decision-option${selectedId === option.id ? ' is-selected' : ''}" type="button" role="radio" aria-checked="${selectedId === option.id}" data-portal-decision-option data-decision-id="${escapeHTML(active.id)}" data-option-id="${escapeHTML(option.id)}"><span class="portal-decision-radio" aria-hidden="true"></span><span><strong>${escapeHTML(option.label)}</strong>${option.description ? `<small>${escapeHTML(option.description)}</small>` : ''}</span></button>`).join('')}
+        </div>
+        <button class="portal-decision-confirm" id="portalDecisionConfirm" type="button" ${selectedId && !portalDecisionPending ? '' : 'disabled'}>${portalDecisionPending ? 'Saving...' : 'Confirm decision'}</button>
+      </article>${historyHTML}`;
+
+      root.querySelectorAll('[data-portal-decision-option]').forEach(button => {
+        button.onclick = () => {
+          if (portalDecisionPending) return;
+          portalDecisionSelection = { decisionId: button.dataset.decisionId, optionId: button.dataset.optionId };
+          renderPortalDecisions();
+        };
+      });
+      document.getElementById('portalDecisionConfirm')?.addEventListener('click', confirmPortalDecision);
+    }
+
+    async function confirmPortalDecision() {
+      if (portalDecisionPending || !portalDecisionSelection) return;
+      if (isLocalPortalPreview()) {
+        showToast('Local preview is read-only.');
+        return;
+      }
+      const targetDecision = getOpenPortalDecisions().find(item => item.id === portalDecisionSelection.decisionId) || null;
+      const targetTaskId = targetDecision?.task_id || null;
+      portalDecisionPending = true;
+      renderPortalDecisions();
+      try {
+        const res = await fetch(PORTAL_DECISIONS_BASE, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'resolve',
+            session_token: getToken(),
+            decision_id: portalDecisionSelection.decisionId,
+            option_id: portalDecisionSelection.optionId
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.error || !data.decisions) throw new Error(data.error || 'Decision was not saved.');
+        CUSTOMER.portalDecisions = data.decisions;
+        CUSTOMER.portalDecisionsAvailable = true;
+        portalDecisionSelection = null;
+        renderPhases();
+        updateProgress();
+        const targetTask = targetTaskId ? findTask(targetTaskId) : null;
+        const targetPhase = targetTask ? findPhaseForTask(targetTaskId) : null;
+        if (targetTask && targetPhase && !isTaskLocked(targetTaskId)) {
+          setPortalTab('home', true);
+          currentDetailTaskId = targetTaskId;
+          currentTaskDetailMode = 'task';
+          selectPhase(PHASES.indexOf(targetPhase), false);
+          updateTaskRoute(targetPhase.id, targetTaskId);
+          scrollActivePortalTaskToTop();
+        } else {
+          setPortalTab('decisions', false);
+        }
+        showToast('Decision saved. The task prompt now includes it.');
+      } catch (error) {
+        showToast(error?.message || 'Decision was not saved. Please try again.');
+      } finally {
+        portalDecisionPending = false;
+        renderPortalDecisions();
+      }
     }
     const PORTAL_CALENDAR_TIME_ZONE = 'Europe/Vienna';
     const PORTAL_CALENDAR_EVENT_RULES = [
@@ -7795,7 +8131,11 @@ WEEKLY DATA:
       const previousTab = getPortalTabFromURL();
       const currentTitle = document.getElementById('portalTabCurrentTitle');
       const currentControl = document.getElementById('portalTabCurrent');
-      if (currentTitle) currentTitle.textContent = PORTAL_TAB_LABELS[nextTab];
+      const openDecisionCount = getOpenPortalDecisions().length;
+      const tabTitle = nextTab === 'decisions' && openDecisionCount
+        ? `Decisions · ${openDecisionCount}`
+        : PORTAL_TAB_LABELS[nextTab];
+      if (currentTitle) currentTitle.textContent = tabTitle;
       if (currentControl) currentControl.setAttribute('aria-label', `${PORTAL_TAB_LABELS[nextTab]} section`);
 
       document.querySelectorAll('[data-portal-panel]').forEach(panel => {
@@ -7825,6 +8165,10 @@ WEEKLY DATA:
 
       if (nextTab === 'chat') {
         loadPortalChatMessages();
+      }
+
+      if (nextTab === 'decisions') {
+        renderPortalDecisions();
       }
 
       if (nextTab === 'calendar') {
@@ -7927,6 +8271,7 @@ WEEKLY DATA:
         CUSTOMER.fullName = 'Robin Ekren';
         CUSTOMER.company = 'GrowthEko';
         CUSTOMER.tier = 'GrowthEko Operator Membership';
+        CUSTOMER.portalDecisionsAvailable = true;
       }
 
       // Load data from Supabase if authenticated
@@ -7951,14 +8296,19 @@ WEEKLY DATA:
           CUSTOMER.company = data.customer.company || '';
         }
 
-        const [founderQaAccess, taskContextData] = await Promise.all([
+        const [founderQaAccess, taskContextData, portalDecisionData] = await Promise.all([
           loadFounderQaAccess(),
-          loadPortalTaskContext()
+          loadPortalTaskContext(),
+          loadPortalDecisions()
         ]);
         if (taskContextData?.context) {
           CUSTOMER.taskContext = taskContextData.context;
           CUSTOMER.onboarding = taskContextData.onboarding || null;
           CUSTOMER.profileReview = taskContextData.review || null;
+        }
+        if (portalDecisionData?.decisions) {
+          CUSTOMER.portalDecisions = portalDecisionData.decisions;
+          CUSTOMER.portalDecisionsAvailable = true;
         }
         if (
           founderQaAccess?.access_class === 'founder_qa' &&
@@ -8227,6 +8577,29 @@ WEEKLY DATA:
         : 'No verified onboarding context was available. Ask only for information that blocks this task and mark everything else as unknown.';
     }
 
+    function getPortalDecisionPromptText(taskId) {
+      if (!CUSTOMER.portalDecisionsAvailable) {
+        return 'Decision ledger unavailable. Do not assume approval or make a customer choice. Ask the customer to refresh the GrowthEko portal before continuing.';
+      }
+      const open = getOpenPortalDecisions(taskId);
+      const resolved = getResolvedPortalDecisions(taskId);
+      const lines = [];
+      if (open.length) {
+        lines.push('OPEN — STOP AT THIS GATE');
+        open.forEach(item => {
+          lines.push(`- ${item.question}`);
+          item.options.forEach(option => lines.push(`  - ${option.id}: ${option.label}`));
+        });
+      } else {
+        lines.push('No open customer decision blocks this task.');
+      }
+      if (resolved.length) {
+        lines.push('', 'CONFIRMED CUSTOMER DECISIONS');
+        resolved.slice(0, 10).forEach(item => lines.push(`- ${item.question} → ${item.selected_option?.label || 'Recorded'}`));
+      }
+      return lines.join('\n');
+    }
+
     function buildTaskPrompt(task, phase) {
       const work = TASK_AI_WORK[task.id] || `Complete this task using only verified project evidence: ${task.name}.`;
       const outcome = task.outcome || task.desc;
@@ -8255,11 +8628,20 @@ Operating mode: ${readiness.operating_mode}
 Live commerce gate: ${readiness.needs_operating_path ? 'BLOCKED until the truthful seller, invoice issuer, payment recipient and jurisdiction are verified.' : 'Operator path is present; continue to respect task-specific approval gates.'}
 Offer foundation: ${readiness.needs_offer_foundation ? `INCOMPLETE (${readiness.missing_offer_fields.join(', ')})` : 'PRESENT'}
 
+CUSTOMER DECISIONS
+${getPortalDecisionPromptText(task.id)}
+
 VERIFIED ONBOARDING CONTEXT
 ${getSafeAiContextText()}
 
 WORK
 ${work}
+
+WORKSPACE CONTINUITY
+- Continue in this same AI chat and the same project for every GrowthEko task so verified context compounds instead of restarting.
+- Before changing anything, read the existing AGENTS.md, PROJECT_CONTEXT.md, DECISIONS.md, EVIDENCE.md and TASKS.md when they exist.
+- Update those files as the durable handoff after each task. If this chat is ever unavailable, those project files are the restart point.
+- Never move business secrets into global Custom Instructions, shared prompts or a public repository.
 
 OPERATING RULES
 1. Work from top to bottom and complete only this task.
@@ -8270,6 +8652,7 @@ OPERATING RULES
 6. Keep the primary action and canonical destination consistent across every relevant asset.
 7. Use the current page or project whenever possible. Open a new tab only when the task cannot be completed safely inline.
 8. Stop before publishing, spending money, sending messages, changing billing, accepting legal terms, exposing secrets or making an irreversible external change unless the customer explicitly approves that exact action.
+9. If customer judgment is required, do not choose for them. Stop and return a GROWTHEKO_DECISION_REQUEST with: task ID, one question, why it matters now, one recommendation, 2-5 mutually exclusive options, and what continues after the choice.
 
 SUCCESS CRITERIA
 - The stated outcome exists as a usable project artifact.
@@ -8278,7 +8661,7 @@ SUCCESS CRITERIA
 - The artifact has one owner, one next action and a simple validation check.
 
 FINAL RESPONSE
-Return: completed artifact, files changed, validation performed, remaining blocker (if any), and the exact item the customer should verify in GrowthEko.
+Return: completed artifact, files changed, validation performed, remaining blocker (if any), durable project files updated, and the exact item the customer should verify in GrowthEko.
 Only when every success criterion passes, end with: "This task is complete. Return to the GrowthEko portal and complete this task to open the next one."
 If blocked, ask for the single smallest missing input and do not claim completion.`;
     }
@@ -8333,10 +8716,10 @@ If blocked, ask for the single smallest missing input and do not claim completio
       const revision = CUSTOMER.profileReview?.context_fingerprint || 'draft';
       return `<section class="task-ai-card open" id="taskAiCard-${escapeHTML(task.id)}">
         <button class="task-ai-summary" type="button" onclick="toggleTaskAiPrompt('${escapeHTML(task.id)}')" aria-expanded="true">
-          <span><strong>Run this task with your AI</strong><small>${needsProfileConfirmation ? 'Draft updates after every saved answer. Confirm the profile to enable copying.' : 'Generated deterministically from the confirmed saved profile.'}</small></span><span aria-hidden="true">⌄</span>
+          <span><strong>Run this task with your AI</strong><small>${needsProfileConfirmation ? 'Draft updates after every saved answer. Confirm the profile to enable copying.' : 'Copy into the same AI chat so your project context keeps compounding.'}</small></span><span aria-hidden="true">⌄</span>
         </button>
         <div class="task-ai-body">
-          <div class="task-ai-revision${needsProfileConfirmation ? '' : ' is-confirmed'}">${needsProfileConfirmation ? 'Draft prompt · not yet confirmed' : `Confirmed prompt · ${escapeHTML(revision)}`}</div>
+          <div class="task-ai-revision${needsProfileConfirmation ? '' : ' is-confirmed'}">${needsProfileConfirmation ? 'Draft · review the answers above, then tap “Everything looks right”' : `Confirmed prompt · ${escapeHTML(revision)}`}</div>
           <pre class="task-ai-prompt">${escapeHTML(prompt)}</pre>
           <div class="task-ai-actions">
             <button class="task-ai-copy" id="taskAiCopy-${escapeHTML(task.id)}" type="button" onclick="copyTaskPrompt('${escapeHTML(task.id)}')" ${needsProfileConfirmation ? 'disabled' : ''}>${needsProfileConfirmation ? 'Confirm profile to copy' : 'Copy prompt'}</button>
@@ -8440,6 +8823,7 @@ If blocked, ask for the single smallest missing input and do not claim completio
       const documentHTML = buildInlineDocument(task, phase, isComplete);
       const ordinal = getTaskOrdinal(task.id);
       const profileConfirmationRequired = task.id === 'setup-profile' && CUSTOMER.profileReview?.confirmed !== true;
+      const customerDecisionRequired = hasOpenPortalDecision(task.id);
       return `
         <div class="task-detail-view inline open" id="taskDetailView">
           <button class="task-back" type="button" onclick="backToPortal()">
@@ -8457,7 +8841,7 @@ If blocked, ask for the single smallest missing input and do not claim completio
             ${currentTaskDetailMode === 'document' ? '' : `
               <div class="task-detail-actions">
                 <button class="btn btn-primary" id="btnMarkComplete" onclick="markCompleteFromDetail()" ${taskCompletionPending ? 'disabled' : ''}>
-                  ${taskCompletionPending ? 'Saving...' : (profileConfirmationRequired ? 'Confirm profile first' : 'Complete task & continue')}
+                  ${taskCompletionPending ? 'Saving...' : (profileConfirmationRequired ? 'Confirm profile first' : (customerDecisionRequired ? 'Decision required first' : 'Complete task & continue'))}
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </button>
               </div><p class="task-log-note">Completion is saved to your delivery history before the next task opens.</p>`}
@@ -8468,6 +8852,11 @@ If blocked, ask for the single smallest missing input and do not claim completio
     // ===== COMPLETE CURRENT TASK =====
     async function completeTask(taskId) {
       if (taskCompletionPending || completedTasks.has(taskId) || isTaskLocked(taskId)) return false;
+      if (hasOpenPortalDecision(taskId)) {
+        setPortalTab('decisions');
+        showToast('Confirm the open decision before completing this task.');
+        return false;
+      }
       if (taskId === 'setup-profile' && CUSTOMER.profileReview?.confirmed !== true) {
         document.getElementById('profileConfirmBar')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         showToast('Confirm the saved profile before completing this task.');
@@ -8517,6 +8906,7 @@ If blocked, ask for the single smallest missing input and do not claim completio
       if (next) {
         selectPhase(PHASES.indexOf(next.phase), false);
         updateTaskRoute(next.phase.id, next.task.id);
+        scrollActivePortalTaskToTop();
         showToast('Saved. Your next task is open.');
       } else {
         updateTaskRoute();
@@ -8524,6 +8914,15 @@ If blocked, ask for the single smallest missing input and do not claim completio
       }
       if (phaseComplete) setTimeout(() => showToast(`${phaseInfo.title} complete.`), 800);
       return true;
+    }
+
+    function scrollActivePortalTaskToTop() {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const target = document.querySelector('.phase-card.active') || document.getElementById('portalPanelHome');
+        if (!target) return;
+        const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY - 12);
+        window.scrollTo({ top, behavior: 'auto' });
+      }));
     }
 
     // ===== INLINE TASK + DOCUMENT ACCORDION =====

@@ -3,6 +3,7 @@ import { hasOpsSession, isSameOrigin } from './lib/ops-session.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const RESOLUTIONS = new Set(['approved', 'held', 'rejected']);
+const CUSTOMER_REQUEST_ACTION = 'request_customer_decision';
 
 function clean(value, max = 1200) {
   return String(value ?? '').trim().slice(0, max);
@@ -25,6 +26,108 @@ function sourceId(value) {
 
 function decisionKey(taskId) {
   return `ops:${createHash('sha256').update(taskId).digest('hex')}`;
+}
+
+function customerDecisionOptions(values) {
+  if (!Array.isArray(values)) return [];
+  return values.slice(0, 5).map((value, index) => {
+    const source = value && typeof value === 'object' ? value : { label: value };
+    const label = clean(source.label, 240);
+    if (!label) return null;
+    return {
+      id: clean(source.id, 80) || `option_${index + 1}_${createHash('sha256').update(label).digest('hex').slice(0, 8)}`,
+      label,
+      description: clean(source.description, 500)
+    };
+  }).filter(Boolean);
+}
+
+async function requestCustomerDecision({ base, key, body }) {
+  const customerId = sourceId(body.customer_id || body.entity_id);
+  const taskId = clean(body.task_id, 500);
+  const question = clean(body.question || body.happened, 1200);
+  const recommendation = clean(body.recommendation, 1200);
+  const options = customerDecisionOptions(body.options || body.customer_options);
+  if (!customerId || !taskId || !question || options.length < 2) {
+    return { status: 400, payload: { ok: false, error: 'Customer decision requires a customer, task, question and at least two options.' } };
+  }
+
+  const now = new Date().toISOString();
+  const keyHash = createHash('sha256').update(`${customerId}:${taskId}:${question}`).digest('hex');
+  const record = {
+    decision_key: `customer:${keyHash}`,
+    task_id: taskId,
+    customer_id: customerId,
+    application_id: null,
+    opportunity_id: sourceId(body.opportunity_id),
+    status: 'open',
+    gate: clean(body.gate, 500) || 'Customer decision required',
+    question,
+    recommendation,
+    verified_facts: Array.isArray(body.verified_facts)
+      ? body.verified_facts.slice(0, 20).map(value => clean(value, 1200)).filter(Boolean)
+      : [],
+    requested_by: 'nora',
+    requested_at: now,
+    metadata: {
+      audience: 'customer',
+      customer_options: options,
+      priority: clean(body.priority, 10) || 'P1',
+      deadline: clean(body.deadline, 80) || null,
+      playbook: clean(body.playbook, 100) || 'customer-decision',
+      after_confirmation: clean(body.after_confirmation, 1200),
+      external_execution_performed: false
+    },
+    updated_at: now
+  };
+  const response = await fetch(`${base}/rest/v1/ops_decisions?on_conflict=decision_key`, {
+    method: 'POST',
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+      Prefer: 'resolution=ignore-duplicates,return=representation'
+    },
+    body: JSON.stringify(record)
+  });
+  if (!response.ok) throw new Error(`Customer decision rejected: ${response.status}`);
+  let rows = await response.json().catch(() => []);
+  if (!Array.isArray(rows) || !rows[0]?.id) {
+    const lookup = await fetch(`${base}/rest/v1/ops_decisions?decision_key=eq.${encodeURIComponent(record.decision_key)}&select=*&limit=1`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` }
+    });
+    if (!lookup.ok) throw new Error(`Customer decision lookup rejected: ${lookup.status}`);
+    rows = await lookup.json().catch(() => []);
+  }
+  const decision = Array.isArray(rows) ? rows[0] : null;
+  if (!decision?.id) throw new Error('Customer decision was not stored');
+
+  const auditResponse = await fetch(`${base}/rest/v1/ops_audit_events?on_conflict=event_key`, {
+    method: 'POST',
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+      Prefer: 'resolution=ignore-duplicates,return=minimal'
+    },
+    body: JSON.stringify({
+      event_key: `customer-decision-requested:${keyHash}`,
+      actor_type: 'nora',
+      event_type: 'portal_customer_decision_requested',
+      entity_type: 'ops_decision',
+      entity_id: decision.id,
+      customer_id: customerId,
+      opportunity_id: record.opportunity_id,
+      source_table: 'ops_decisions',
+      source_record_id: decision.id,
+      channel: 'portal',
+      summary: 'A bounded customer decision was requested in the portal',
+      metadata: { task_id: taskId, option_count: options.length, external_execution_performed: false },
+      occurred_at: now
+    })
+  });
+  if (!auditResponse.ok) throw new Error(`Customer decision audit rejected: ${auditResponse.status}`);
+  return { status: 200, payload: { ok: true, decision, external_execution_performed: false } };
 }
 
 function launchScope(playbook) {
@@ -98,6 +201,20 @@ export default async function handler(req, res) {
   if (!isSameOrigin(req)) return res.status(403).json({ ok: false, error: 'Request unavailable.' });
 
   const body = parseBody(req.body);
+  const action = clean(body.action, 40);
+  const base = clean(process.env.GROWTHEKO_SUPABASE_URL, 500).replace(/\/$/, '');
+  const key = clean(process.env.GROWTHEKO_SUPABASE_SERVICE_KEY, 10000);
+  if (!base || !key) return res.status(503).json({ ok: false, error: 'Decision ledger unavailable.' });
+  if (action === CUSTOMER_REQUEST_ACTION) {
+    try {
+      const result = await requestCustomerDecision({ base, key, body });
+      return res.status(result.status).json(result.payload);
+    } catch (error) {
+      console.error('ops-customer-decision:', error?.message || error);
+      return res.status(503).json({ ok: false, error: 'Customer decision could not be requested.' });
+    }
+  }
+
   const taskId = clean(body.task_id, 500);
   const status = clean(body.status, 20).toLowerCase();
   const entityType = clean(body.entity_type, 20).toLowerCase();
@@ -108,10 +225,6 @@ export default async function handler(req, res) {
   if (!taskId || !RESOLUTIONS.has(status) || !entityId || !['customer', 'lead'].includes(entityType)) {
     return res.status(400).json({ ok: false, error: 'Decision source is invalid.' });
   }
-
-  const base = clean(process.env.GROWTHEKO_SUPABASE_URL, 500).replace(/\/$/, '');
-  const key = clean(process.env.GROWTHEKO_SUPABASE_SERVICE_KEY, 10000);
-  if (!base || !key) return res.status(503).json({ ok: false, error: 'Decision ledger unavailable.' });
 
   const now = new Date().toISOString();
   const record = {

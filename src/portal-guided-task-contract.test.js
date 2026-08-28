@@ -5,6 +5,8 @@ import test from 'node:test';
 const portal = readFileSync(new URL('./portal/index.html', import.meta.url), 'utf8');
 const terms = readFileSync(new URL('./terms/index.html', import.meta.url), 'utf8');
 const taskContextApi = readFileSync(new URL('./api/portal-task-context.js', import.meta.url), 'utf8');
+const portalDecisionsApi = readFileSync(new URL('./api/portal-decisions.js', import.meta.url), 'utf8');
+const opsDecisionApi = readFileSync(new URL('./api/ops-decision.js', import.meta.url), 'utf8');
 
 test('portal exposes exactly one active customer task and saves completion before advancing', () => {
   assert.match(portal, /function getActiveTask\(\)/);
@@ -40,6 +42,29 @@ test('each task has a personalized AI handoff with success and return rules', ()
   assert.match(portal, /separate brand and talent bio structures/);
   assert.match(portal, /PROFILE REVISION/);
   assert.match(portal, /Draft updates after every saved answer/);
+  assert.match(portal, /Continue in this same AI chat and the same project/);
+  assert.match(portal, /AGENTS\.md, PROJECT_CONTEXT\.md, DECISIONS\.md, EVIDENCE\.md and TASKS\.md/);
+  assert.match(portal, /GROWTHEKO_DECISION_REQUEST/);
+});
+
+test('portal moves each completed task to the top of the next guided task', () => {
+  assert.match(portal, /function scrollActivePortalTaskToTop\(\)/);
+  assert.match(portal, /selectPhase\(PHASES\.indexOf\(next\.phase\), false\);\s*updateTaskRoute\(next\.phase\.id, next\.task\.id\);\s*scrollActivePortalTaskToTop\(\)/);
+  assert.match(portal, /window\.scrollTo\(\{ top, behavior: 'auto' \}\)/);
+});
+
+test('customer decisions are isolated, audited and returned to the task prompt', () => {
+  assert.match(portal, /data-portal-panel="decisions"/);
+  assert.match(portal, /The saved answer becomes part of the next AI prompt/);
+  assert.match(portal, /Decisions are temporarily unavailable/);
+  assert.match(portal, /Do not assume approval or make a customer choice/);
+  assert.match(portal, /getPortalDecisionPromptText\(task\.id\)/);
+  assert.match(portal, /Decision required first/);
+  assert.match(portalDecisionsApi, /metadataOf\(row\)\.audience === 'customer'/);
+  assert.match(portalDecisionsApi, /portal_customer_decision_resolved/);
+  assert.match(portalDecisionsApi, /external_execution_performed: false/);
+  assert.match(opsDecisionApi, /request_customer_decision/);
+  assert.match(opsDecisionApi, /portal_customer_decision_requested/);
 });
 
 test('task flow branches deterministically when operating or offer foundations are missing', () => {
