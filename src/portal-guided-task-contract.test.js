@@ -22,6 +22,11 @@ test('first portal task renders the canonical profile inline with audited editin
   assert.match(portal, /Edit any answer inline/);
   assert.match(portal, /action: 'update'/);
   assert.match(taskContextApi, /portal_profile_answer_updated/);
+  assert.match(portal, /Everything looks right/);
+  assert.match(portal, /action: 'confirm'/);
+  assert.match(taskContextApi, /portal_profile_review_confirmed/);
+  assert.match(taskContextApi, /deterministic_template_no_model_call/);
+  assert.match(portal, /Confirm the saved profile before completing this task/);
   assert.match(portal, /Completion is saved to your delivery history/);
 });
 
@@ -33,6 +38,16 @@ test('each task has a personalized AI handoff with success and return rules', ()
   assert.match(portal, /new Set\(\['date_of_birth', 'tax_id'\]\)/);
   assert.match(portal, /implementation-channel-copy/);
   assert.match(portal, /separate brand and talent bio structures/);
+  assert.match(portal, /PROFILE REVISION/);
+  assert.match(portal, /Draft updates after every saved answer/);
+});
+
+test('task flow branches deterministically when operating or offer foundations are missing', () => {
+  assert.match(portal, /function getCustomerReadiness\(\)/);
+  assert.match(portal, /condition: 'needs_operating_path'/);
+  assert.match(portal, /condition: 'needs_offer_foundation'/);
+  assert.match(portal, /function getApplicableTasks\(phase\)/);
+  assert.match(portal, /Live commerce gate:/);
 });
 
 test('Architect receives a downloadable versioned workspace without a fake trained-model claim', () => {

@@ -5,6 +5,7 @@ import { CUSTOMER_INTAKE_FIELDS, canonicalCustomerIntakeSummary } from './lib/cu
 const MAX_TOKEN_LENGTH = 4096;
 const MAX_VALUE_LENGTH = 4000;
 const EDITABLE_FIELDS = new Set(CUSTOMER_INTAKE_FIELDS.map(field => field.key));
+const PROMPT_GENERATOR_VERSION = 'growtheko.portal-task-prompt.v2';
 
 function header(req, name) {
   const value = req.headers?.[name] ?? req.headers?.[name.toLowerCase()];
@@ -50,7 +51,8 @@ function customerFromPayload(payload) {
   if (!id) return null;
   return {
     id: String(id),
-    email: String(customer?.email || payload?.customer_email || '').trim().toLowerCase()
+    email: String(customer?.email || payload?.customer_email || '').trim().toLowerCase(),
+    tier: String(customer?.tier || payload?.customer_tier || '').trim()
   };
 }
 
@@ -93,6 +95,29 @@ async function latestOnboardingSession(supabaseUrl, serviceKey, customerId) {
   return rows[0] || null;
 }
 
+async function createPortalOnboardingSession(supabaseUrl, serviceKey, customer) {
+  const submissionKey = `portal-profile-${createHash('sha256').update(customer.id).digest('hex').slice(0, 24)}`;
+  const response = await fetch(`${supabaseUrl}/rest/v1/onboarding_sessions?on_conflict=submission_key`, {
+    method: 'POST',
+    headers: {
+      ...serviceHeaders(serviceKey),
+      'Content-Type': 'application/json',
+      Prefer: 'resolution=ignore-duplicates,return=representation'
+    },
+    body: JSON.stringify({
+      customer_id: customer.id,
+      tier: customer.tier || 'membership',
+      status: 'processing',
+      completed_at: null,
+      submission_key: submissionKey
+    })
+  });
+  if (!response.ok) throw new Error('onboarding_session_create_failed');
+  const rows = await response.json().catch(() => []);
+  if (Array.isArray(rows) && rows[0]?.id) return rows[0];
+  return latestOnboardingSession(supabaseUrl, serviceKey, customer.id);
+}
+
 async function onboardingAnswers(supabaseUrl, serviceKey, sessionId) {
   const query = new URLSearchParams({
     session_id: `eq.${sessionId}`,
@@ -101,6 +126,101 @@ async function onboardingAnswers(supabaseUrl, serviceKey, sessionId) {
     limit: '200'
   });
   return fetchRows(`${supabaseUrl}/rest/v1/onboarding_answers?${query}`, serviceKey);
+}
+
+function contextFingerprint(context) {
+  const stableAnswers = (context?.items || []).map(item => [
+    item?.number,
+    item?.key,
+    item?.unknown ? 'unknown' : 'known',
+    item?.unknown ? item?.unknown_reason : item?.value
+  ]);
+  return `ctx_${createHash('sha256')
+    .update(JSON.stringify([context?.schema_version, stableAnswers]))
+    .digest('hex')
+    .slice(0, 20)}`;
+}
+
+function eventMetadata(row) {
+  if (row?.metadata && typeof row.metadata === 'object') return row.metadata;
+  try {
+    return JSON.parse(String(row?.metadata || '{}'));
+  } catch {
+    return {};
+  }
+}
+
+async function profileReviewEvents(supabaseUrl, serviceKey, customerId, sessionId) {
+  const query = new URLSearchParams({
+    customer_id: `eq.${customerId}`,
+    entity_id: `eq.${sessionId}`,
+    event_type: 'in.(portal_profile_answer_updated,portal_profile_review_confirmed)',
+    select: 'event_type,metadata,occurred_at',
+    order: 'occurred_at.desc',
+    limit: '100'
+  });
+  return fetchRows(`${supabaseUrl}/rest/v1/ops_audit_events?${query}`, serviceKey);
+}
+
+function profileReviewStatus(events, context) {
+  const fingerprint = contextFingerprint(context);
+  const latestUpdate = events.find(row => row?.event_type === 'portal_profile_answer_updated') || null;
+  const matchingConfirmation = events.find(row => {
+    if (row?.event_type !== 'portal_profile_review_confirmed') return false;
+    return eventMetadata(row).context_fingerprint === fingerprint;
+  }) || null;
+  const confirmedAt = matchingConfirmation?.occurred_at || null;
+  const updatedAt = latestUpdate?.occurred_at || null;
+  const confirmed = Boolean(
+    matchingConfirmation &&
+    (!updatedAt || new Date(confirmedAt).getTime() >= new Date(updatedAt).getTime())
+  );
+  return {
+    confirmed,
+    confirmed_at: confirmed ? confirmedAt : null,
+    context_fingerprint: fingerprint,
+    prompt_generator_version: PROMPT_GENERATOR_VERSION,
+    generation_method: 'deterministic_template_no_model_call'
+  };
+}
+
+async function confirmProfileReview(supabaseUrl, serviceKey, { customerId, sessionId, context }) {
+  const occurredAt = new Date().toISOString();
+  const fingerprint = contextFingerprint(context);
+  const eventKeyHash = createHash('sha256')
+    .update(JSON.stringify([customerId, sessionId, fingerprint, PROMPT_GENERATOR_VERSION]))
+    .digest('hex')
+    .slice(0, 24);
+  const response = await fetch(`${supabaseUrl}/rest/v1/ops_audit_events?on_conflict=event_key`, {
+    method: 'POST',
+    headers: {
+      ...serviceHeaders(serviceKey),
+      'Content-Type': 'application/json',
+      Prefer: 'resolution=ignore-duplicates,return=minimal'
+    },
+    body: JSON.stringify({
+      event_key: `portal-profile-confirm:${eventKeyHash}`,
+      actor_type: 'customer',
+      event_type: 'portal_profile_review_confirmed',
+      entity_type: 'onboarding_session',
+      entity_id: sessionId,
+      customer_id: customerId,
+      source_table: 'onboarding_answers',
+      source_record_id: sessionId,
+      channel: 'portal',
+      summary: 'Customer confirmed the current portal profile revision',
+      metadata: {
+        context_fingerprint: fingerprint,
+        known_count: context.known_count,
+        unknown_count: context.unknown_count,
+        schema_version: context.schema_version,
+        prompt_generator_version: PROMPT_GENERATOR_VERSION,
+        generation_method: 'deterministic_template_no_model_call'
+      },
+      occurred_at: occurredAt
+    })
+  });
+  if (!response.ok) throw new Error('profile_confirmation_failed');
 }
 
 async function updateOnboardingAnswer(supabaseUrl, serviceKey, { customerId, sessionId, fieldName, fieldValue }) {
@@ -194,16 +314,23 @@ export default async function handler(req, res) {
     const customer = await verifyCustomerSession(supabaseUrl, sessionToken);
     if (!customer?.id) return res.status(401).json({ error: 'Customer authentication failed.' });
 
-    const session = await latestOnboardingSession(supabaseUrl, serviceKey, customer.id);
+    const action = String(body.action || 'load');
+    if (!['load', 'update', 'confirm'].includes(action)) return res.status(400).json({ error: 'Invalid action.' });
+
+    let session = await latestOnboardingSession(supabaseUrl, serviceKey, customer.id);
     if (!session?.id) {
+      if (action === 'update') session = await createPortalOnboardingSession(supabaseUrl, serviceKey, customer);
+      if (action === 'confirm') return res.status(409).json({ error: 'Save at least one profile answer before confirming.' });
+    }
+    if (!session?.id) {
+      const context = canonicalCustomerIntakeSummary([]);
       return res.status(200).json({
-        context: canonicalCustomerIntakeSummary([]),
+        context,
+        review: profileReviewStatus([], context),
         onboarding: null
       });
     }
 
-    const action = String(body.action || 'load');
-    if (!['load', 'update'].includes(action)) return res.status(400).json({ error: 'Invalid action.' });
     if (action === 'update') {
       const fieldName = String(body.field_name || '').trim();
       const fieldValue = String(body.field_value ?? '').trim();
@@ -218,8 +345,18 @@ export default async function handler(req, res) {
     }
 
     const answers = await onboardingAnswers(supabaseUrl, serviceKey, session.id);
+    const context = canonicalCustomerIntakeSummary(answers, { sessionId: session.id });
+    if (action === 'confirm') {
+      await confirmProfileReview(supabaseUrl, serviceKey, {
+        customerId: customer.id,
+        sessionId: session.id,
+        context
+      });
+    }
+    const events = await profileReviewEvents(supabaseUrl, serviceKey, customer.id, session.id);
     return res.status(200).json({
-      context: canonicalCustomerIntakeSummary(answers, { sessionId: session.id }),
+      context,
+      review: profileReviewStatus(events, context),
       onboarding: {
         session_id: session.id,
         status: session.status || null,

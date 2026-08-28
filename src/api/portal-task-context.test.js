@@ -72,6 +72,7 @@ test('portal task context returns the verified customer canonical 48-answer summ
           { session_id: 'session-1', field_name: 'primary_goal', field_value: 'Ship one verified funnel.' }
         ]);
       }
+      if (value.includes('/ops_audit_events?')) return Response.json([]);
       throw new Error(`unexpected URL: ${value}`);
     };
     const res = response();
@@ -82,6 +83,9 @@ test('portal task context returns the verified customer canonical 48-answer summ
     assert.match(res.payload.context.text, /1\. Name: Robin/);
     assert.match(res.payload.context.text, /37\. Goal: Ship one verified funnel\./);
     assert.equal(res.payload.onboarding.session_id, 'session-1');
+    assert.equal(res.payload.review.confirmed, false);
+    assert.match(res.payload.review.context_fingerprint, /^ctx_[a-f0-9]{20}$/);
+    assert.equal(res.payload.review.generation_method, 'deterministic_template_no_model_call');
   });
 });
 
@@ -99,6 +103,61 @@ test('portal task context returns explicit unknowns when onboarding is absent', 
     assert.equal(res.payload.context.total, 48);
     assert.equal(res.payload.context.unknown_count, 48);
     assert.equal(res.payload.onboarding, null);
+  });
+});
+
+test('first portal profile edit creates a canonical onboarding session when none exists', async () => {
+  await withEnvironment(async () => {
+    const writes = [];
+    let sessionCreated = false;
+    global.fetch = async (url, options = {}) => {
+      const value = String(url);
+      if (value.includes('/portal-auth/verify')) {
+        return Response.json({ customer: { id: 'customer-new', email: 'new@example.com', tier: 'audit' } });
+      }
+      if (value.includes('/onboarding_sessions?') && options.method === 'POST') {
+        const body = JSON.parse(options.body);
+        writes.push({ type: 'session', body });
+        sessionCreated = true;
+        return Response.json([{ id: 'session-new', ...body }]);
+      }
+      if (value.includes('/onboarding_sessions?')) return Response.json([]);
+      if (value.includes('/onboarding_answers?') && value.includes('field_name=eq.company')) return Response.json([]);
+      if (value.includes('/onboarding_answers?') && options.method === 'POST') {
+        writes.push({ type: 'answer', body: JSON.parse(options.body) });
+        return new Response(null, { status: 204 });
+      }
+      if (value.includes('/customers?') && options.method === 'PATCH') {
+        writes.push({ type: 'customer', body: JSON.parse(options.body) });
+        return new Response(null, { status: 204 });
+      }
+      if (value.includes('/onboarding_answers?')) {
+        return sessionCreated
+          ? Response.json([{ session_id: 'session-new', field_name: 'company', field_value: 'Example Co' }])
+          : Response.json([]);
+      }
+      if (value.includes('/ops_audit_events?') && options.method === 'POST') {
+        writes.push({ type: 'audit', body: JSON.parse(options.body) });
+        return new Response(null, { status: 204 });
+      }
+      if (value.includes('/ops_audit_events?')) return Response.json([]);
+      throw new Error(`unexpected URL: ${value}`);
+    };
+
+    const res = response();
+    await handler(request({
+      action: 'update',
+      session_token: 'valid-token',
+      field_name: 'company',
+      field_value: 'Example Co'
+    }), res);
+    assert.equal(res.statusCode, 200);
+    assert.equal(writes[0].type, 'session');
+    assert.equal(writes[0].body.customer_id, 'customer-new');
+    assert.equal(writes[0].body.tier, 'audit');
+    assert.equal(writes[1].type, 'answer');
+    assert.equal(writes[2].type, 'customer');
+    assert.match(res.payload.context.text, /Company: Example Co/);
   });
 });
 
@@ -126,10 +185,11 @@ test('portal task context updates only an allowed answer and appends an audit ev
       if (value.includes('/onboarding_answers?')) {
         return Response.json([{ session_id: 'session-3', field_name: 'primary_goal', field_value: answerValue }]);
       }
-      if (value.includes('/ops_audit_events?')) {
+      if (value.includes('/ops_audit_events?') && options.method === 'POST') {
         writes.push({ type: 'audit', body: JSON.parse(options.body) });
         return new Response(null, { status: 204 });
       }
+      if (value.includes('/ops_audit_events?')) return Response.json([]);
       throw new Error(`unexpected URL: ${value}`);
     };
     const res = response();
@@ -147,5 +207,46 @@ test('portal task context updates only an allowed answer and appends an audit ev
     assert.equal(writes[1].body.metadata.previous_value, 'Old goal');
     assert.equal(writes[1].body.metadata.new_value, 'One verified launch');
     assert.match(res.payload.context.text, /Goal: One verified launch/);
+    assert.equal(res.payload.review.confirmed, false);
+  });
+});
+
+test('portal task context confirms one deterministic prompt revision and returns it as current', async () => {
+  await withEnvironment(async () => {
+    const writes = [];
+    const events = [];
+    global.fetch = async (url, options = {}) => {
+      const value = String(url);
+      if (value.includes('/portal-auth/verify')) {
+        return Response.json({ customer: { id: 'customer-4', email: 'customer@example.com' } });
+      }
+      if (value.includes('/onboarding_sessions?')) {
+        return Response.json([{ id: 'session-4', status: 'completed', tier: 'architect' }]);
+      }
+      if (value.includes('/onboarding_answers?')) {
+        return Response.json([
+          { session_id: 'session-4', field_name: 'name', field_value: 'Robin' },
+          { session_id: 'session-4', field_name: 'company', field_value: 'GrowthEko' }
+        ]);
+      }
+      if (value.includes('/ops_audit_events?') && options.method === 'POST') {
+        const body = JSON.parse(options.body);
+        writes.push(body);
+        events.unshift({ event_type: body.event_type, metadata: body.metadata, occurred_at: body.occurred_at });
+        return new Response(null, { status: 204 });
+      }
+      if (value.includes('/ops_audit_events?')) return Response.json(events);
+      throw new Error(`unexpected URL: ${value}`);
+    };
+
+    const res = response();
+    await handler(request({ action: 'confirm', session_token: 'valid-token' }), res);
+    assert.equal(res.statusCode, 200);
+    assert.equal(writes.length, 1);
+    assert.equal(writes[0].event_type, 'portal_profile_review_confirmed');
+    assert.match(writes[0].metadata.context_fingerprint, /^ctx_[a-f0-9]{20}$/);
+    assert.equal(writes[0].metadata.generation_method, 'deterministic_template_no_model_call');
+    assert.equal(res.payload.review.confirmed, true);
+    assert.equal(res.payload.review.context_fingerprint, writes[0].metadata.context_fingerprint);
   });
 });

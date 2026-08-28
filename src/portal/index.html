@@ -4192,6 +4192,51 @@
       cursor: pointer;
     }
     .profile-editor-actions .profile-save { border-color: #1769e8; background: #1769e8; color: #fff; }
+    .profile-confirm-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      background: rgba(247,250,255,0.9);
+      border-top: 1px solid rgba(15,23,42,0.07);
+    }
+    .profile-confirm-copy strong { display: block; color: #172033; font-size: 12px; }
+    .profile-confirm-copy small { display: block; margin-top: 3px; color: #748096; font-size: 10px; line-height: 1.45; }
+    .profile-confirm-button {
+      flex: 0 0 auto;
+      min-height: 40px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 11px;
+      background: #1769e8;
+      color: #fff;
+      font: 800 11px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+      cursor: pointer;
+    }
+    .profile-confirm-button:disabled { cursor: default; opacity: 0.62; }
+    .profile-confirm-bar.is-confirmed { background: rgba(236,253,245,0.78); }
+    .profile-confirm-bar.is-confirmed .profile-confirm-copy strong { color: #08775a; }
+    .profile-confirm-bar.is-confirmed .profile-confirm-button { background: #07865f; }
+
+    .task-ai-revision {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 10px;
+      color: #64748b;
+      font: 700 9px/1.35 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+      letter-spacing: .02em;
+    }
+    .task-ai-revision::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245,158,11,0.12);
+    }
+    .task-ai-revision.is-confirmed::before { background: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,0.12); }
 
     .task-ai-card {
       margin: 18px 0 0;
@@ -4244,6 +4289,7 @@
       font: 800 11px/1 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
       cursor: pointer;
     }
+    .task-ai-copy:disabled { cursor: default; opacity: 0.48; }
     .task-kit-download { border: 1px solid rgba(23,105,232,0.18); background: #fff; color: #1769e8; }
     .task-log-note { margin: 12px 0 0; color: #7a8497; font-size: 10px; text-align: center; }
 
@@ -4695,6 +4741,8 @@
       .task-detail-view.inline .task-detail-card { padding: 16px 12px; }
       .profile-review-grid { grid-template-columns: 1fr; }
       .profile-field:nth-child(odd) { border-right: 0; }
+      .profile-confirm-bar { align-items: stretch; flex-direction: column; }
+      .profile-confirm-button { width: 100%; }
       .task-run-header { gap: 10px; }
       .task-ai-actions { flex-direction: column; }
       .task-detail-view.inline .doc-content table th,
@@ -6196,6 +6244,7 @@ WEEKLY DATA:
       startDate: '',
       taskContext: null,
       onboarding: null,
+      profileReview: null,
     };
 
     const PHASES = [
@@ -6632,6 +6681,8 @@ WEEKLY DATA:
         description: 'Confirm the real customer context before any diagnosis or recommendation.',
         tasks: [
           { id: 'setup-profile', name: 'Confirm your profile & set up your AI workspace', desc: 'Review every onboarding answer, correct anything outdated, then give your AI one clean project context.', outcome: 'Your verified profile is correct and your AI has one project-local operating workspace without duplicate or invented context.', sop: '<strong>Start with the profile below.</strong><br><br>Edit any missing or outdated answer in place. Then copy the AI prompt and run it inside the project you will use for this engagement. Do not place business secrets in global AI instructions.' },
+          { id: 'setup-operating-path', condition: 'needs_operating_path', name: 'Confirm your operating path', desc: 'Define who can legally sell, invoice and receive funds before any live checkout or campaign.', outcome: 'The real seller, country, business status, tax/VAT unknowns and professional-review owner are documented.', sop: '<strong>This is a readiness path, not a company-incorporation assumption.</strong><br><br>You can prepare drafts without a registered company in some situations, but no live checkout, invoice or paid campaign opens until the truthful operator path is verified for your jurisdiction.' },
+          { id: 'setup-offer-foundation', condition: 'needs_offer_foundation', name: 'Define your first offer foundation', desc: 'Fill the minimum market, customer, offer and objective facts required for useful execution.', outcome: 'One specific market, ideal customer, offer, price or pricing decision, delivery method and primary goal are explicit.', sop: '<strong>Complete only the missing foundation.</strong><br><br>Do not invent authority, proof or pricing. Use the guided prompt to document what is known, what needs a decision and the smallest next validation.' },
           { id: 'setup-evidence', name: 'Add your current evidence', desc: 'Collect the real links, screenshots and numbers needed to evaluate the current system.', outcome: 'One evidence index shows what exists, what is verified and what is still missing.', sop: '<strong>Keep this inside the same project.</strong><br><br>Use the prompt below to inventory your current offer, traffic source, conversion path, channel profiles, recent numbers and suspected bottleneck. Missing information stays visibly missing.' }
         ]
       },
@@ -6706,6 +6757,7 @@ WEEKLY DATA:
     let currentTaskDetailMode = 'task';
     let taskCompletionPending = false;
     let profileSavePending = false;
+    let profileConfirmPending = false;
 
     // ===== URL PARAMS =====
     function getCustomerFromURL() {
@@ -7906,6 +7958,7 @@ WEEKLY DATA:
         if (taskContextData?.context) {
           CUSTOMER.taskContext = taskContextData.context;
           CUSTOMER.onboarding = taskContextData.onboarding || null;
+          CUSTOMER.profileReview = taskContextData.review || null;
         }
         if (
           founderQaAccess?.access_class === 'founder_qa' &&
@@ -7992,7 +8045,7 @@ WEEKLY DATA:
       visible.forEach((phase, vi) => {
         const origIdx = PHASES.indexOf(phase);
         const done = getPhaseCompletedCount(origIdx);
-        const total = phase.tasks.length;
+        const total = getApplicableTasks(phase).length;
         const isComplete = done === total;
         const curIdx = getCurrentPhaseIndex();
         const curVisible = getVisiblePhaseIndex(curIdx);
@@ -8078,6 +8131,8 @@ WEEKLY DATA:
 
     const TASK_AI_WORK = {
       'setup-profile': 'Inspect the existing project before changing anything. Create or update one minimal project-local workspace with AGENTS.md, PROJECT_CONTEXT.md, DECISIONS.md, EVIDENCE.md and TASKS.md. Preserve existing files and user work. Put durable operating rules in AGENTS.md and verified business facts in PROJECT_CONTEXT.md. Do not place this business context in global Custom Instructions. Ask only for a missing fact that blocks the current setup.',
+      'setup-operating-path': 'Create OPERATING_PATH.md. Record the truthful current operator or seller, jurisdiction, legal status, invoice issuer, payment recipient, tax or VAT state, required professional review and the exact launch gate. Do not assume that incorporation is always required. Do not provide legal or tax conclusions; mark them for the appropriate licensed professional. Keep checkout, invoicing, ad spend and public legal claims blocked until the operating path is verified.',
+      'setup-offer-foundation': 'Create or update OFFER_FOUNDATION.md with one market, one ideal customer, one painful or valuable problem, one promised transformation stated without unsupported claims, the delivery method, a pricing decision or open pricing question, one primary CTA and one validation step. Use only confirmed facts and visibly mark decisions that still require the customer.',
       'setup-evidence': 'Inventory the current website, offer, funnel, social profiles, email path, traffic sources, analytics and recent performance evidence. Create or update EVIDENCE.md. Label each item VERIFIED, CUSTOMER-CLAIMED, MISSING or NOT APPLICABLE. Do not estimate missing numbers.',
       'diagnosis-prepare': 'Use the verified evidence to create a concise current-state diagnosis. Identify the primary objective, primary metric, biggest measurable drop-off, constraints and decisions that require the customer. Keep hypotheses separate from facts.',
       'diagnosis-review': 'Compare the delivered diagnosis against the evidence index. Produce a correction list for any unsupported statement. If it is supported, record one bottleneck and one recommended next move in DECISIONS.md.',
@@ -8091,9 +8146,49 @@ WEEKLY DATA:
       'operate-support': 'Prepare one focused Growth Support request with current state, desired outcome, evidence, what was tried and the exact decision or help needed. Do not include credentials or unrelated context.'
     };
 
+    function getContextAnswer(key) {
+      const item = CUSTOMER.taskContext?.items?.find(answer => answer?.key === key);
+      return item && !item.unknown ? String(item.value || '').trim() : '';
+    }
+
+    function isExplicitlyAbsent(value) {
+      return /^(no|none|n\/a|not applicable|not yet|not registered|not incorporated|no company|pre[- ]?launch|individual only|keine|keine firma|noch keine firma|noch nicht)$/i.test(String(value || '').trim());
+    }
+
+    function getCustomerReadiness() {
+      const company = getContextAnswer('company');
+      const legalEntity = getContextAnswer('legal_entity_type');
+      const operatingPathVerified = Boolean(
+        (company && !isExplicitlyAbsent(company)) ||
+        (legalEntity && !isExplicitlyAbsent(legalEntity))
+      );
+      const operatingPathExplicitlyAbsent = isExplicitlyAbsent(company) || isExplicitlyAbsent(legalEntity);
+      const offerKeys = ['market', 'ideal_customer', 'product_description', 'product_price', 'delivery_method', 'primary_goal'];
+      const missingOfferKeys = offerKeys.filter(key => !getContextAnswer(key));
+      const operatingMode = operatingPathVerified
+        ? 'verified_operator'
+        : (operatingPathExplicitlyAbsent ? 'pre_business' : 'operator_unconfirmed');
+      return {
+        operating_mode: operatingMode,
+        needs_operating_path: !operatingPathVerified,
+        needs_offer_foundation: missingOfferKeys.length > 0,
+        missing_offer_fields: missingOfferKeys
+      };
+    }
+
+    function isTaskApplicable(task) {
+      if (!task?.condition) return true;
+      const readiness = getCustomerReadiness();
+      return Boolean(readiness[task.condition]);
+    }
+
+    function getApplicableTasks(phase) {
+      return (phase?.tasks || []).filter(isTaskApplicable);
+    }
+
     function getActiveTask() {
       for (const phase of getVisiblePhases()) {
-        for (const task of phase.tasks) {
+        for (const task of getApplicableTasks(phase)) {
           if (!completedTasks.has(task.id)) return { task, phase };
         }
       }
@@ -8101,7 +8196,7 @@ WEEKLY DATA:
     }
 
     function getTaskOrdinal(taskId) {
-      const tasks = getVisiblePhases().flatMap(phase => phase.tasks);
+      const tasks = getVisiblePhases().flatMap(getApplicableTasks);
       const index = tasks.findIndex(task => task.id === taskId);
       return { current: Math.max(1, index + 1), total: tasks.length };
     }
@@ -8135,6 +8230,12 @@ WEEKLY DATA:
     function buildTaskPrompt(task, phase) {
       const work = TASK_AI_WORK[task.id] || `Complete this task using only verified project evidence: ${task.name}.`;
       const outcome = task.outcome || task.desc;
+      const review = CUSTOMER.profileReview || {};
+      const readiness = getCustomerReadiness();
+      const profileRevision = review.context_fingerprint || 'not-yet-generated';
+      const profileState = review.confirmed
+        ? `CONFIRMED · ${profileRevision} · ${review.prompt_generator_version || 'growtheko.portal-task-prompt.v2'}`
+        : `DRAFT · ${profileRevision} · customer confirmation required`;
       return `You are the customer's GrowthEko execution copilot inside their own project workspace.
 
 CURRENT TASK
@@ -8144,6 +8245,15 @@ Outcome: ${outcome}
 
 DELIVERY BOUNDARY
 ${getTierAiBoundary()}
+
+PROFILE REVISION
+${profileState}
+Generation method: deterministic template from saved portal answers; no AI model generated or rewrote the customer facts.
+
+READINESS PATH
+Operating mode: ${readiness.operating_mode}
+Live commerce gate: ${readiness.needs_operating_path ? 'BLOCKED until the truthful seller, invoice issuer, payment recipient and jurisdiction are verified.' : 'Operator path is present; continue to respect task-specific approval gates.'}
+Offer foundation: ${readiness.needs_offer_foundation ? `INCOMPLETE (${readiness.missing_offer_fields.join(', ')})` : 'PRESENT'}
 
 VERIFIED ONBOARDING CONTEXT
 ${getSafeAiContextText()}
@@ -8179,6 +8289,12 @@ If blocked, ask for the single smallest missing input and do not claim completio
         return `<div class="profile-review"><div class="profile-review-head"><div><strong>Your onboarding profile</strong><small>We could not load the saved answers.</small></div><span class="profile-review-count">Unavailable</span></div><div class="profile-field"><span class="profile-field-value is-missing">Refresh once. If this remains empty, open Support before completing this task.</span></div></div>`;
       }
       const known = items.filter(item => !item.unknown).length;
+      const review = CUSTOMER.profileReview || {};
+      const reviewConfirmed = review.confirmed === true;
+      const revision = review.context_fingerprint || 'pending';
+      const confirmedAt = reviewConfirmed && review.confirmed_at
+        ? new Date(review.confirmed_at).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })
+        : '';
       const rows = items.map(item => {
         const field = escapeHTML(item.key || '');
         const label = escapeHTML(item.label || item.key || 'Answer');
@@ -8200,20 +8316,30 @@ If blocked, ask for the single smallest missing input and do not claim completio
       return `<section class="profile-review" aria-label="Your onboarding profile">
         <div class="profile-review-head"><div><strong>Your onboarding profile</strong><small>Edit any answer inline. Saves become the new verified portal context.</small></div><span class="profile-review-count">${known}/48 complete</span></div>
         <div class="profile-review-grid">${rows}</div>
+        <div class="profile-confirm-bar${reviewConfirmed ? ' is-confirmed' : ''}" id="profileConfirmBar">
+          <div class="profile-confirm-copy">
+            <strong>${reviewConfirmed ? 'This saved profile version is confirmed.' : 'Finished reviewing the saved answers?'}</strong>
+            <small>${reviewConfirmed ? `Prompt revision ${escapeHTML(revision)} is active${confirmedAt ? ` · ${escapeHTML(confirmedAt)}` : ''}. Any later edit creates a new draft that must be confirmed again.` : 'Confirm the current saved version to generate one fixed prompt revision. “Not provided” remains an explicit unknown and creates the appropriate guided task.'}</small>
+          </div>
+          <button class="profile-confirm-button" id="profileConfirmButton" type="button" onclick="confirmProfileReview()" ${reviewConfirmed || profileConfirmPending ? 'disabled' : ''}>${profileConfirmPending ? 'Confirming...' : (reviewConfirmed ? 'Confirmed' : 'Everything looks right')}</button>
+        </div>
       </section>`;
     }
 
     function buildTaskAiHTML(task, phase) {
       const prompt = buildTaskPrompt(task, phase);
       const isArchitectSetup = task.id === 'setup-profile' && ['GrowthEko AI Empire Architect', 'architect', 'done_for_you_14997'].includes(CUSTOMER.tier);
+      const needsProfileConfirmation = task.id === 'setup-profile' && CUSTOMER.profileReview?.confirmed !== true;
+      const revision = CUSTOMER.profileReview?.context_fingerprint || 'draft';
       return `<section class="task-ai-card open" id="taskAiCard-${escapeHTML(task.id)}">
         <button class="task-ai-summary" type="button" onclick="toggleTaskAiPrompt('${escapeHTML(task.id)}')" aria-expanded="true">
-          <span><strong>Run this task with your AI</strong><small>Personalized from your saved onboarding context.</small></span><span aria-hidden="true">⌄</span>
+          <span><strong>Run this task with your AI</strong><small>${needsProfileConfirmation ? 'Draft updates after every saved answer. Confirm the profile to enable copying.' : 'Generated deterministically from the confirmed saved profile.'}</small></span><span aria-hidden="true">⌄</span>
         </button>
         <div class="task-ai-body">
+          <div class="task-ai-revision${needsProfileConfirmation ? '' : ' is-confirmed'}">${needsProfileConfirmation ? 'Draft prompt · not yet confirmed' : `Confirmed prompt · ${escapeHTML(revision)}`}</div>
           <pre class="task-ai-prompt">${escapeHTML(prompt)}</pre>
           <div class="task-ai-actions">
-            <button class="task-ai-copy" id="taskAiCopy-${escapeHTML(task.id)}" type="button" onclick="copyTaskPrompt('${escapeHTML(task.id)}')">Copy prompt</button>
+            <button class="task-ai-copy" id="taskAiCopy-${escapeHTML(task.id)}" type="button" onclick="copyTaskPrompt('${escapeHTML(task.id)}')" ${needsProfileConfirmation ? 'disabled' : ''}>${needsProfileConfirmation ? 'Confirm profile to copy' : 'Copy prompt'}</button>
             ${isArchitectSetup ? '<a class="task-kit-download" href="/portal/assets/growtheko-ai-operator-kit.zip" download>Download AI workspace</a>' : ''}
           </div>
         </div>
@@ -8225,7 +8351,7 @@ If blocked, ask for the single smallest missing input and do not claim completio
       const list = document.getElementById('tasksList');
       list.innerHTML = '';
       const active = getActiveTask();
-      phase.tasks.forEach((task, i) => {
+      getApplicableTasks(phase).forEach((task, i) => {
         const isComplete = completedTasks.has(task.id);
         const isCurrent = active?.task?.id === task.id;
         const isLocked = !isCurrent;
@@ -8313,6 +8439,7 @@ If blocked, ask for the single smallest missing input and do not claim completio
     function buildInlineTaskDetail(task, phase, isComplete) {
       const documentHTML = buildInlineDocument(task, phase, isComplete);
       const ordinal = getTaskOrdinal(task.id);
+      const profileConfirmationRequired = task.id === 'setup-profile' && CUSTOMER.profileReview?.confirmed !== true;
       return `
         <div class="task-detail-view inline open" id="taskDetailView">
           <button class="task-back" type="button" onclick="backToPortal()">
@@ -8330,7 +8457,7 @@ If blocked, ask for the single smallest missing input and do not claim completio
             ${currentTaskDetailMode === 'document' ? '' : `
               <div class="task-detail-actions">
                 <button class="btn btn-primary" id="btnMarkComplete" onclick="markCompleteFromDetail()" ${taskCompletionPending ? 'disabled' : ''}>
-                  ${taskCompletionPending ? 'Saving...' : 'Complete task & continue'}
+                  ${taskCompletionPending ? 'Saving...' : (profileConfirmationRequired ? 'Confirm profile first' : 'Complete task & continue')}
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </button>
               </div><p class="task-log-note">Completion is saved to your delivery history before the next task opens.</p>`}
@@ -8341,6 +8468,11 @@ If blocked, ask for the single smallest missing input and do not claim completio
     // ===== COMPLETE CURRENT TASK =====
     async function completeTask(taskId) {
       if (taskCompletionPending || completedTasks.has(taskId) || isTaskLocked(taskId)) return false;
+      if (taskId === 'setup-profile' && CUSTOMER.profileReview?.confirmed !== true) {
+        document.getElementById('profileConfirmBar')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showToast('Confirm the saved profile before completing this task.');
+        return false;
+      }
       const phaseInfo = findPhaseForTask(taskId);
       taskCompletionPending = true;
       const detailButton = document.getElementById('btnMarkComplete');
@@ -8365,7 +8497,7 @@ If blocked, ask for the single smallest missing input and do not claim completio
         triggerEmail('task_complete', taskId);
       }
       triggerEmailMilestones();
-      const phaseComplete = phaseInfo.tasks.every(task => completedTasks.has(task.id));
+      const phaseComplete = getApplicableTasks(phaseInfo).every(task => completedTasks.has(task.id));
       if (phaseComplete) {
         triggerConfetti();
         const phaseKey = `phase_complete_${phaseInfo.id}`;
@@ -8460,6 +8592,11 @@ If blocked, ask for the single smallest missing input and do not claim completio
       const task = findTask(taskId);
       const phase = findPhaseForTask(taskId);
       if (!task || !phase) return;
+      if (taskId === 'setup-profile' && CUSTOMER.profileReview?.confirmed !== true) {
+        document.getElementById('profileConfirmBar')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showToast('Confirm the saved profile before copying this prompt.');
+        return;
+      }
       const button = document.getElementById(`taskAiCopy-${taskId}`);
       try {
         await navigator.clipboard.writeText(buildTaskPrompt(task, phase));
@@ -8526,6 +8663,7 @@ If blocked, ask for the single smallest missing input and do not claim completio
         }
         CUSTOMER.taskContext = data.context;
         CUSTOMER.onboarding = data.onboarding || CUSTOMER.onboarding;
+        CUSTOMER.profileReview = data.review || null;
         const updatedName = data.context.items?.find(item => item.key === 'name' && !item.unknown)?.value;
         const updatedCompany = data.context.items?.find(item => item.key === 'company' && !item.unknown)?.value;
         if (updatedName) {
@@ -8534,14 +8672,65 @@ If blocked, ask for the single smallest missing input and do not claim completio
           document.getElementById('welcomeTitle').textContent = `Welcome, ${CUSTOMER.name}.`;
         }
         if (updatedCompany) CUSTOMER.company = String(updatedCompany);
-        renderTasks(findPhaseForTask('setup-profile'));
-        showToast('Profile answer saved.');
+        const profilePhase = findPhaseForTask('setup-profile');
+        currentDetailTaskId = 'setup-profile';
+        renderPhases();
+        selectPhase(PHASES.indexOf(profilePhase), false);
+        updateProgress();
+        showToast('Saved. The draft prompt has been updated.');
       } catch {
         button.disabled = false;
         button.textContent = 'Save';
         showToast('Answer was not saved. Please try again.');
       } finally {
         profileSavePending = false;
+      }
+    }
+
+    async function confirmProfileReview() {
+      if (profileConfirmPending || CUSTOMER.profileReview?.confirmed === true) return;
+      if (document.querySelector('.profile-field.is-editing')) {
+        showToast('Save or cancel the open answer first.');
+        return;
+      }
+      if (isLocalPortalPreview()) {
+        showToast('Local preview is read-only.');
+        return;
+      }
+      const button = document.getElementById('profileConfirmButton');
+      profileConfirmPending = true;
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Confirming...';
+      }
+      try {
+        const res = await fetch(PORTAL_TASK_CONTEXT_BASE, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'confirm', session_token: getToken() })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.error || data?.review?.confirmed !== true || data?.context?.format !== 'numbered_48') {
+          throw new Error(data.error || 'Profile confirmation failed');
+        }
+        CUSTOMER.taskContext = data.context;
+        CUSTOMER.onboarding = data.onboarding || CUSTOMER.onboarding;
+        CUSTOMER.profileReview = data.review;
+        const profilePhase = findPhaseForTask('setup-profile');
+        currentDetailTaskId = 'setup-profile';
+        renderPhases();
+        selectPhase(PHASES.indexOf(profilePhase), false);
+        updateProgress();
+        showToast('Confirmed. Your fixed prompt revision is ready.');
+      } catch {
+        showToast('Profile confirmation was not saved. Please try again.');
+      } finally {
+        profileConfirmPending = false;
+        if (button && CUSTOMER.profileReview?.confirmed !== true) {
+          button.disabled = false;
+          button.textContent = 'Everything looks right';
+        }
       }
     }
 
@@ -8641,20 +8830,20 @@ If blocked, ask for the single smallest missing input and do not claim completio
       const visible = getVisiblePhases();
       for (const phase of visible) {
         const origIdx = PHASES.indexOf(phase);
-        if (!phase.tasks.every(t => completedTasks.has(t.id))) return origIdx;
+        if (!getApplicableTasks(phase).every(t => completedTasks.has(t.id))) return origIdx;
       }
       const last = visible[visible.length - 1];
       return PHASES.indexOf(last);
     }
 
     function getPhaseCompletedCount(index) {
-      return PHASES[index].tasks.filter(t => completedTasks.has(t.id)).length;
+      return getApplicableTasks(PHASES[index]).filter(t => completedTasks.has(t.id)).length;
     }
 
     function getTotalProgress() {
       const visible = getVisiblePhases();
-      const total = visible.reduce((s, p) => s + p.tasks.length, 0);
-      const done = visible.reduce((s, p) => s + p.tasks.filter(t => completedTasks.has(t.id)).length, 0);
+      const total = visible.reduce((sum, phase) => sum + getApplicableTasks(phase).length, 0);
+      const done = visible.reduce((sum, phase) => sum + getApplicableTasks(phase).filter(task => completedTasks.has(task.id)).length, 0);
       return { done, total };
     }
 
