@@ -11,6 +11,7 @@ import {
 import {
   START_TO_SALE_ORCHESTRATION,
   canonicalConversationSource,
+  conversationScriptPrompt,
   deterministicConversationDraft,
   normalizeConversationDraft,
   normalizeConversationScriptRequest,
@@ -53,6 +54,16 @@ test('Nora scripts are draft-only, lowercase and reject fabricated commercial pr
   assert.doesNotMatch(draft, /[—–]/);
   assert.equal(normalizeConversationDraft('hey mia — what changed?', source), 'hey mia, what changed?');
   assert.equal(normalizeConversationDraft('only 2 spots left — act now', source), null);
+  assert.equal(normalizeConversationDraft('bro, this is the move', source), null);
+  const premiumSource = canonicalConversationSource({
+    preferred_name: 'Mia',
+    customer_level: { key: 'premium', rank: 3, tag: '💎 Premium', amount: '$1,997' }
+  }, [{ sender_type: 'customer', content: 'bro, what do you think?', created_at: '2026-08-28T10:00:00.000Z' }]);
+  assert.equal(premiumSource.relationship_tone.bro_allowed, true);
+  assert.equal(normalizeConversationDraft('bro, this is the move', premiumSource), 'hey mia, bro, this is the move');
+  const prompt = conversationScriptPrompt(source, request);
+  assert.match(prompt.system, /relationship_tone\.bro_allowed/);
+  assert.match(prompt.system, /verified premium-or-higher paid customer level/);
   const contextDraft = deterministicConversationDraft(
     canonicalConversationSource({ preferred_name: 'Mia', goal: 'Build a clear first offer.' }, []),
     normalizeConversationScriptRequest({ path: 'start_to_sale', stage: 'context', format: 'text' })
@@ -61,6 +72,7 @@ test('Nora scripts are draft-only, lowercase and reject fabricated commercial pr
   assert.match(draftEndpoint, /draft_only: true/);
   assert.match(draftEndpoint, /auto_sent: false/);
   assert.match(draftEndpoint, /email_subject: emailSubject/);
+  assert.match(draftEndpoint, /email_action: emailAction/);
   assert.doesNotMatch(draftEndpoint, /https:\/\/api\.resend\.com\/emails/);
 });
 

@@ -1,12 +1,14 @@
 import { createHash } from 'node:crypto';
 
 import { sender } from './_mail-config.js';
-import { draftHash, normalizeConversationScriptRequest, normalizeScriptProgress } from './lib/conversation-scripts.js';
+import { canonicalConversationSource, draftHash, normalizeConversationScriptRequest, normalizeScriptProgress } from './lib/conversation-scripts.js';
+import { loadVerifiedCustomerLevel } from './lib/customer-level-source.js';
 import {
   attentionEmailSubject as attentionSubject,
   replyEmailSubject as replySubject,
   safeEmailHeader as safeHeader
 } from './lib/email-subject.js';
+import { canonicalOperatorEmailAction, isCanonicalOperatorEmailAction } from './lib/operator-email-action.js';
 import { hasOpsSession, isLocalDevelopmentRequest, isSameOrigin } from './lib/ops-session.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -37,16 +39,37 @@ function escapeHtml(value) {
   })[char]);
 }
 
-function operatorEmailHtml({ name, content }) {
+function operatorEmailHtml({ name, content, action, firstOutgoing = false }) {
   const firstName = (clean(name, 120).split(/\s+/)[0] || 'there').toLowerCase();
-  const greeting = /^hey\b/i.test(clean(content, 80)) ? '' : `<p style="font-size:15px;line-height:1.7;margin:0 0 18px">hey ${escapeHtml(firstName)},</p>`;
-  return `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:32px 22px;color:#101528">${greeting}<div style="font-size:15px;line-height:1.75;white-space:pre-wrap">${escapeHtml(content)}</div><p style="margin:28px 0 0;color:#6e788b;font-size:12px;line-height:1.6">Reply directly to this email to keep the conversation in one thread.</p></div>`;
+  const greeting = firstOutgoing && !/^hey\b/i.test(clean(content, 80))
+    ? `<p style="font-size:15px;line-height:1.7;margin:0 0 18px">hey ${escapeHtml(firstName)},</p>`
+    : '';
+  if (!isCanonicalOperatorEmailAction(action)) throw new Error('Canonical email action required');
+  return `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:32px 22px;color:#101528">${greeting}<div style="font-size:15px;line-height:1.75;white-space:pre-wrap">${escapeHtml(content)}</div><div style="margin:28px 0 0;padding:18px;border:1px solid #e4e9f2;border-radius:16px;background:#f8faff"><strong style="display:block;font-size:14px;line-height:1.35;color:#172033">${escapeHtml(action.title)}</strong><span style="display:block;margin-top:5px;color:#6e788b;font-size:12px;line-height:1.55">${escapeHtml(action.reminder)}</span><a href="${escapeHtml(action.href)}" style="display:inline-block;margin-top:14px;padding:10px 17px;border-radius:10px;background:#2768e8;color:#ffffff;font-size:12px;font-weight:800;line-height:1;text-decoration:none">${escapeHtml(action.label)}</a></div></div>`;
 }
 
 function noraPunctuation(value) {
   return clean(value, MAX_MESSAGE_LENGTH)
     .replace(/\s*[—–]\s*/g, ', ')
-    .replace(/^(hey\s+[^,\n]{1,80})\s+-\s+/i, '$1, ');
+    .replace(/^(hey\s+[^,\n]{1,80})\s+-\s+/i, '$1, ')
+    .toLocaleLowerCase('en-US');
+}
+
+function withoutUnverifiedBro(value, relationshipTone) {
+  if (relationshipTone?.bro_allowed === true) return value;
+  return clean(value, MAX_MESSAGE_LENGTH)
+    .replace(/\s*,?\s*\bbro\b\s*,?\s*/gi, match => match.includes(',') ? ', ' : ' ')
+    .replace(/,\s*,/g, ',')
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/\n {1,}/g, '\n')
+    .trim();
+}
+
+function firstEmailContent(value, name, firstOutgoing, relationshipTone) {
+  const content = withoutUnverifiedBro(noraPunctuation(value), relationshipTone);
+  if (!firstOutgoing || /^hey\b/i.test(content)) return content;
+  const firstName = (clean(name, 120).split(/\s+/)[0] || 'there').toLowerCase();
+  return `hey ${firstName},\n\n${content}`;
 }
 
 function completedScriptProgress(value, content, now) {
@@ -64,7 +87,7 @@ function completedScriptProgress(value, content, now) {
   };
 }
 
-function localMessage(applicationId, content, scriptProgress, now) {
+function localMessage(applicationId, content, scriptProgress, emailAction, now) {
   return {
     id: `local-ops-reply-${Date.now()}`,
     application_id: applicationId,
@@ -73,7 +96,7 @@ function localMessage(applicationId, content, scriptProgress, now) {
     sender_name: 'Nora',
     content,
     message_type: 'text',
-    metadata: { source: 'ops_email_reply', channel: 'email', local_preview: true, delivery_email: 'not_sent', script_progress: scriptProgress },
+    metadata: { source: 'ops_email_reply', channel: 'email', local_preview: true, delivery_email: 'not_sent', script_progress: scriptProgress, email_action: emailAction },
     read_at: null,
     created_at: now
   };
@@ -81,21 +104,28 @@ function localMessage(applicationId, content, scriptProgress, now) {
 
 async function resolveApplication(base, key, applicationId) {
   const response = await fetch(
-    `${base}/rest/v1/applications?id=eq.${encodeURIComponent(applicationId)}&select=id,email,first_name,last_name,preferred_name&limit=1`,
+    `${base}/rest/v1/applications?id=eq.${encodeURIComponent(applicationId)}&select=id,email,first_name,last_name,preferred_name,selected_tier,stage,status&limit=1`,
     { headers: serviceHeaders(key) }
   );
   if (!response.ok) throw new Error(`Application lookup rejected: ${response.status}`);
   return (await response.json().catch(() => []))?.[0] || null;
 }
 
-async function resolveLatestInboundThread(base, key, applicationId) {
+async function resolveConversationThread(base, key, applicationId) {
   const response = await fetch(
-    `${base}/rest/v1/messages?application_id=eq.${encodeURIComponent(applicationId)}&sender_type=eq.customer&select=metadata,created_at&order=created_at.desc&limit=1`,
+    `${base}/rest/v1/messages?application_id=eq.${encodeURIComponent(applicationId)}&message_type=eq.text&select=sender_type,content,metadata,created_at&order=created_at.asc&limit=200`,
     { headers: serviceHeaders(key) }
   );
   if (!response.ok) throw new Error(`Conversation thread lookup rejected: ${response.status}`);
-  const metadata = (await response.json().catch(() => []))?.[0]?.metadata;
-  return metadata && typeof metadata === 'object' ? metadata : {};
+  const messages = await response.json().catch(() => []);
+  const latestInbound = [...messages].reverse().find(message => message?.sender_type === 'customer') || {};
+  const inboundMetadata = latestInbound?.metadata && typeof latestInbound.metadata === 'object' ? latestInbound.metadata : {};
+  return {
+    messages,
+    latestInboundContent: clean(latestInbound?.content, 4000),
+    hasPriorTeamMessage: messages.some(message => message?.sender_type === 'team'),
+    inboundMetadata
+  };
 }
 
 async function markCustomerMessagesRead(base, key, applicationId, now) {
@@ -117,7 +147,7 @@ function replyHeaders(thread = {}) {
   return { 'In-Reply-To': messageId, References: [references, messageId].filter(Boolean).join(' ') };
 }
 
-async function sendEmailNotification({ email, name, content, messageId, subject, thread }) {
+async function sendEmailNotification({ email, name, content, messageId, subject, thread, emailAction, firstOutgoing }) {
   const apiKey = clean(process.env.RESEND_API_KEY, 10000);
   const replyTo = clean(process.env.GROWTHEKO_INBOUND_EMAIL, 320).toLowerCase();
   if (!apiKey || !EMAIL.test(email)) return { status: 'not_configured', id: null };
@@ -138,7 +168,7 @@ async function sendEmailNotification({ email, name, content, messageId, subject,
       from,
       to: [email],
       subject,
-      html: operatorEmailHtml({ name, content }),
+      html: operatorEmailHtml({ name, content, action: emailAction, firstOutgoing }),
       ...(EMAIL.test(replyTo) ? { reply_to: replyTo } : {}),
       headers: replyHeaders(thread)
     })
@@ -148,7 +178,7 @@ async function sendEmailNotification({ email, name, content, messageId, subject,
   return { status: 'sent', id: clean(payload.id, 240) || null };
 }
 
-async function recordAudit({ base, key, applicationId, messageId, emailStatus, scriptProgress, now }) {
+async function recordAudit({ base, key, applicationId, messageId, emailStatus, scriptProgress, emailAction, now }) {
   const eventKey = `ops-message:${messageId}`;
   const response = await fetch(`${base}/rest/v1/ops_audit_events?on_conflict=event_key`, {
     method: 'POST',
@@ -168,7 +198,7 @@ async function recordAudit({ base, key, applicationId, messageId, emailStatus, s
       source_record_id: messageId,
       channel: 'email',
       summary: emailStatus === 'sent' ? 'Customer email reply sent and recorded' : 'Customer email reply recorded but not delivered',
-      metadata: { sender_name: 'Nora', customer_channel: 'email', email_delivery: emailStatus, script_progress: scriptProgress, auto_sent: false },
+      metadata: { sender_name: 'Nora', customer_channel: 'email', email_delivery: emailStatus, script_progress: scriptProgress, email_action: emailAction, auto_sent: false },
       occurred_at: now
     })
   });
@@ -229,8 +259,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, error: 'Conversation source is invalid.' });
   }
 
-  const content = noraPunctuation(body.content);
-  if (action === 'send' && (!content || content.length > MAX_MESSAGE_LENGTH)) {
+  const rawContent = noraPunctuation(body.content);
+  if (action === 'send' && (!rawContent || rawContent.length > MAX_MESSAGE_LENGTH)) {
     return res.status(400).json({ ok: false, error: 'Write a message before sending.' });
   }
   const completion = action === 'script-progress' ? scriptCompletion(body) : null;
@@ -240,18 +270,29 @@ export default async function handler(req, res) {
 
   const scriptProgressProvided = body.script_progress !== undefined && body.script_progress !== null;
   const now = new Date().toISOString();
-  const scriptProgress = action === 'send' ? completedScriptProgress(body.script_progress, content, now) : null;
-  if (action === 'send' && scriptProgressProvided && !scriptProgress) {
+  const validatedScriptProgress = scriptProgressProvided ? normalizeScriptProgress(body.script_progress) : null;
+  if (action === 'send' && scriptProgressProvided && !validatedScriptProgress) {
     return res.status(400).json({ ok: false, error: 'Script progress is invalid.' });
   }
 
   if (isLocal) {
     if (action === 'mark-read') return res.status(200).json({ ok: true, local_preview: true });
     if (action === 'script-progress') return res.status(200).json({ ok: true, local_preview: true, completion, customer_message_sent: false });
+    const source = canonicalConversationSource({ selected_tier: '' }, []);
+    const emailAction = canonicalOperatorEmailAction({
+      path: validatedScriptProgress?.path,
+      stage: validatedScriptProgress?.stage,
+      commercialNextStep: source.commercial_next_step,
+      latestInboundContent: '',
+      replyTo: process.env.GROWTHEKO_INBOUND_EMAIL
+    });
+    const content = firstEmailContent(rawContent, 'Mia', false, source.relationship_tone);
+    const scriptProgress = action === 'send' ? completedScriptProgress(validatedScriptProgress, content, now) : null;
     return res.status(201).json({
       ok: true,
-      message: localMessage(applicationId, content, scriptProgress, now),
+      message: localMessage(applicationId, content, scriptProgress, emailAction, now),
       delivery: { channel: 'email', email: 'preview_not_sent' },
+      email_action: emailAction,
       audit: 'preview',
       auto_sent: false
     });
@@ -268,9 +309,9 @@ export default async function handler(req, res) {
       await recordScriptCompletion({ base, key, applicationId, completion, now });
       return res.status(200).json({ ok: true, completion, customer_message_sent: false, external_execution_performed: false });
     }
-    const [application, inboundThread] = await Promise.all([
+    const [application, conversationThread] = await Promise.all([
       resolveApplication(base, key, applicationId),
-      resolveLatestInboundThread(base, key, applicationId)
+      resolveConversationThread(base, key, applicationId)
     ]);
     if (!application) return res.status(404).json({ ok: false, error: 'Customer conversation was not found.' });
 
@@ -281,7 +322,20 @@ export default async function handler(req, res) {
 
     const email = clean(application.email, 320).toLowerCase();
     const customerName = clean(application.preferred_name || `${application.first_name || ''} ${application.last_name || ''}`.trim() || 'Customer', 160);
-    const subject = attentionSubject({ name: customerName, content, threadSubject: inboundThread.subject });
+    application.customer_level = await loadVerifiedCustomerLevel({ base, key, application });
+    const conversationSource = canonicalConversationSource(application, conversationThread.messages);
+    const firstOutgoing = !conversationThread.hasPriorTeamMessage;
+    const content = firstEmailContent(rawContent, customerName, firstOutgoing, conversationSource.relationship_tone);
+    const scriptProgress = action === 'send' ? completedScriptProgress(validatedScriptProgress, content, now) : null;
+    const commercialNextStep = conversationSource.commercial_next_step;
+    const emailAction = canonicalOperatorEmailAction({
+      path: scriptProgress?.path,
+      stage: scriptProgress?.stage,
+      commercialNextStep,
+      latestInboundContent: conversationThread.latestInboundContent,
+      replyTo: process.env.GROWTHEKO_INBOUND_EMAIL
+    });
+    const subject = attentionSubject({ name: customerName, content, threadSubject: conversationThread.inboundMetadata.subject, path: scriptProgress?.path, stage: scriptProgress?.stage });
     const insertResponse = await fetch(`${base}/rest/v1/messages`, {
       method: 'POST',
       headers: serviceHeaders(key, { 'Content-Type': 'application/json', Prefer: 'return=representation' }),
@@ -296,9 +350,10 @@ export default async function handler(req, res) {
           channel: 'email',
           notification_type: 'support_reply',
           delivery_email: 'pending',
-          reply_to_message_id: safeHeader(inboundThread.message_id, 500) || null,
+          reply_to_message_id: safeHeader(conversationThread.inboundMetadata.message_id, 500) || null,
           subject,
           script_progress: scriptProgress,
+          email_action: emailAction,
           auto_sent: false
         }
       })
@@ -308,7 +363,7 @@ export default async function handler(req, res) {
     const stored = Array.isArray(inserted) ? inserted[0] : inserted;
     if (!stored?.id) throw new Error('Message insert returned no source record');
 
-    const emailDelivery = await sendEmailNotification({ email, name: customerName, content, messageId: stored.id, subject, thread: inboundThread });
+    const emailDelivery = await sendEmailNotification({ email, name: customerName, content, messageId: stored.id, subject, thread: conversationThread.inboundMetadata, emailAction, firstOutgoing });
     const metadata = {
       ...(stored.metadata && typeof stored.metadata === 'object' ? stored.metadata : {}),
       delivery_email: emailDelivery.status,
@@ -323,7 +378,7 @@ export default async function handler(req, res) {
 
     let audit = 'recorded';
     try {
-      await recordAudit({ base, key, applicationId, messageId: stored.id, emailStatus: emailDelivery.status, scriptProgress, now });
+      await recordAudit({ base, key, applicationId, messageId: stored.id, emailStatus: emailDelivery.status, scriptProgress, emailAction, now });
     } catch (error) {
       audit = 'unavailable';
       console.error('ops-message audit:', error?.message || error);
@@ -333,6 +388,7 @@ export default async function handler(req, res) {
       ok: true,
       message: { ...stored, email, metadata },
       delivery: { channel: 'email', email: emailDelivery.status },
+      email_action: emailAction,
       audit,
       auto_sent: false
     });
@@ -346,6 +402,8 @@ export {
   completedScriptProgress as canonicalCompletedScriptProgress,
   attentionSubject as canonicalAttentionSubject,
   noraPunctuation as canonicalNoraPunctuation,
+  withoutUnverifiedBro as canonicalWithoutUnverifiedBro,
+  firstEmailContent as canonicalFirstEmailContent,
   escapeHtml as canonicalOpsMessageEscapeHtml,
   operatorEmailHtml as canonicalOperatorEmailHtml,
   replyHeaders as canonicalReplyHeaders,

@@ -12,6 +12,8 @@ import {
   recommendConversationMove
 } from './lib/conversation-scripts.js';
 import { attentionEmailSubject } from './lib/email-subject.js';
+import { loadVerifiedCustomerLevel } from './lib/customer-level-source.js';
+import { canonicalOperatorEmailAction } from './lib/operator-email-action.js';
 import { customerProfileFromAnswers, customerProfileFromMessageMetadata, mergeCustomerProfiles } from './lib/customer-profile.js';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -44,9 +46,10 @@ async function canonicalSource(base, key, applicationId) {
   if (!application) return null;
   const messages = await messagesResponse.json().catch(() => []);
   let profileContext = customerProfileFromAnswers([]);
+  let customer = null;
   try {
-    const customerResponse = await fetch(`${base}/rest/v1/customers?email=eq.${encodeURIComponent(application.email || '')}&select=id&limit=1`, { headers: serviceHeaders(key) });
-    const customer = customerResponse.ok ? (await customerResponse.json().catch(() => []))?.[0] : null;
+    const customerResponse = await fetch(`${base}/rest/v1/customers?email=eq.${encodeURIComponent(application.email || '')}&select=id,email,tier,amount_paid,paid_at&limit=1`, { headers: serviceHeaders(key) });
+    customer = customerResponse.ok ? (await customerResponse.json().catch(() => []))?.[0] : null;
     if (customer?.id) {
       const sessionResponse = await fetch(`${base}/rest/v1/onboarding_sessions?customer_id=eq.${encodeURIComponent(customer.id)}&select=id,status,completed_at&order=completed_at.desc.nullslast&limit=1`, { headers: serviceHeaders(key) });
       const session = sessionResponse.ok ? (await sessionResponse.json().catch(() => []))?.[0] : null;
@@ -58,6 +61,7 @@ async function canonicalSource(base, key, applicationId) {
   } catch {
     profileContext = customerProfileFromAnswers([]);
   }
+  application.customer_level = await loadVerifiedCustomerLevel({ base, key, application, customer });
   application.profile_context = mergeCustomerProfiles(profileContext, customerProfileFromMessageMetadata(messages));
   const source = canonicalConversationSource(application, messages);
   const latestInbound = [...messages].reverse().find(message => message?.sender_type === 'customer');
@@ -186,12 +190,23 @@ export default async function handler(req, res) {
   const emailSubject = attentionEmailSubject({
     name: source.application.first_name,
     content: draft,
-    threadSubject: source.thread_subject
+    threadSubject: source.thread_subject,
+    path: request.path,
+    stage: request.stage
+  });
+  const latestInboundContent = [...source.messages].reverse().find(message => message.sender === 'customer')?.content || '';
+  const emailAction = canonicalOperatorEmailAction({
+    path: request.path,
+    stage: request.stage,
+    commercialNextStep: source.commercial_next_step,
+    latestInboundContent,
+    replyTo: process.env.GROWTHEKO_INBOUND_EMAIL
   });
   return res.status(200).json({
     ok: true,
     draft,
     email_subject: emailSubject,
+    email_action: emailAction,
     script_progress: progress,
     recommendation,
     source: isLocal ? 'local_deterministic_scenario' : 'canonical_application_messages',

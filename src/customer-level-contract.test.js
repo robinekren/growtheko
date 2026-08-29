@@ -2,7 +2,13 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
-import { CUSTOMER_LEVELS, applyCustomerLevels, resolveCustomerLevel } from './api/lib/customer-level.js';
+import {
+  BRO_MINIMUM_CUSTOMER_LEVEL_RANK,
+  CUSTOMER_LEVELS,
+  applyCustomerLevels,
+  customerRelationshipTone,
+  resolveCustomerLevel
+} from './api/lib/customer-level.js';
 
 test('customer level taxonomy matches the approved six-level revenue ladder', () => {
   assert.deepEqual(CUSTOMER_LEVELS.map(level => [level.emoji, level.label, level.amount]), [
@@ -73,4 +79,20 @@ test('Ops exposes customer tags in Customers, Pipeline and Inbox search', () => 
   assert.match(template, /thread\.customer_level=entity\?\.customer_level/);
   assert.match(template, /tag customer-level/);
   assert.match(template, /Customer level/);
+});
+
+test('bro familiarity starts at verified Premium and remains customer-led', () => {
+  assert.equal(BRO_MINIMUM_CUSTOMER_LEVEL_RANK, 3);
+  assert.equal(customerRelationshipTone({
+    customerLevel: { key: 'member', rank: 2 },
+    messages: [{ sender_type: 'customer', content: 'bro, can you check this?' }]
+  }).bro_allowed, false);
+  assert.equal(customerRelationshipTone({
+    customerLevel: { key: 'premium', rank: 3 },
+    messages: [{ sender_type: 'customer', content: 'bro, can you check this?' }]
+  }).bro_allowed, true);
+  assert.equal(customerRelationshipTone({
+    customerLevel: { key: 'growth', rank: 4 },
+    messages: [{ sender_type: 'customer', content: 'can you check this?' }]
+  }).bro_allowed, false);
 });

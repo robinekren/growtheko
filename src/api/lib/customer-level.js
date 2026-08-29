@@ -9,6 +9,8 @@ export const CUSTOMER_LEVELS = Object.freeze([
   Object.freeze({ key: 'partner', rank: 5, emoji: '🐋', label: 'Partner', amount: '$14,997', offerId: 'architect' })
 ]);
 
+export const BRO_MINIMUM_CUSTOMER_LEVEL_RANK = 3;
+
 const LEVEL_BY_OFFER = new Map(CUSTOMER_LEVELS.filter(level => level.offerId).map(level => [level.offerId, level]));
 const PAID_STAGES = new Set(['paid', 'onboarding', 'delivery', 'proof', 'retention_expansion', 'retention expansion']);
 const PAID_STATUSES = new Set(['paid', 'won', 'completed']);
@@ -108,4 +110,19 @@ export function applyCustomerLevels(people = [], leads = [], opportunities = [],
   }
 
   return { people, leads, opportunities };
+}
+
+export function customerRelationshipTone({ customerLevel, messages = [] } = {}) {
+  const rank = Number.isFinite(Number(customerLevel?.rank)) ? Number(customerLevel.rank) : 0;
+  const customerUsesBro = (Array.isArray(messages) ? messages : []).some(message => {
+    const sender = normalized(message?.sender_type || message?.sender);
+    return sender === 'customer' && /\bbro\b/i.test(String(message?.content || ''));
+  });
+  return {
+    customer_level_rank: rank,
+    customer_level_key: normalized(customerLevel?.key) || 'lead',
+    minimum_bro_level_rank: BRO_MINIMUM_CUSTOMER_LEVEL_RANK,
+    customer_uses_bro: customerUsesBro,
+    bro_allowed: rank >= BRO_MINIMUM_CUSTOMER_LEVEL_RANK && customerUsesBro
+  };
 }
