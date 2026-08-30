@@ -129,7 +129,7 @@ No AI persona receives a fake human photo or fabricated human identity.
 ## Calls, lives and transcripts
 
 - Friday 18:00 Vienna: public GrowthEko training/acquisition live
-- Friday 20:00 Vienna: member Growth Support clinic
+- Sunday 20:00 Vienna: member Growth Support clinic
 - extra recurring lives are removed until demand and attendance data justify them
 
 Fireflies or another meeting recorder is not silently enabled. Activation requires:

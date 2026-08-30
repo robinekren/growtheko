@@ -53,6 +53,10 @@ test('portal moves each completed task to the top of the next guided task', () =
   assert.match(portal, /window\.scrollTo\(\{ top, behavior: 'auto' \}\)/);
 });
 
+test('member Growth Support follows the Sunday post-webinar slot', () => {
+  assert.match(portal, /id: 'growth-support',[\s\S]*?weekday: 0,[\s\S]*?timeMinutes: 20 \* 60,[\s\S]*?durationMinutes: 60/);
+});
+
 test('customer decisions are isolated, audited and returned to the task prompt', () => {
   assert.match(portal, /data-portal-panel="decisions"/);
   assert.match(portal, /The saved answer becomes part of the next AI prompt/);
