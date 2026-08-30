@@ -53,6 +53,14 @@ test('Digital Estate $7 offer is recorded without becoming a GrowthEko container
 
 test('paid activation remains zero while capacity ceilings stay conditional', () => {
   assert.equal(COMMERCIAL_ACTIVATION.paidActivationCapacity, 0);
+  assert.equal(COMMERCIAL_ACTIVATION.gateA.status, 'blocked');
+  assert.deepEqual(COMMERCIAL_ACTIVATION.gateA.checks.map(({ key, status }) => [key, status]), [
+    ['contract', 'not_certified'],
+    ['intake', 'not_certified'],
+    ['delivery', 'not_certified'],
+    ['customer_success', 'not_certified'],
+    ['test_payment', 'not_certified']
+  ]);
   assert.equal(OFFER_REGISTRY.membership.status, 'blocked_gate_a');
   assert.equal(OFFER_REGISTRY.audit.status, 'blocked_gate_a');
   assert.equal(OFFER_REGISTRY.sprint.status, 'application_only_blocked_gate_b');

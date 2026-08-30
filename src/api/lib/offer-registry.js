@@ -106,6 +106,16 @@ export function resolveOfferKey(value) {
 
 export const COMMERCIAL_ACTIVATION = Object.freeze({
   paidActivationCapacity: 0,
+  gateA: Object.freeze({
+    status: 'blocked',
+    checks: Object.freeze([
+      Object.freeze({ key: 'contract', label: 'Contract & terms', status: 'not_certified' }),
+      Object.freeze({ key: 'intake', label: 'Intake', status: 'not_certified' }),
+      Object.freeze({ key: 'delivery', label: 'Delivery', status: 'not_certified' }),
+      Object.freeze({ key: 'customer_success', label: 'Customer Success', status: 'not_certified' }),
+      Object.freeze({ key: 'test_payment', label: 'Test payment', status: 'not_certified' })
+    ])
+  }),
   reason: 'Gate A remains blocked; Gates B and C remain unopened.',
   taxBasis: 'All paid prices are net USD plus applicable taxes; non-Austrian orders require manual review.'
 });

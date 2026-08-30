@@ -21,6 +21,11 @@ function parseBody(body) {
   }
 }
 
+function safeNext(value) {
+  const next = String(value || '');
+  return /^\/ops(?:\?(?:view=(?:queue|customers|pipeline|inbox|decisions)(?:&focus=gate-a)?)?)?$/.test(next) ? next : '/ops';
+}
+
 export default function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') {
@@ -31,12 +36,13 @@ export default function handler(req, res) {
   if (!isSameOrigin(req)) return res.status(403).json({ ok: false, error: 'Request unavailable' });
 
   const body = parseBody(req.body);
+  const redirect = safeNext(body.next);
   if (isLocalDevelopmentRequest(req)) {
     if (!String(body.password || '').trim()) {
       return res.status(400).json({ ok: false, error: 'Enter any non-empty local value' });
     }
     res.setHeader('Set-Cookie', createOpsCookie({ secure: false }));
-    return res.status(200).json({ ok: true, redirect: '/ops', local_dev: true });
+    return res.status(200).json({ ok: true, redirect, local_dev: true });
   }
 
   const expectedHash = String(process.env.GROWTHEKO_OPS_PASSWORD_HASH || '');
@@ -50,5 +56,5 @@ export default function handler(req, res) {
   }
 
   res.setHeader('Set-Cookie', createOpsCookie());
-  return res.status(200).json({ ok: true, redirect: '/ops' });
+  return res.status(200).json({ ok: true, redirect });
 }

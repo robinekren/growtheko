@@ -1,5 +1,6 @@
 import { hasOpsSession, isLocalDevelopmentRequest } from './lib/ops-session.js';
 import {
+  COMMERCIAL_ACTIVATION,
   CUSTOMER_OFFER_LIFECYCLE,
   ECOSYSTEM_ENTRY_REGISTRY,
   OFFER_REGISTRY,
@@ -545,6 +546,7 @@ function localScenarioCrm(now = new Date(), policy = autonomyPolicy()) {
   return {
     generated_at: reference.toISOString(),
     autonomy_policy: policy,
+    commercial_activation: COMMERCIAL_ACTIVATION,
     customer_journey: customerJourney(),
     offer_lifecycle: offerLifecycle(people, leads, opportunities),
     people,
@@ -921,6 +923,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       generated_at: new Date().toISOString(),
       autonomy_policy: policy,
+      commercial_activation: COMMERCIAL_ACTIVATION,
       customer_journey: customerJourney(),
       offer_lifecycle: offerLifecycle(people, leads, opportunities),
       people,

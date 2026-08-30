@@ -200,6 +200,10 @@ test('/ops is canonical and exposes exactly the five final Nora modules', () => 
   assert.match(template, /title:'Pipeline'/);
   assert.match(template, /title:'Inbox'/);
   assert.match(template, /Robin approval only/);
+  assert.match(template, /Gate A readiness/);
+  assert.match(template, /commercial_activation/);
+  assert.match(template, /requestedView/);
+  assert.match(template, /syncViewUrl/);
   assert.match(template, /Open Customer 360/);
   assert.match(template, /1 · What happened/);
   assert.match(template, /4 · After confirmation/);
@@ -220,4 +224,5 @@ test('/ops is canonical and exposes exactly the five final Nora modules', () => 
   assert.doesNotMatch(template, /next=\/crm/);
   assert.doesNotMatch(auth, /redirect: '\/crm'/);
   assert.doesNotMatch(page, /next=\/crm/);
+  assert.match(page, /encodeURIComponent\(next\)/);
 });
